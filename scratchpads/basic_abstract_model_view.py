@@ -47,12 +47,22 @@ class MainWindow(QtWidgets.QMainWindow):
             [7, 8, 9],
         ]
 
+        self.model = BasicModel(data)
+        self.table.setModel(self.model)
+
+        self.setCentralWidget(self.table)
 
 
 
-def main():
-    pass
+
+
+def main(argv):
+    app = QtWidgets.QApplication(argv)
+    window = MainWindow()
+    window.show()
+    app.exec_()
+
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
