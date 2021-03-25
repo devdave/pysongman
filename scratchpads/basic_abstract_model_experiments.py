@@ -30,6 +30,12 @@ class BasicModel(QtCore.QAbstractTableModel):
         if role == Qt.DisplayRole:
             return self._data[index.row()][index.column()]
 
+        elif role == Qt.ToolTipRole:
+            return f"This is a tool tip for [{index.row()}][{index.column()}]"
+
+        else:
+            pass
+
     def rowCount(self, index):
         return len(self._data)
 
