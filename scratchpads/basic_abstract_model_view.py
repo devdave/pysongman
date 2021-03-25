@@ -2,10 +2,11 @@
 
     Resources:
         https://www.learnpyqt.com/tutorials/qtableview-modelviews-numpy-pandas/
-        https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractTableModel.html?highlight=qabstracttablemodel#PySide6.QtCore.PySide6.QtCore.QAbstractTableModel
+        https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractItemModel.html
+        https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractTableModel.html
 
     Goal:
-        Touch-type copy code example and run.
+        touch type copy the code examples from the provided tutorial
 
 """
 
