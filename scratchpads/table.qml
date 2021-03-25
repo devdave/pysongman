@@ -1,18 +1,20 @@
+import QtQuick 2.15
 
 TableView {
     id: myView
 
-    topMargin: header.implicitHeight
+    model: myModel
 
-    Text {
-        id: header
-        text: "A table header"
+    delegate: Rectangle {
+        implicitWidth: 100
+        implicitHeight: 50
+        border.width: 1
+
+        Text {
+            text: display
+            anchors.centerIn: parent
+        }
+
     }
 
-    model: myModel
-    anchors.fill: parent
-    delegate:
-        Text {
-            text: model.display
-        }
 }

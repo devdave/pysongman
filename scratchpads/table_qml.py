@@ -1,3 +1,7 @@
+"""
+Resources:
+    https://stackoverflow.com/questions/66804586/is-it-possible-to-connect-a-qml-table-view-to-a-python-qabstractmodel-instance/66805948#66805948
+"""
 import sys
 
 from PySide2 import QtWidgets
@@ -19,6 +23,7 @@ class BasicModel(QtCore.QAbstractTableModel):
 
     def data(self, index, role):
         if role == Qt.DisplayRole:
+            print("data called")
             return self._data[index.row()][index.column()]
 
         elif role == Qt.ToolTipRole:
@@ -28,9 +33,11 @@ class BasicModel(QtCore.QAbstractTableModel):
             pass
 
     def rowCount(self, index):
+        print("rc called")
         return len(self._data)
 
     def columnCount(self, index):
+        print("cc called")
         return len(self._data[0])
 
 
@@ -49,8 +56,12 @@ def main(argv):
     app = QtWidgets.QApplication(argv)
     view = QQuickView()
     view.rootContext().setContextProperty("myModel", myModel)
+    view.setResizeMode(QQuickView.SizeRootObjectToView)
+    view.resize(640, 480)
+
     url = QtCore.QUrl("table.qml")
-    view.setSource(url)
+
+    result = view.setSource(url)
 
     # TODO somehow connect myModel python to QML Table view.
 
