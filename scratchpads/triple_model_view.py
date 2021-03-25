@@ -48,7 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.table = QtWidgets.QTableView()
+
 
         # copy & pasted
         data = [
@@ -59,15 +59,38 @@ class MainWindow(QtWidgets.QMainWindow):
             [7, 8, 9],
         ]
 
-        self.model = BasicModel(data)
-        self.table.setModel(self.model)
+        # our Data
+        self.model1 = BasicModel(data)
+        self.model2 = BasicModel(data)
+        self.model3 = BasicModel(data)
 
+        # our widgets
+        self.table1 = QtWidgets.QTableView()
+        self.table2 = QtWidgets.QTableView()
+        divide = QtWidgets.QSplitter()
+        self.table3 = QtWidgets.QTableView()
+        # setup the data
+        self.table1.setModel(self.model1)
+        self.table2.setModel(self.model2)
+        self.table3.setModel(self.model3)
+
+        #layouts
+        # top body
+        self.top = QtWidgets.QHBoxLayout()
+        self.top.addStretch(1)
+        self.top.addWidget(self.table1)
+        self.top.addWidget(self.table2)
+
+        # main bodty
+        self.body = QtWidgets.QVBoxLayout()
+        self.body.addStretch(1)
+        self.body.addLayout(self.top, True)
+        self.body.addWidget(divide)
+        self.body.addWidget(self.table3)
+
+        self.setLayout(self.body)
 
         self.setWindowTitle("Triple View")
-        self.setCentralWidget(self.table)
-
-
-
 
 
 def main(argv):
