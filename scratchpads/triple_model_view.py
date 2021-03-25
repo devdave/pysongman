@@ -3,9 +3,10 @@
     Resources:
         https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractItemModel.html
         https://doc.qt.io/qtforpython/PySide6/QtCore/QAbstractTableModel.html
+        https://doc.qt.io/qtforpython/PySide6/QtWidgets/QMainWindow.html
 
     Goal:
-        Experiment with AbstractModel virtual functions
+        Experiment with composite view
 
 """
 
@@ -88,7 +89,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.body.addWidget(divide)
         self.body.addWidget(self.table3)
 
-        self.setLayout(self.body)
+
+        self.frame = QtWidgets.QFrame(self)
+        self.frame.setLayout(self.body)
+
+        self.setCentralWidget(self.frame)
+
+
 
         self.setWindowTitle("Triple View")
 
