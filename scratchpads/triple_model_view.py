@@ -43,13 +43,15 @@ class BasicModel(QtCore.QAbstractTableModel):
     def columnCount(self, index):
         return len(self._data[0])
 
+    # def flags(self, index):
+    #     return [Qt.ItemIsSelectable]
+
+
 
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
-
-
 
         # copy & pasted
         data = [
@@ -60,7 +62,7 @@ class MainWindow(QtWidgets.QMainWindow):
             [7, 8, 9],
         ]
 
-        # our Data
+        # our data
         self.model1 = BasicModel(data)
         self.model2 = BasicModel(data)
         self.model3 = BasicModel(data)
@@ -70,22 +72,29 @@ class MainWindow(QtWidgets.QMainWindow):
         self.table2 = QtWidgets.QTableView()
         divide = QtWidgets.QSplitter()
         self.table3 = QtWidgets.QTableView()
+
+        # get rid of the vertical headers
+        for table in [self.table1, self.table2, self.table3]:
+            table.verticalHeader().hide()
+            table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+
+
         # setup the data
         self.table1.setModel(self.model1)
         self.table2.setModel(self.model2)
         self.table3.setModel(self.model3)
 
-        #layouts
+        # layouts
         # top body
         self.top = QtWidgets.QHBoxLayout()
-        self.top.addStretch(1)
-        self.top.addWidget(self.table1)
-        self.top.addWidget(self.table2)
+        self.top.setAlignment(Qt.AlignLeft)
+        self.top.addWidget(self.table1, True, Qt.AlignLeft)
+        self.top.addWidget(self.table2, True, Qt.AlignLeft)
 
-        # main bodty
+        # main body
         self.body = QtWidgets.QVBoxLayout()
-        self.body.addStretch(1)
-        self.body.addLayout(self.top, True)
+        self.body.addLayout(self.top)
+        self.body.setAlignment(Qt.AlignLeft)  # Ever get a feeling I really want this to be alligned left?
         self.body.addWidget(divide)
         self.body.addWidget(self.table3)
 
