@@ -11,14 +11,14 @@ DB_FILENAME = "pysongman.sqlite3"
 
 PARENT_DIR_TABLE = """
 CREATE TABLE ParentDir (
-    id integer PRIMARY KEY,
-    path string
-) WITHOUT ROWID;
+    id integer PRIMARY KEY AUTOINCREMENT,
+    path string UNIQUE
+);
 """
 
 SONGS_TABLE = """
-CREATE TABLE Songs (
-    id integer PRIMARY KEY,
+CREATE TABLE Song (
+    id integer PRIMARY KEY AUTOINCREMENT,
     title string,
     track string,
     artist string,
@@ -27,9 +27,11 @@ CREATE TABLE Songs (
     duration integer,
 
     filename string,
+    rel_path string,
     parent_dir int,
-    FOREIGN KEY (parent_dir) REFERENCES ParentDir
-) WITHOUT ROWID;
+    FOREIGN KEY (parent_dir) REFERENCES ParentDir,
+    UNIQUE(rel_path, parent_dir)
+);
 """
 
 
