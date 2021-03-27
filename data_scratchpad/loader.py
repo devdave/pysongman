@@ -1,3 +1,6 @@
+"""
+    TODO - group by album/sub dir
+"""
 import sys
 import sqlite3
 import pathlib
