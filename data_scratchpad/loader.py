@@ -5,10 +5,113 @@ import sys
 import sqlite3
 import pathlib
 import argparse
+from collections import defaultdict
+
 
 from reader import read
 from walker import walker
 from db_creator import DB_FILENAME, create_schema
+
+
+class Artist:
+    CACHE = defaultdict(lambda: None)
+
+    @classmethod
+    def Create(cls, conn: sqlite3.Connection, artist: str, recursed=False):
+
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO Artist(name) VALUES(?)", [artist])
+        conn.commit()
+        cursor.close()
+
+        return cls.Fetch(conn, artist, True)
+
+
+
+    @classmethod
+    def Fetch(cls, conn: sqlite3.Connection, artist: str, recursed=False):
+
+        cursor = conn.cursor()
+        cursor.execute("SELECT id from Artist WHERE name=?", [artist])
+        try:
+            artist_id = cursor.fetchone()[0]
+        except TypeError:
+            artist_id = None
+
+        cursor.close()
+
+        if artist_id is not None:
+            cls.CACHE[artist] = artist_id
+            return artist_id
+        elif recursed is False:
+            cursor.close()
+            return cls.Create(conn, artist, True)
+
+        else:
+            raise RuntimeError(f"recursion! {artist=}")
+
+
+
+    @classmethod
+    def Get(cls, conn, artist):
+
+        cached_id = cls.CACHE[artist]
+        if cached_id is not None:
+            return cached_id
+        else:
+            return cls.Fetch(conn, artist)
+
+
+
+
+class Album:
+    # CACHE[ARTIST][ALBUM] -> album ID
+    CACHE = defaultdict(lambda: defaultdict(lambda : None))
+
+
+    @classmethod
+    def Create(cls, conn: sqlite3.Connection, artist_id, album, recursed=False):
+
+        if recursed is not False:
+            raise RuntimeError(f"Recursed into create record with {artist_id=} {album=}")
+
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO ArtistAlbum(artist_id, name) VALUES (?, ?)", [artist_id, album])
+        cursor.close()
+
+        return cls.Fetch(conn, artist_id, album, recursed=True)
+
+
+
+    @classmethod
+    def Fetch(cls, conn: sqlite3.Connection, artist_id, album, recursed=False):
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT id from ArtistAlbum WHERE artist_id=? AND name=?", [artist_id, album])
+
+        try:
+            album_id = cursor.fetchone()[0]
+        except TypeError:
+            album_id = None
+
+        cursor.close()
+
+        if album_id:
+            cls.CACHE[artist_id][album] = album_id
+            return album_id
+        elif recursed is False:
+            return cls.Create(conn, artist_id, album, recursed)
+        else:
+            raise RuntimeError(f"Attempted to fetch album.id but {recursed=} for {artist_id=} and {album=}")
+
+
+    @classmethod
+    def Get(cls, conn: sqlite3.Connection, artist_id: int, album: str):
+        cached_id = cls.CACHE[artist_id][album]
+        if cached_id is not None:
+            return cached_id
+        else:
+            return cls.Fetch(conn, artist_id, album)
 
 
 
