@@ -47,6 +47,16 @@ def analyze(database_path):
         print(f"MB {filesize/1024/1024}")
         print(f"GB {filesize/1024/1024/1024}")
 
+
+        cursor.execute("SELECT count() as 'count' FROM Artist")
+        artists = cursor.fetchone()
+        print(f"{artists['count']=}")
+
+        cursor.execute("SELECT count() as 'count' FROM ArtistAlbum")
+        albums = cursor.fetchone()
+        print(f"{albums['count']=}")
+
+
         # blah
 
 
