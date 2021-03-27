@@ -16,19 +16,36 @@ CREATE TABLE ParentDir (
 );
 """
 
+ALBUM_TABLE = """
+CREATE TABLE ArtistAlbum (
+    id integer PRIMARY KEY AUTOINCREMENT,
+    artist_id integer,
+    name string,
+    UNIQUE (artist_id, name)
+);
+"""
+
+ARTIST_TABLE = """
+CREATE TABLE Artist(
+    id integer PRIMARY KEY AUTOINCREMENT,
+    name string UNIQUE
+);
+"""
+
 SONGS_TABLE = """
 CREATE TABLE Song (
     id integer PRIMARY KEY AUTOINCREMENT,
     title string,
     track string,
-    artist string,
-    album string,
+    artist_id integer,
+    album_id integer,
     filesize integer,
     duration integer,
 
     filename string,
     rel_path string,
     parent_dir int,
+    FOREIGN KEY (album_id) REFERENCES ArtistAlbum,
     FOREIGN KEY (parent_dir) REFERENCES ParentDir,
     UNIQUE(rel_path, parent_dir)
 );
@@ -51,6 +68,8 @@ def create_schema(override_name=None):
     cursor = conn.cursor()
 
     print("Creating tables")
+    cursor.execute(ARTIST_TABLE)
+    cursor.execute(ALBUM_TABLE)
     cursor.execute(PARENT_DIR_TABLE)
     cursor.execute(SONGS_TABLE)
 
