@@ -183,7 +183,7 @@ def main(argv):
 
     args = parser.parse_args(argv)
 
-    loader(args.parent_dir, args.db_name)
+    loader(r"C:\Users\lived\Google Drive\music_new_era", args.db_name)
 
 
 if __name__ == "__main__":
