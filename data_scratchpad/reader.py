@@ -9,7 +9,7 @@ import dataclasses
 class Song(object):
     title:str
     track:str
-    artist:str
+    albumartist:str
     album:str
     filesize:int
     duration:int
@@ -40,7 +40,13 @@ class Song(object):
 def read(filepath:pathlib.Path):
     tags = tinytag.TinyTag.get(filepath) # type: tinytag.TinyTag
 
-    return Song(tags.title, tags.track, tags.artist, tags.album, tags.filesize, tags.duration, filepath.name, None)
+    # DONE - handle scenario where title is missing or none
+    title = filepath.name if tags.title is None or tags.title.strip() == "" else tags.title
+    # TODO - handle scenario where albumartist is missing or none
+        # fallback to artist
+            # fallback to filepath parent directory name
+
+    return Song(title, tags.track, tags.albumartist, tags.album, tags.filesize, tags.duration, filepath.name, None)
 
 
 
