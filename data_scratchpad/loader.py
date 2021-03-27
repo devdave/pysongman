@@ -150,13 +150,13 @@ def loader(parent_dir, override_db_name=False):
         if song.name.endswith((".mp3", ".ogg",)):
             print(f"Found {song.name=}")
             tags = read(song)
-            columns = "title,track,artist,album,filesize,duration,filename,rel_path,parent_dir"
+            columns = "title,track,artist_id,album_id,filesize,duration,filename,rel_path,parent_dir"
             rel_path = str(song).replace(str(parent), "")
             data = [
                 tags.title,
                 tags.track,
-                tags.artist,
-                tags.album,
+                Artist.Get(conn, tags.albumartist),
+                Album.Get(conn, Artist.Get(conn, tags.albumartist), tags.album),
                 tags.filesize,
                 tags.duration,
                 tags.filename,
