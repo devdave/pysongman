@@ -31,8 +31,9 @@ class Song(object):
 
     @property
     def duration_str(self):
-        remainder = (self.duration_minutes - int(self.duration_minutes))*60
-        return f"{self.duration_minutes}:{remainder:02d}"
+        round_minutes = int(self.duration_minutes)
+        remainder = int((self.duration_minutes - int(self.duration_minutes))*60)
+        return f"{round_minutes}:{remainder:02d}"
 
 
 
@@ -51,10 +52,20 @@ def main(song_path:str):
 
     assert song.artist is not None
 
+    print("Tags")
     for k,v in dataclasses.asdict(song).items():
         print(f"\t {k}={v!r}")
 
-    print(\t"Durations")
+    print()
+    print("Durations")
+    print(f"\t{song.duration}")
+    print(f"\t{song.duration_minutes=}")
+    print(f"\t{song.duration_str=}")
+    print()
+    print("File sizes")
+    print(f"\t{song.filesize=}")
+    print(f"\t{song.filesize_kb=}")
+    print(f"\t{song.filesize_mb=}")
 
 
 if __name__ == "__main__":
