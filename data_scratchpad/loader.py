@@ -11,7 +11,7 @@ from collections import defaultdict
 from reader import read
 from walker import walker
 from db_creator import DB_FILENAME, create_schema
-from db_repair_duration import RepairParentSong
+from db_repair_duration import RepairParentSong, fetch_ffprobe_duration
 
 
 class Artist:
@@ -158,6 +158,11 @@ def loader(parent_dir, override_db_name=False):
             tags = read(song)
             columns = "title,track,artist_id,album_id,filesize,duration,filename,rel_path,parent_dir"
             rel_path = str(song).replace(str(parent), "")
+
+
+
+
+
             data = [
                 tags.title,
                 tags.track,
@@ -191,7 +196,7 @@ def main(argv):
 
     args = parser.parse_args(argv)
 
-    loader(r"C:\Users\lived\Google Drive\music_new_era", args.db_name)
+    loader(args.parent_dir, args.db_name)
 
 
 if __name__ == "__main__":
