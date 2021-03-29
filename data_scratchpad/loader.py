@@ -153,7 +153,7 @@ def loader(parent_dir, override_db_name=False):
 
     for index, song in enumerate(walker(parent)):
         if song.name.endswith((".mp3", ".ogg",)):
-            print(f"Found {song.name=}")
+            # print(f"Found {index}: {song.name=}")
             tags = read(song)
             columns = "title,track,artist_id,album_id,filesize,duration,filename,rel_path,parent_dir"
             rel_path = str(song).replace(str(parent), "")
@@ -173,6 +173,8 @@ def loader(parent_dir, override_db_name=False):
                 cursor.execute(f"INSERT INTO Song({columns}) VALUES(?,?,?,?,?,?,?,?,?)", data )
             except sqlite3.IntegrityError:
                 print(f"Sus duplicate: {song=}, {tags.title=}, {parent_id=}")
+        else:
+            print(f"WARNING - {song.name}")
 
     conn.commit()
     conn.close()
