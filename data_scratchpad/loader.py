@@ -32,7 +32,12 @@ class Artist:
     def Fetch(cls, conn: sqlite3.Connection, artist: str, recursed=False):
 
         cursor = conn.cursor()
-        cursor.execute("SELECT id from Artist WHERE name=?", [artist])
+        try:
+            cursor.execute("SELECT id from Artist WHERE name=?", [artist])
+        except sqlite3.InterfaceError:
+            print(f"Issue fetching artist {artist=}")
+            raise
+
         try:
             artist_id = cursor.fetchone()[0]
         except TypeError:
