@@ -11,6 +11,7 @@ from collections import defaultdict
 from reader import read
 from walker import walker
 from db_creator import DB_FILENAME, create_schema
+from db_repair_duration import RepairParentSong
 
 
 class Artist:
