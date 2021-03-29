@@ -8,6 +8,8 @@ import dataclasses
 import tinytag
 import mutagen
 
+from db_repair_duration import fetch_ffprobe_duration
+
 
 @dataclasses.dataclass
 class Song(object):
@@ -111,10 +113,9 @@ def read(filepath:pathlib.Path):
         # TODO - For 16 Volt - Skin the length is a negative number
         duration = media_info.info.length
 
-        if duration <= 1:
-            # For some reason samplerate isn't being found for some ogg files.
-            print(f"DURATION ISSUE - {filepath=}")
-            duration = 0
+
+
+
 
 
         song = Song(title,
@@ -126,6 +127,13 @@ def read(filepath:pathlib.Path):
                     filepath.name,
                     None)
 
+    if song.duration <= 1:
+        # For some reason samplerate isn't being found for some ogg files.
+        print(f"DURATION ISSUE - {filepath=}")
+        song.duration = fetch_ffprobe_duration(filepath)
+
+    if isinstance(song.track, str) and "/" in song.track:
+        song.track, _ = song.track.split("/", 1)
 
     return song
 
