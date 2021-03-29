@@ -12,7 +12,7 @@ def walker(root_dir:str) -> None:
     Returns: None
 
     """
-    print(f"Processing {root_dir=}")
+    # print(f"Processing {root_dir=}")
     path = pathlib.Path(root_dir)
     if path.exists() is False or path.is_dir() is False:
         raise RuntimeError(f"{path} is not a valid directory")
