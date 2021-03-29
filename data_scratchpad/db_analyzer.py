@@ -63,8 +63,6 @@ def analyze(database_path):
         print(f"Damaged files: {damaged_files['count']}")
 
 
-        # blah
-
 
 
 
