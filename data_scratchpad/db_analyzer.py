@@ -38,6 +38,7 @@ def analyze(database_path):
         print(f"{duration=}")
         print(f"minutes: {duration/60}")
         print(f"hours: {duration / 60 / 60}")
+        print(f"Days: {duration / 60 / 60 / 24}")
 
         cursor.execute("SELECT sum(filesize) as 'filesize' FROM Song WHERE parent_dir=?", (parent_id,))
         filesize = cursor.fetchone()['filesize']
@@ -55,6 +56,11 @@ def analyze(database_path):
         cursor.execute("SELECT count() as 'count' FROM ArtistAlbum")
         albums = cursor.fetchone()
         print(f"{albums['count']=}")
+
+
+        cursor.execute("SELECT count() as 'count' from Song WHERE duration < 1")
+        damaged_files = cursor.fetchone()
+        print(f"Damaged files: {damaged_files['count']}")
 
 
         # blah
