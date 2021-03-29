@@ -11,6 +11,7 @@
 """
 
 import sys
+import PySide2
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtCore import Qt
 
@@ -47,6 +48,34 @@ class BasicModel(QtCore.QAbstractTableModel):
     #     return [Qt.ItemIsSelectable]
 
 
+class DynamicModel(QtCore.QAbstractTableModel):
+
+    def __init__(self, headers, initial_data):
+        super(DynamicModel, self).__init__()
+        self._headers = headers
+        self._data = initial_data
+
+
+    def headerData(self, section:int, orientation:PySide2.QtCore.Qt.Orientation, role:int=...):
+
+        if role == Qt.DisplayRole:
+            return self._headers[section]
+
+
+    def data(self, index, role):
+        if role == Qt.DisplayRole:
+            return self._data[index.row()][index.column()]
+
+        else:
+            pass
+
+    def rowCount(self, index):
+        return len(self._data)
+
+    def columnCount(self, parent:PySide2.QtCore.QModelIndex=...) -> int:
+        return len(self._data[0])
+
+
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -63,7 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
         ]
 
         # our data
-        self.model1 = BasicModel(data)
+        self.model1 = DynamicModel(["C1", "C two", "C 3"], data)
         self.model2 = BasicModel(data)
         self.model3 = BasicModel(data)
 
