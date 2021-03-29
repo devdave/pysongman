@@ -1,9 +1,13 @@
 import math
 import argparse
 import sys
-import tinytag
+
 import pathlib
 import dataclasses
+
+import tinytag
+import mutagen
+
 
 @dataclasses.dataclass
 class Song(object):
@@ -38,15 +42,92 @@ class Song(object):
 
 
 def read(filepath:pathlib.Path):
-    tags = tinytag.TinyTag.get(filepath) # type: tinytag.TinyTag
 
-    # DONE - handle scenario where title is missing or none
-    title = filepath.name if tags.title is None or tags.title.strip() == "" else tags.title
-    # TODO - handle scenario where albumartist is missing or none
-        # fallback to artist
-            # fallback to filepath parent directory name
+    try:
+        tags = tinytag.TinyTag.get(filepath) # type: tinytag.TinyTag
+        title = filepath.name if tags.title is None or tags.title.strip() == "" else tags.title
 
-    return Song(title, tags.track, tags.albumartist, tags.album, tags.filesize, tags.duration, filepath.name, None)
+        if tags.album is None:
+            album = filepath.parts[-2]
+        else:
+            album = tags.album
+
+        if tags.albumartist is None:
+            if tags.artist is not None:
+                artist = tags.artist
+
+            else:
+                if "-" in filepath.name:
+                    left, right = filepath.name.split("-", 1)
+                    artist = left.strip()
+                else:
+                    artist = filepath.parts[-2]
+                    artist += "-FIXME"
+        else:
+            artist = tags.albumartist
+
+        if tags.duration <= 0:
+            tags.duration = 0
+
+        song = Song(title, tags.track, artist, album, tags.filesize, tags.duration, filepath.name, None)
+
+    except TypeError:
+        # TODO - Evaluate if mutagen should ALWAYS be used over tinytag
+        media_info = mutagen.File(filepath)
+        title = filepath.name if media_info.tags['title'] is None or media_info.tags['title'][0].strip() == "" else media_info.tags['title'][0]
+        if 'albumartist' in media_info.tags:
+            artist = media_info.tags['albumartist'][0]
+        elif 'artist' in media_info.tags:
+            artist = media_info.tags['artist'][0]
+        else:
+            if "-" in filepath.name:
+                left,right = filepath.name.split("-", 1)
+                artist = left.strip()
+            else:
+                artist = "UNKNOWN - FIXME!"
+
+        if 'album' in media_info.tags:
+            album = media_info.tags['album'][0]
+        else:
+            # /path/to/file.ext
+            # -2 skips over the file.ext and "should" grab "to"
+            album = filepath.parts[-2]
+
+        if 'track' in media_info.tags:
+            track = media_info.tags['track'][0]
+        elif 'tracknumber' in media_info:
+            track = media_info.tags['tracknumber'][0]
+        elif "_" in filepath.name:
+            left,right = filepath.name.split("_", 1)
+            try:
+                track = int(left.strip)
+            except TypeError:
+                track = 0
+
+        else:
+            track = 0
+
+
+        # TODO - For 16 Volt - Skin the length is a negative number
+        duration = media_info.info.length
+
+        if duration <= 1:
+            # For some reason samplerate isn't being found for some ogg files.
+            print(f"DURATION ISSUE - {filepath=}")
+            duration = 0
+
+
+        song = Song(title,
+                    track,
+                    artist,
+                    album,
+                    filepath.stat().st_size,
+                    duration,
+                    filepath.name,
+                    None)
+
+
+    return song
 
 
 
@@ -56,7 +137,9 @@ def main(song_path:str):
     path = pathlib.Path(song_path)
     song = read(path)
 
-    assert song.artist is not None
+    if song.artist is None:
+        assert song.artist is not None
+
 
     print("Tags")
     for k,v in dataclasses.asdict(song).items():
