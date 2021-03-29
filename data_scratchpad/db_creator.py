@@ -11,16 +11,16 @@ DB_FILENAME = "pysongman.sqlite3"
 
 PARENT_DIR_TABLE = """
 CREATE TABLE ParentDir (
-    id integer PRIMARY KEY AUTOINCREMENT,
-    path string UNIQUE
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    path TEXT UNIQUE
 );
 """
 
 ALBUM_TABLE = """
 CREATE TABLE ArtistAlbum (
     id integer PRIMARY KEY AUTOINCREMENT,
-    artist_id integer,
-    name string,
+    artist_id INTEGER,
+    name TEXT,
     UNIQUE (artist_id, name)
 );
 """
@@ -28,23 +28,23 @@ CREATE TABLE ArtistAlbum (
 ARTIST_TABLE = """
 CREATE TABLE Artist(
     id integer PRIMARY KEY AUTOINCREMENT,
-    name string UNIQUE
+    name TEXT UNIQUE
 );
 """
 
 SONGS_TABLE = """
 CREATE TABLE Song (
     id integer PRIMARY KEY AUTOINCREMENT,
-    title string,
-    track string,
-    artist_id integer,
-    album_id integer,
-    filesize integer,
-    duration integer,
+    title TEXT,
+    track TEXT,
+    artist_id INTEGER,
+    album_id INTEGER,
+    filesize INTEGER,
+    duration REAL,
 
-    filename string,
-    rel_path string,
-    parent_dir int,
+    filename TEXT,
+    rel_path TEXT,
+    parent_dir INTEGER,
     FOREIGN KEY (album_id) REFERENCES ArtistAlbum,
     FOREIGN KEY (parent_dir) REFERENCES ParentDir,
     UNIQUE(rel_path, parent_dir)
