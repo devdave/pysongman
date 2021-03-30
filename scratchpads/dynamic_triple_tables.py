@@ -11,6 +11,8 @@
 """
 
 import sys
+import sqlite3
+
 import PySide2
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtCore import Qt
@@ -50,11 +52,11 @@ class BasicModel(QtCore.QAbstractTableModel):
 
 class DynamicModel(QtCore.QAbstractTableModel):
 
-    def __init__(self, headers, initial_data):
+    def __init__(self, header_map, initial_data):
         super(DynamicModel, self).__init__()
-        self._headers = headers
+        self._header_map = header_map
+        self._headers = list(header_map.keys())
         self._data = initial_data
-
 
     def headerData(self, section:int, orientation:PySide2.QtCore.Qt.Orientation, role:int=...):
 
@@ -64,8 +66,7 @@ class DynamicModel(QtCore.QAbstractTableModel):
 
     def data(self, index, role):
         if role == Qt.DisplayRole:
-            return self._data[index.row()][index.column()]
-
+            return list(self._header_map.items())[index.column()]
         else:
             pass
 
@@ -82,6 +83,39 @@ class DynamicModel(QtCore.QAbstractTableModel):
 
 class TripleApp(PySide2.QtCore.QObject):
 
+    def __init__(self, parent, default_db = "pysongman.sqlite3"):
+        super().__init__(parent)
+
+        self.conn = sqlite3.connect(default_db)
+        self.conn.row_factory = sqlite3.Row
+
+
+    def build_artist_model(self):
+        data = []
+        header_map = {
+                         "artist": "Artists",
+                         "Album Counts": "album_count",
+                         "Track count": "track_counts"
+        }
+
+        cursor = self.conn.cursor()
+
+        cursor.execute("SELECT * FROM Artist")
+        artists = cursor.fetchall()
+
+        for artist in artists:
+            cursor.execute("SELECT count() as 'count' FROM ArtistAlbum where artist_id = ?", [artist['id']])
+            album_count = cursor.fetchone()['count']
+
+            cursor.execute("SELECT count() as 'count' FROM Song WHERE artist_id = ?", [artist['id']])
+            song_count = cursor.fetchone()['count']
+
+            data.append({"name": artist['name'], "album_count": album_count, "track_count": song_count})
+
+        return DynamicModel(header_map, data)
+
+
+
 
     def artist_row_clicked(self, index: PySide2.QtCore.QModelIndex):
         print(index.row(), index.column(), index.model().fetch_row(index.row()) )
@@ -91,7 +125,7 @@ class TripleApp(PySide2.QtCore.QObject):
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self):
+    def __init__(self, controller: TripleApp):
         super().__init__()
 
         # copy & pasted
@@ -104,7 +138,7 @@ class MainWindow(QtWidgets.QMainWindow):
         ]
 
         # our data
-        self.model1 = DynamicModel(["C1", "C two", "C 3"], data)
+        self.model1 = controller.build_artist_model()
         self.model2 = BasicModel(data)
         self.model3 = BasicModel(data)
 
@@ -157,8 +191,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 def main(argv):
     app = QtWidgets.QApplication(argv)
-    window = MainWindow()
     table_controller = TripleApp(app)
+    window = MainWindow(table_controller)
+
 
     window.bindApp(table_controller)
 
