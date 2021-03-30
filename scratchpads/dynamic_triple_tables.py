@@ -119,6 +119,10 @@ class TripleApp(PySide2.QtCore.QObject):
         self.conn = sqlite3.connect(default_db)
         self.conn.row_factory = sqlite3.Row
 
+        self.artist_model = None
+        self.album_model = None
+        self.song_model = None
+
 
     def build_artist_model(self):
         data = []
