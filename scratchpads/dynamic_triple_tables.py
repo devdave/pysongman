@@ -86,6 +86,21 @@ class DynamicModel(QtCore.QAbstractTableModel):
     def columnCount(self, parent:PySide2.QtCore.QModelIndex=...) -> int:
         return len(self._header_map)
 
+    def sort(self, column:int, order:PySide2.QtCore.Qt.SortOrder=...) -> None:
+
+        if column == -1:
+            return
+
+        # I know I am ding this wrong as this is really tedious
+        self.emit(PySide2.QtCore.SIGNAL("layoutAboutToBeChanged()") )
+        column_name = list(self._header_map.values())[column]
+
+        if order == PySide2.QtCore.Qt.SortOrder.DescendingOrder:
+            self._data = sorted(self._data, key=lambda row: row[column_name])
+        else:
+            self._data.sort(key=lambda row: row[column_name], reverse=True)
+
+        self.emit(PySide2.QtCore.SIGNAL("layoutChanged()"))
 
 
 class TripleApp(PySide2.QtCore.QObject):
