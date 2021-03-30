@@ -68,8 +68,10 @@ class DynamicModel(QtCore.QAbstractTableModel):
 
 
     def data(self, index, role):
-        if role == Qt.DisplayRole:
-            return list(self._header_map.items())[index.column()]
+        if role in [Qt.DisplayRole, Qt.ToolTipRole]:
+            row = self._data[index.row()]
+            column_name = list(self._header_map.values())[index.column()]
+            return row[column_name]
         else:
             pass
 
