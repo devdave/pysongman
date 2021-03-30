@@ -84,7 +84,7 @@ class DynamicModel(QtCore.QAbstractTableModel):
         return len(self._data)
 
     def columnCount(self, parent:PySide2.QtCore.QModelIndex=...) -> int:
-        return len(self._data[0])
+        return len(self._header_map)
 
 
 
