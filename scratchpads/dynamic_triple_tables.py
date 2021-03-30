@@ -61,7 +61,10 @@ class DynamicModel(QtCore.QAbstractTableModel):
     def headerData(self, section:int, orientation:PySide2.QtCore.Qt.Orientation, role:int=...):
 
         if role == Qt.DisplayRole:
-            return self._headers[section]
+            try:
+                return self._headers[section]
+            except IndexError:
+                print(f"hD - index{section=}")
 
 
     def data(self, index, role):
