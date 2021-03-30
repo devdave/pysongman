@@ -75,6 +75,8 @@ class DynamicModel(QtCore.QAbstractTableModel):
         else:
             pass
 
+        return
+
     def fetch_row(self, row):
         return self._data[row]
 
