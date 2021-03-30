@@ -102,6 +102,14 @@ class DynamicModel(QtCore.QAbstractTableModel):
 
         self.emit(PySide2.QtCore.SIGNAL("layoutChanged()"))
 
+    def updateData(self, data):
+
+        self.layoutAboutToBeChanged.emit()
+        # self.emit(PySide2.QtCore.SIGNAL("layoutAboutToBeChanged()"))
+        self._data = data
+        self.layoutChanged.emit()
+        # self.emit(PySide2.QtCore.SIGNAL("layoutChanged()"))
+
 
 class TripleApp(PySide2.QtCore.QObject):
 
