@@ -118,8 +118,24 @@ class TripleApp(PySide2.QtCore.QObject):
 
 
     def artist_row_clicked(self, index: PySide2.QtCore.QModelIndex):
-        print(index.row(), index.column(), index.model().fetch_row(index.row()) )
+        data = []
+        record = index.model().fetch_row(index.row())
+        cursor = self.conn.cursor()
 
+        cursor.execute("SELECT * FROM ArtistAlbum where artist_id = ?", [record['id']])
+        albums = cursor.fetchall()
+
+        for album in albums:
+            cursor.execute("SELECT count() as 'count' FROM Song WHERE album_id=?",[album['id']])
+            count = cursor.fetchone()['count']
+            data.append({'id': album['id'], 'name': album['name'], 'count': count})
+
+        self.album_model.updateData(data)
+        #fuck me I need to access the TableView from here to deselect the rows.
+
+
+    def album_row_clicked(self, index: PySide2.QtCore.QModelIndex):
+        data = []
 
 
 
