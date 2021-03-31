@@ -93,9 +93,9 @@ class TripleApp(PySide2.QtCore.QObject):
     def build_artist_model(self):
         data = []
         header_map = {
-                         "artist": "Artists",
+                         "artist": "name",
                          "Album Counts": "album_count",
-                         "Track count": "track_counts"
+                         "Track count": "track_count"
         }
 
         cursor = self.conn.cursor()
@@ -110,9 +110,81 @@ class TripleApp(PySide2.QtCore.QObject):
             cursor.execute("SELECT count() as 'count' FROM Song WHERE artist_id = ?", [artist['id']])
             song_count = cursor.fetchone()['count']
 
-            data.append({"name": artist['name'], "album_count": album_count, "track_count": song_count})
+            data.append(
+                {
+                    "id": artist['id'],
+                    "name": artist['name'],
+                    "album_count": album_count,
+                    "track_count": song_count
+                })
 
-        return DynamicModel(header_map, data)
+        model = DynamicModel(header_map, data)
+        self.artist_model = model
+        return model
+
+
+    def build_album_model(self):
+        data = []
+        header_map = {
+                "Album name":"name",
+                "Track count": "count"
+        }
+
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM ArtistAlbum")
+        albums = cursor.fetchall()
+        for album in albums:
+            cursor.execute("SELECT count() as 'count' FROM Song WHERE album_id=?", [album['id']])
+            count = cursor.fetchone()['count']
+            row = {"id": album['id'], 'name': album['name'], 'count': count}
+            data.append(row)
+
+        cursor.close()
+        model = DynamicModel(header_map, data)
+        self.album_model = model
+        return self.album_model
+
+    def build_songs_model(self):
+        data = []
+        header_map = {
+            'Artist': 'artist_name',
+            "Title": "title",
+            "Album": "album",
+            "Track": "track",
+            "Length": 'duration',
+        }
+
+        cursor = self.conn.cursor()
+        cursor.execute("""
+                SELECT 
+                    song.id as id, 
+                    song.title as title, 
+                    song.track as track, 
+                    song.duration as duration, 
+                    ArtistAlbum.name as album_name,
+                    Artist.name as artist_name
+                FROM
+                    Song
+                LEFT JOIN
+                    Artist, ArtistAlbum
+                WHERE
+                    Song.artist_id = Artist.id AND Song.album_id = ArtistAlbum.id
+            """)
+
+        rows = cursor.fetchall()
+
+        for row in rows:
+            data.append(dict(
+                id=row['id'],
+                artist_name=row['artist_name'],
+                title=row['title'],
+                album=row['album_name'],
+                track=row['track'],
+                duration=row['duration'],
+            ))
+
+        self.song_model = DynamicModel(header_map, data)
+        return self.song_model
 
 
 
@@ -187,12 +259,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setCentralWidget(self.frame)
 
-        self.setWindowTitle("Triple View")
+        self.setWindowTitle("Media Library")
 
     def bindApp(self, app):
 
-
         self.artist_table.clicked.connect(app.artist_row_clicked)
+        self.album_table.clicked.connect(app.album_row_clicked)
         pass
 
 
