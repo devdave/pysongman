@@ -89,6 +89,18 @@ class TripleApp(PySide2.QtCore.QObject):
         self.album_model = None
         self.song_model = None
 
+    def _fetch_artists(self):
+
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM Artist")
+        artists = cursor.fetchall()
+
+        for artist in artists:
+            yield artist
+
+        cursor.close()
+
+
 
     def build_artist_model(self):
         data = []
@@ -100,10 +112,8 @@ class TripleApp(PySide2.QtCore.QObject):
 
         cursor = self.conn.cursor()
 
-        cursor.execute("SELECT * FROM Artist")
-        artists = cursor.fetchall()
 
-        for artist in artists:
+        for artist in self._fetch_artists():
             cursor.execute("SELECT count() as 'count' FROM ArtistAlbum where artist_id = ?", [artist['id']])
             album_count = cursor.fetchone()['count']
 
