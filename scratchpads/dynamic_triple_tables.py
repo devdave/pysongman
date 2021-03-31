@@ -128,50 +128,42 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, controller: TripleApp):
         super().__init__()
 
-        # copy & pasted
-        data = [
-            [4, 9, 2],
-            [1, 0, 0],
-            [3, 5, 0],
-            [3, 3, 2],
-            [7, 8, 9],
-        ]
-
         # our data
-        self.model1 = controller.build_artist_model()
-        self.model2 = BasicModel(data)
-        self.model3 = BasicModel(data)
+        self.artist_model = controller.build_artist_model()
+        self.album_model = controller.build_album_model()
+        self.song_model = controller.build_songs_model()
 
         # our widgets
         self.artist_table = QtWidgets.QTableView()
-        self.table2 = QtWidgets.QTableView()
+        self.album_table = QtWidgets.QTableView()
         divide = QtWidgets.QSplitter()
-        self.table3 = QtWidgets.QTableView()
+        self.songs_table = QtWidgets.QTableView()
 
         # get rid of the vertical headers
-        for table in [self.artist_table, self.table2, self.table3]:
+        for table in [self.artist_table, self.album_table, self.songs_table]:
             table.verticalHeader().hide()
             table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-
+            table.setSortingEnabled(True)
+            table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
         # setup the data
-        self.artist_table.setModel(self.model1)
-        self.table2.setModel(self.model2)
-        self.table3.setModel(self.model3)
+        self.artist_table.setModel(self.artist_model)
+        self.album_table.setModel(self.album_model)
+        self.songs_table.setModel(self.song_model)
 
         # layouts
         # top body
         self.top = QtWidgets.QHBoxLayout()
         self.top.setAlignment(Qt.AlignLeft)
-        self.top.addWidget(self.artist_table, True, Qt.AlignLeft)
-        self.top.addWidget(self.table2, True, Qt.AlignLeft)
+        self.top.addWidget(self.artist_table, 1, Qt.AlignLeft)
+        self.top.addWidget(self.album_table, 1, Qt.AlignLeft)
 
         # main body
         self.body = QtWidgets.QVBoxLayout()
         self.body.addLayout(self.top)
         self.body.setAlignment(Qt.AlignLeft)  # Ever get a feeling I really want this to be alligned left?
         self.body.addWidget(divide)
-        self.body.addWidget(self.table3)
+        self.body.addWidget(self.songs_table)
 
 
         self.frame = QtWidgets.QFrame(self)
