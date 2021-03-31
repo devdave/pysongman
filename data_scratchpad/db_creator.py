@@ -21,7 +21,7 @@ CREATE TABLE ArtistAlbum (
     id integer PRIMARY KEY AUTOINCREMENT,
     artist_id INTEGER,
     name TEXT,
-    UNIQUE (artist_id, name)
+    CONSTRAINT ux_artist_name UNIQUE (artist_id, name)
 );
 """
 
