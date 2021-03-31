@@ -58,24 +58,23 @@ class DynamicModel(QtCore.QAbstractTableModel):
         if column == -1:
             return
 
-        # I know I am ding this wrong as this is really tedious
-        self.emit(PySide2.QtCore.SIGNAL("layoutAboutToBeChanged()") )
+
+        # self.emit(PySide2.QtCore.SIGNAL("layoutAboutToBeChanged()") )
+        self.layoutAboutToBeChanged.emit()
         column_name = list(self._header_map.values())[column]
 
         if order == PySide2.QtCore.Qt.SortOrder.DescendingOrder:
             self._data = sorted(self._data, key=lambda row: row[column_name])
         else:
             self._data.sort(key=lambda row: row[column_name], reverse=True)
-
-        self.emit(PySide2.QtCore.SIGNAL("layoutChanged()"))
+        self.layoutChanged.emit()
+        # self.emit(PySide2.QtCore.SIGNAL("layoutChanged()"))
 
     def updateData(self, data):
 
         self.layoutAboutToBeChanged.emit()
-        # self.emit(PySide2.QtCore.SIGNAL("layoutAboutToBeChanged()"))
         self._data = data
         self.layoutChanged.emit()
-        # self.emit(PySide2.QtCore.SIGNAL("layoutChanged()"))
 
 
 class TripleApp(PySide2.QtCore.QObject):
