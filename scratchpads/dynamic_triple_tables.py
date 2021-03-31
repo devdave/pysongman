@@ -17,39 +17,6 @@ import PySide2
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtCore import Qt
 
-
-class BasicModel(QtCore.QAbstractTableModel):
-
-    def __init__(self, data):
-        super(BasicModel, self).__init__()  # TODO research why the author used super this way
-        self._data = data
-
-
-    def headerData(self, section, orientation, role):
-
-        if role == Qt.DisplayRole:
-            return f"Test {section}"
-
-    def data(self, index, role):
-        if role == Qt.DisplayRole:
-            return self._data[index.row()][index.column()]
-
-        elif role == Qt.ToolTipRole:
-            return f"This is a tool tip for [{index.row()}][{index.column()}]"
-
-        else:
-            pass
-
-    def rowCount(self, index):
-        return len(self._data)
-
-    def columnCount(self, index):
-        return len(self._data[0])
-
-    # def flags(self, index):
-    #     return [Qt.ItemIsSelectable]
-
-
 class DynamicModel(QtCore.QAbstractTableModel):
 
     def __init__(self, header_map, initial_data):
