@@ -61,7 +61,6 @@ class DynamicModel(QtCore.QAbstractTableModel):
         if column == -1:
             return
 
-
         # self.emit(PySide2.QtCore.SIGNAL("layoutAboutToBeChanged()") )
         self.layoutAboutToBeChanged.emit()
         column_name = list(self._header_map.values())[column]
@@ -79,139 +78,10 @@ class DynamicModel(QtCore.QAbstractTableModel):
         self._data = data
         self.layoutChanged.emit()
 
+class MediaLibraryWindow(QtWidgets.QMainWindow):
 
-class TripleApp(PySide2.QtCore.QObject):
-
-    def __init__(self, parent):
-        super().__init__(parent)
-
-        self.artist_model = None
-        self.album_model = None
-        self.song_model = None
-
-
-    def build_artist_model(self):
-        data = []
-        header_map = {
-                         "artist": "name",
-                         "Album Counts": "album_count",
-                         "Track count": "track_count"
-        }
-
-        for artist in Artist.query.all():
-            album_count = len(artist.albums)
-            song_count = len(artist.songs)
-
-            data.append(
-                {
-                    "id": artist.id,
-                    "name": artist.name,
-                    "album_count": album_count,
-                    "track_count": song_count
-                })
-
-        model = DynamicModel(header_map, data)
-        self.artist_model = model
-        return model
-
-
-    def build_album_model(self):
-        data = []
-        header_map = {
-                "Album name":"name",
-                "Track count": "count"
-        }
-
-
-        for album in ArtistAlbum.query.all():
-            count = len(album.songs)
-            row = {"id": album.id, 'name': album.name, 'count': count}
-            data.append(row)
-
-        model = DynamicModel(header_map, data)
-        self.album_model = model
-        return self.album_model
-
-    def build_songs_model(self):
-        data = []
-        header_map = {
-            'Artist': 'artist_name',
-            "Title": "title",
-            "Album": "album",
-            "Track": "track",
-            "Length": 'duration',
-        }
-
-
-        for song in Song.query.all(): # type: Song
-            data.append(dict(
-                id=song.id,
-                artist_name=song.artist.name,
-                title=song.title,
-                album=song.album.name,
-                track=song.track,
-                duration=song.duration_str
-            ))
-
-        self.song_model = DynamicModel(header_map, data)
-        return self.song_model
-
-
-
-
-    def artist_row_clicked(self, index: PySide2.QtCore.QModelIndex):
-        data = []
-        songs = []
-        record = index.model().fetch_row(index.row())
-
-        artist = Artist.query.filter(Artist.id == record['id']).first()
-
-        for album in artist.albums:
-            count = len(album.songs)
-            for song in album.songs:
-                songs.append(dict(
-                    id=song.id,
-                    artist_name=song.artist.name,
-                    title=song.title,
-                    album=album.name,
-                    track=song.track,
-                    duration=song.duration_str
-                ))
-            data.append({'id': album.id, 'name': album.name, 'count': count})
-
-        self.album_model.updateData(data)
-        self.song_model.updateData(songs)
-
-
-    def album_row_clicked(self, index: PySide2.QtCore.QModelIndex):
-        data = []
-        record = index.model().fetch_row(index.row())
-        album_id = record['id']
-
-        for song in ArtistAlbum.query.filter(ArtistAlbum.id == album_id).first().songs:
-            data.append(dict(
-                id=song.id,
-                artist_name=song.artist.name,
-                title=song.title,
-                album=song.album.name,
-                track=song.track,
-                duration=song.duration_minutes
-            ))
-
-        self.song_model.updateData(data)
-
-
-
-
-class MainWindow(QtWidgets.QMainWindow):
-
-    def __init__(self, controller: TripleApp):
+    def __init__(self):
         super().__init__()
-
-        # our data
-        self.artist_model = controller.build_artist_model()
-        self.album_model = controller.build_album_model()
-        self.song_model = controller.build_songs_model()
 
         # our widgets
         self.artist_table = QtWidgets.QTableView()
@@ -227,9 +97,9 @@ class MainWindow(QtWidgets.QMainWindow):
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
         # setup the data
-        self.artist_table.setModel(self.artist_model)
-        self.album_table.setModel(self.album_model)
-        self.songs_table.setModel(self.song_model)
+        # self.artist_table.setModel(self.artist_model)
+        # self.album_table.setModel(self.album_model)
+        # self.songs_table.setModel(self.song_model)
 
         # layouts
         # top body
@@ -253,10 +123,129 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setWindowTitle("Media Library")
 
+
     def bindApp(self, app):
 
         self.artist_table.clicked.connect(app.artist_row_clicked)
         self.album_table.clicked.connect(app.album_row_clicked)
+
+
+class TripleApp(PySide2.QtCore.QObject):
+
+    def __init__(self, view: MediaLibraryWindow):
+        super().__init__()
+
+        self._view = view
+
+        self.artist_model = self.build_artist_model()
+        self.album_model = self.build_album_model()
+        self.song_model = self.build_songs_model()
+
+        self._view.artist_table.setModel(self.artist_model)
+        self._view.album_table.setModel(self.album_model)
+        self._view.songs_table.setModel(self.song_model)
+
+        self._view.artist_table.clicked.connect(self.artist_row_clicked)
+        self._view.album_table.clicked.connect(self.album_row_clicked)
+
+
+
+    def build_artist_model(self):
+        data = []
+        header_map = {
+                         "artist": "name",
+                         "Album Counts": "album_count",
+                         "Track count": "track_count"
+        }
+
+        for artist in Artist.query.all():
+            album_count = len(artist.albums)
+            song_count = len(artist.songs)
+
+            data.append(
+                {
+                    "id": artist.id,
+                    "name": artist.name,
+                    "album_count": album_count,
+                    "track_count": song_count
+                })
+
+        return DynamicModel(header_map, data)
+
+    def build_album_model(self):
+        data = []
+        header_map = {
+                "Album name":"name",
+                "Track count": "count"
+        }
+
+
+        for album in ArtistAlbum.query.all():
+            count = len(album.songs)
+            row = {"id": album.id, 'name': album.name, 'count': count}
+            data.append(row)
+
+        return DynamicModel(header_map, data)
+
+    def build_songs_model(self):
+        data = []
+        header_map = {
+            'Artist': 'artist_name',
+            "Title": "title",
+            "Album": "album",
+            "Track": "track",
+            "Length": 'duration',
+        }
+
+
+        for song in Song.query.all(): # type: Song
+            data.append(self._generate_song_row(song))
+
+        return DynamicModel(header_map, data)
+
+
+    def _generate_song_row(self, song:Song):
+        return dict(
+            id=song.id,
+            artist_name=song.title,
+            title=song.title,
+            album=song.album.name,
+            track=song.track,
+            duration = song.duration_str
+        )
+
+
+    def artist_row_clicked(self, index: PySide2.QtCore.QModelIndex):
+        data = []
+        songs = []
+        record = index.model().fetch_row(index.row())
+
+        artist = Artist.query.filter(Artist.id == record['id']).first()
+
+        for album in artist.albums:
+            count = len(album.songs)
+            for song in album.songs:
+                songs.append(self._generate_song_row(song))
+            data.append({'id': album.id, 'name': album.name, 'count': count})
+
+        self.album_model.updateData(data)
+        self.song_model.updateData(songs)
+
+
+    def album_row_clicked(self, index: PySide2.QtCore.QModelIndex):
+        data = []
+        record = index.model().fetch_row(index.row())
+        album_id = record['id']
+
+        for song in ArtistAlbum.query.filter(ArtistAlbum.id == album_id).first().songs:
+            data.append(self._generate_song_row(song))
+
+        self.song_model.updateData(data)
+
+
+
+
+
 
 
 
@@ -275,11 +264,11 @@ def main(argv):
 
 
     app = QtWidgets.QApplication(argv)
-    table_controller = TripleApp(app)
-    # FUCK, the presentation layer shouldn't need to know about the controller
-    # Models -> Controller -> UI
-    # not this rude-goldberg nightmare
-    window = MainWindow(table_controller)
+
+    window = MediaLibraryWindow()
+    table_controller = TripleApp(window)
+
+
 
 
     window.bindApp(table_controller)
