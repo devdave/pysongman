@@ -204,15 +204,9 @@ class PlayerController(QtCore.QObject):
         self.view = PlayerWindow()
 
 
-
-
-def main(argv):
-    parser = argparse.ArgumentParser()
-    parser.add_argument("music-file")
-    args = parser.parse_args(argv)
+def main(music_file, argv):
 
     app = QtWidgets.QApplication(argv)
-
     controller = PlayerController()
     controller.view.show()
 
@@ -222,4 +216,8 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    parser = argparse.ArgumentParser()
+    parser.add_argument("music-file")
+    args = parser.parse_args()
+
+    main(args.music_file, sys.argv)
