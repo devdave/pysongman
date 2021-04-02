@@ -183,6 +183,19 @@ class PlayerWindow(QtWidgets.QWidget):
         self.setWindowTitle("PySongMan")
         self.setMinimumWidth(350)
 
+    def load_stylesheet(self, filepath: T.Union[str, pathlib.Path]) -> None:
+        """
+            Given a valid file path(relative or absolute), load up the stylesheet file and
+            inject it into the QWidget to ideally cascade downward.
+
+            This is part of the UI plugin infrastructure envisioned.
+
+        Args:
+            filepath:
+
+        """
+        pass
+
 
 class PlayerController(QtCore.QObject):
     def __init__(self):
