@@ -202,6 +202,7 @@ class PlayerWindow(QtWidgets.QWidget):
 class PlayerController(QtCore.QObject):
     def __init__(self):
         self.view = PlayerWindow()
+        self.player = QtMultimedia.QMediaPlayer(self)
 
 
 def main(music_file, argv):
