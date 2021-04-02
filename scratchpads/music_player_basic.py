@@ -202,7 +202,36 @@ class PlayerWindow(QtWidgets.QWidget):
 class PlayerController(QtCore.QObject):
     def __init__(self):
         self.view = PlayerWindow()
-        self.player = QtMultimedia.QMediaPlayer(self)
+        self.play_list = QtMultimedia.QMediaPlaylist()
+        self.player = QtMultimedia.QMediaPlayer()
+        self.player.setPlaylist(self.play_list)
+
+        self.connect()
+
+    def connect(self):
+        self.view.play_btn.clicked.connect(self.player.play)
+        self.view.pause_btn.clicked.connect(self.player.pause)
+        self.view.stop_btn.clicked.connect(self.player.stop)
+        # self.player.position(). .connect(self.view.progress_bar.setTickPosition)
+
+        self.view.load_btn.clicked.connect(self.open_song)
+
+
+
+    def open_song(self):
+        print("load song to playlist")
+        fileDialog = QtWidgets.QFileDialog(self.view)
+        supportedMimeTypes = ['audio/mpeg', 'application/ogg','application/octet-stream']
+        fileDialog.setMimeTypeFilters(supportedMimeTypes)
+        if fileDialog.exec_() == QtWidgets.QDialog.Accepted:
+            files = fileDialog.selectedFiles()
+
+            for file in files:
+                content = QtMultimedia.QMediaContent(QtCore.QUrl(file))
+                self.play_list.addMedia(content)
+
+            self.player.play()
+
 
 
 def main(music_file, argv):
@@ -218,7 +247,7 @@ def main(music_file, argv):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("music-file")
+    parser.add_argument("music_file")
     args = parser.parse_args()
 
     main(args.music_file, sys.argv)
