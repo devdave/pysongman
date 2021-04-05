@@ -218,6 +218,7 @@ class PlayerController(QtCore.QObject):
         self.player.setPlaylist(self.playlist)
 
         self.progress_bar_pressed = False
+        self.last_volume = None
 
         self.connect()
 
@@ -226,6 +227,7 @@ class PlayerController(QtCore.QObject):
         self.view.volume_slider.setRange(0, 100)
         self.view.volume_slider.setValue(100)
         self.view.volume_slider.valueChanged.connect(self.player.setVolume)
+        self.view.mute_btn.clicked.connect(self.muted)
 
         self.view.play_btn.clicked.connect(self.player.play)
         self.view.pause_btn.clicked.connect(self.player.pause)
@@ -290,6 +292,15 @@ class PlayerController(QtCore.QObject):
 
             self.view.current_song.setText(f"{probe.listing} ({probe.duration_str})")
 
+    def muted(self):
+        if self.last_volume is not None:
+            self.player.setVolume(self.last_volume)
+            self.view.volume_slider.setValue(self.last_volume)
+            self.last_volume = None
+        else:
+            self.last_volume = self.player.volume()
+            self.player.setVolume(0)
+            self.view.volume_slider.setValue(0)
 
     def mediaError(self, error: QtMultimedia.QMediaPlayer.Error.ResourceError):
         print(error)
