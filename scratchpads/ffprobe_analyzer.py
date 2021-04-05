@@ -87,7 +87,7 @@ class FFProbe:
 
     @property
     def duration(self):
-        return float(self.info.duration) if self.info.duration is None else 0
+        return float(self.info.duration) if self.info.duration is not None else 0
 
     @property
     def duration_ms(self):
