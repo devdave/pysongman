@@ -1,19 +1,24 @@
 import typing as T
 import pathlib
 
-import PySide2
-from PySide2.QtGui import QPixmap
-from PySide2 import QtCore
-from PySide2.QtCore import Qt
-from PySide2 import QtWidgets
+# import PySide2
+# from PySide2.QtGui import QPixmap
+# from PySide2 import QtCore
+# from PySide2.QtCore import Qt
+# from PySide2 import QtWidgets
 
-# TODO I don't like having this wired up this tight, perhaps use ..?
-from pysongman import ICON_DIR
+# import PyQt5
+# from PyQt5.QtGui import QPixmap
+# from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
+from PyQt5 import QtWidgets
+
+from .. import ICON_DIR
 
 class PlayerWindow(QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs):
-        super(PlayerWindow, self).__init__(*args, **kwargs)
+        super(PlayerWindow, self).__init__()
 
         self.setupUI()
 
@@ -189,7 +194,7 @@ class PlayerWindow(QtWidgets.QWidget):
         self.setWindowTitle("PySongMan")
         self.setMinimumWidth(350)
 
-    def load_stylesheet(self, filepath: T.Union[str, pathlib.Path]) -> None:
+    def load_stylesheets(self, filepath: T.Union[str, pathlib.Path]) -> None:
         """
             Given a valid file path(relative or absolute), load up the stylesheet file and
             inject it into the QWidget to ideally cascade downward.
