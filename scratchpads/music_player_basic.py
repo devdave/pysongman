@@ -13,6 +13,7 @@ import argparse
 import typing as T
 import pathlib
 
+from ffprobe_analyzer import FFProbe
 
 import PySide2
 from PySide2 import QtCore
@@ -230,6 +231,7 @@ class PlayerController(QtCore.QObject):
 
         self.player.durationChanged.connect(self.durationChanged)
         self.player.positionChanged.connect(self.positionChanged)
+        self.player.currentMediaChanged.connect(self.mediaChanged)
         self.view.progress_bar.sliderPressed.connect(self.progressPressed)
         self.view.progress_bar.sliderReleased.connect(self.progressReleased)
 
@@ -269,6 +271,19 @@ class PlayerController(QtCore.QObject):
 
         self.view.time_display.setText(f"{minutes}:{corrected_seconds:02}")
 
+    def mediaChanged(self, media: QtMultimedia.QMediaContent):
+        print(media, vars(media), dir(media))
+        raw_path = media.canonicalUrl().toString()
+        if raw_path.strip() != "":
+            print(f"{raw_path=}")
+            probe = FFProbe(raw_path)
+
+            for k,v in probe.info.items():
+                print(f"\t{k}: {v}")
+
+            self.view.current_song.setText(f"{probe.listing} ({probe.duration_str})")
+
+
     def open_song(self):
         print("load song to playlist")
         fileDialog = QtWidgets.QFileDialog(self.view)
@@ -278,6 +293,7 @@ class PlayerController(QtCore.QObject):
             files = fileDialog.selectedFiles()
 
             for file in files:
+                print("Adding", file)
                 content = QtMultimedia.QMediaContent(QtCore.QUrl(file))
                 self.playlist.addMedia(content)
 
