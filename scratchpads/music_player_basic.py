@@ -213,10 +213,25 @@ class PlayerController(QtCore.QObject):
         self.view.pause_btn.clicked.connect(self.player.pause)
         self.view.stop_btn.clicked.connect(self.player.stop)
         # self.player.position(). .connect(self.view.progress_bar.setTickPosition)
+        self.view.progress_bar.sliderPressed.connect(self.progressPressed)
+        self.view.progress_bar.sliderReleased.connect(self.progressReleased)
+
+        self.view.progress_bar.valueChanged.connect(self.progress_changed)
 
         self.view.load_btn.clicked.connect(self.open_song)
 
 
+    def progressPressed(self):
+        self.progress_bar_pressed = True
+
+
+    def progressReleased(self):
+        self.progress_bar_pressed = False
+
+
+    def progress_changed(self, position):
+        if self.progress_bar_pressed is True:
+            self.player.setPosition(position)
 
     def open_song(self):
         print("load song to playlist")
