@@ -311,6 +311,7 @@ class PlayerController(QtCore.QObject):
         fileDialog = QtWidgets.QFileDialog(self.view)
         supportedMimeTypes = ['audio/mpeg', 'application/ogg','application/octet-stream']
         fileDialog.setMimeTypeFilters(supportedMimeTypes)
+        # fileDialog.setFileMode(fileDialog.Directory & fileDialog.ExistingFile)
         if fileDialog.exec_() == QtWidgets.QDialog.Accepted:
             files = fileDialog.selectedFiles()
 
