@@ -237,6 +237,8 @@ class PlayerController(QtCore.QObject):
         self.player.durationChanged.connect(self.durationChanged)
         self.player.positionChanged.connect(self.positionChanged)
         self.player.currentMediaChanged.connect(self.mediaChanged)
+        self.player.error.connect(self.mediaError)
+
         self.view.progress_bar.sliderPressed.connect(self.progressPressed)
         self.view.progress_bar.sliderReleased.connect(self.progressReleased)
 
@@ -287,6 +289,10 @@ class PlayerController(QtCore.QObject):
                 print(f"\t{k}: {v}")
 
             self.view.current_song.setText(f"{probe.listing} ({probe.duration_str})")
+
+
+    def mediaError(self, error):
+        print(error)
 
 
     def open_song(self):
