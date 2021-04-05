@@ -2,6 +2,7 @@
 https://stackoverflow.com/questions/15043620/cant-play-ogg-and-flac
 
 https://www.xiph.org/dshow/ - required by QT to play ogg files
+https://www.microsoft.com/en-us/p/mpeg-2-video-extension/9n95q1zzpmh4?activetab=pivot:overviewtab - Required by QT to play mp2 files
 
 
 To implement, a clickable range slider.
