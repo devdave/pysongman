@@ -202,9 +202,10 @@ class PlayerWindow(QtWidgets.QWidget):
 class PlayerController(QtCore.QObject):
     def __init__(self):
         self.view = PlayerWindow()
-        self.play_list = QtMultimedia.QMediaPlaylist()
+        self.playlist = QtMultimedia.QMediaPlaylist()
         self.player = QtMultimedia.QMediaPlayer()
-        self.player.setPlaylist(self.play_list)
+        self.player.setPlaylist(self.playlist)
+
 
         self.connect()
 
@@ -243,7 +244,7 @@ class PlayerController(QtCore.QObject):
 
             for file in files:
                 content = QtMultimedia.QMediaContent(QtCore.QUrl(file))
-                self.play_list.addMedia(content)
+                self.playlist.addMedia(content)
 
             self.player.play()
 
