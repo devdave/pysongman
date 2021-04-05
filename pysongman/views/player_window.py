@@ -13,7 +13,7 @@ from pysongman import ICON_DIR
 class PlayerWindow(QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(PlayerWindow, self).__init__(*args, **kwargs)
 
         self.setupUI()
 
@@ -45,11 +45,11 @@ class PlayerWindow(QtWidgets.QWidget):
 
         """
 
-        icons = {}
-        ico_files = [file for file in ICON_DIR.iterdir() if file.is_file() and file.name.endswith("png")]
-        for file in ico_files:
-            fname, _ = file.name.split(".", 1)
-            icons[fname] = QPixmap(file)
+        # icons = {}
+        # ico_files = [file for file in ICON_DIR.iterdir() if file.is_file() and file.name.endswith("png")]
+        # for file in ico_files:
+        #     fname, _ = file.name.split(".", 1)
+        #     icons[fname] = QPixmap(file)
 
         # Main display body
         self.time_display = QtWidgets.QLabel("0:00")
@@ -128,23 +128,23 @@ class PlayerWindow(QtWidgets.QWidget):
 
         # line3 - previous, play, pause, stop, next - mute - volume slider
         self.previous_btn = QtWidgets.QPushButton("PR")
-        self.previous_btn.setIcon(ico_files['previous'])
+        # self.previous_btn.setIcon(ico_files['previous'])
         self.previous_btn.setObjectName("previousButton")
 
         self.play_btn = QtWidgets.QPushButton("PL")
-        self.previous_btn.setIcon(ico_files['play'])
+        # self.previous_btn.setIcon(ico_files['play'])
         self.play_btn.setObjectName("playButton")
 
         self.pause_btn = QtWidgets.QPushButton("PS")
-        self.previous_btn.setIcon(ico_files['pause'])
+        # self.previous_btn.setIcon(ico_files['pause'])
         self.pause_btn.setObjectName("pauseButton")
 
         self.stop_btn = QtWidgets.QPushButton("ST")
-        self.stop_btn.setIcon(ico_files['stop'])
+        # self.stop_btn.setIcon(ico_files['stop'])
         self.stop_btn.setObjectName("stopButton")
 
         self.next_btn = QtWidgets.QPushButton("NXT")
-        self.next_btn.setIcon(ico_files['next'])
+        # self.next_btn.setIcon(ico_files['next'])
         self.next_btn.setObjectName("nextButton")
 
         self.mute_btn = QtWidgets.QPushButton("MUTE")
