@@ -14,8 +14,9 @@ def main(song_file):
     player = PlayerController(song_file)
 
     player.view.show()
+    print("Player shown")
 
-    app = QtWidgets.QApplication(sys.argv)
+    app = QtWidgets.QApplication()
 
     return sys.exit(app.exec_())
 
