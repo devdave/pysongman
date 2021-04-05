@@ -77,6 +77,17 @@ class PlayerWindow(QtWidgets.QWidget):
 
         icons = self.load_icons()
 
+
+        todo_remove_me_button_style = """
+            QPushButton {
+                border: 1px solid black;
+                border-radius: 10px;
+                padding: 5px 5px 5px 5px;
+            }
+        """
+
+
+
         #Main display body
         self.time_display = QtWidgets.QLabel("0:00")
         self.time_display.setObjectName("timeDisplay")
@@ -105,11 +116,14 @@ class PlayerWindow(QtWidgets.QWidget):
         self.info_dash.addWidget(self.current_song)
 
         #Playlist controls
-        self.repeat_button = QtWidgets.QPushButton("L")
+        self.repeat_button = QtWidgets.QPushButton()
+        self.repeat_button.setIcon(self.icons['repeat'])
+
         self.repeat_button.setObjectName("repeatButton")
 
-        self.random_button = QtWidgets.QPushButton("RA")
-        self.random_button.setObjectName("randonButton")
+        self.random_button = QtWidgets.QPushButton()
+        self.random_button.setObjectName("randomButton")
+        self.random_button.setIcon(self.icons['shuffle'])
 
         self.playlist = QtWidgets.QVBoxLayout()
         self.playlist.setObjectName("playListControls")
@@ -117,6 +131,7 @@ class PlayerWindow(QtWidgets.QWidget):
         for button in [self.repeat_button, self.random_button]:
             button.setMinimumWidth(3)
             button.setMaximumWidth(25)
+            button.setStyleSheet(todo_remove_me_button_style)
             self.playlist.addWidget(button)
 
 
@@ -135,13 +150,17 @@ class PlayerWindow(QtWidgets.QWidget):
         self.progress_bar.setRange(0,100)
         self.progress_bar.setFocusPolicy(Qt.NoFocus)
 
-        self.load_btn = QtWidgets.QPushButton("LD")
+        self.load_btn = QtWidgets.QPushButton()
+        self.load_btn.setIcon(self.icons['folder'])
+
         self.load_btn.setObjectName("loadButton")
 
-        self.playlist_btn = QtWidgets.QPushButton("PL")
+        self.playlist_btn = QtWidgets.QPushButton()
+        self.playlist_btn.setIcon(self.icons['list'])
         self.playlist_btn.setObjectName("playlistButton")
 
-        self.medialib_btn = QtWidgets.QPushButton("ML")
+        self.medialib_btn = QtWidgets.QPushButton()
+        self.medialib_btn.setIcon(self.icons['board'])
         self.medialib_btn.setObjectName("medialibButton")
 
         self.status_and_views = QtWidgets.QHBoxLayout()
@@ -152,6 +171,7 @@ class PlayerWindow(QtWidgets.QWidget):
         for button in [self.load_btn, self.playlist_btn, self.medialib_btn]:
             button.setMinimumWidth(3)
             button.setMaximumWidth(25)
+            button.setStyleSheet(todo_remove_me_button_style)
             self.status_and_views.addWidget(button)
 
 
@@ -191,15 +211,8 @@ class PlayerWindow(QtWidgets.QWidget):
         self.controls = QtWidgets.QHBoxLayout()
         self.controls.setObjectName("controlBar")
 
-        todo_remove_me = """
-            QPushButton {
-                border-radius: 10px;
-                padding: 10px 10px 10px 10px;
-            }
-        """
-
         for button in [self.previous_btn, self.play_btn, self.pause_btn, self.stop_btn, self.next_btn, self.mute_btn]:
-            button.setStyleSheet(todo_remove_me)
+            button.setStyleSheet(todo_remove_me_button_style)
             button.setMinimumWidth(3)
             button.setMaximumWidth(25)
             self.controls.addWidget(button)
@@ -302,10 +315,10 @@ class PlayerController(QtCore.QObject):
     def durationChanged(self, duration):
         #
         print(f"{duration=}")
-        self.view.progress_bar.setRange(0, duration)
+        # self.view.progress_bar.setRange(0, duration)
 
     def positionChanged(self, position):
-        print(f"{position=}")
+
         self.view.progress_bar.setValue(position)
         seconds = int(position / 1000)
 
@@ -324,6 +337,7 @@ class PlayerController(QtCore.QObject):
 
             for k,v in probe.info.items():
                 print(f"\t{k}: {v}")
+            self.view.progress_bar.setRange(0, probe.duration_ms)
 
             self.view.current_song.setText(f"{probe.listing} ({probe.duration_str})")
 
