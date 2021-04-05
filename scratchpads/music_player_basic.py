@@ -281,7 +281,7 @@ class PlayerController(QtCore.QObject):
         self.view.time_display.setText(f"{minutes}:{corrected_seconds:02}")
 
     def mediaChanged(self, media: QtMultimedia.QMediaContent):
-        print(media, vars(media), dir(media))
+        # print(media, vars(media), dir(media))
         raw_path = media.canonicalUrl().toString()
         if raw_path.strip() != "":
             print(f"{raw_path=}")
