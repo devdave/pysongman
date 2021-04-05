@@ -2,19 +2,28 @@ import sys
 import argparse
 import pathlib
 
-from PySide2 import QtCore
-from PySide2 import QtWidgets
+# from PySide2 import QtCore
+# from PySide2 import QtWidgets
+import PyQt5
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 
 
 
 # from .controllers.player import PlayerController
 from pysongman.controllers.player import PlayerController
 
-def main(song_file):
-    player = PlayerController(song_file)
+class Test(PyQt5.QtWidgets.QTabWidget):
+    pass
 
-    player.view.show()
-    print("Player shown")
+
+def main(song_file):
+    # player = PlayerController(song_file)
+    #
+    # player.view.show()
+    # print("Player shown")
+    test = Test()
+    test.show()
 
     app = QtWidgets.QApplication()
 
