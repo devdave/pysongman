@@ -55,13 +55,13 @@ class FFProbe:
 
     def probe_file(self) -> None:
         r"""
-                ffprobe
-                    -show_format
-                    -hide_banner
-                    -print_format json
-                    {song_path}
-                Returns:
-                """
+        ffprobe
+            -show_format
+            -hide_banner
+            -print_format json
+            {song_path}
+        Returns:
+        """
 
         cmd = f"ffprobe -show_format -hide_banner -print_format json \"{self.song_path}\""
         res = delegator.run(cmd, env=self._env)

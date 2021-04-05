@@ -1,10 +1,16 @@
+"""
+
+MP2/Layer 2 mp3 codec - https://www.microsoft.com/en-us/p/mpeg-2-video-extension/9n95q1zzpmh4?activetab=pivot:overviewtab
+"""
+
 
 import sys
 import argparse
 import typing as T
 import pathlib
 
-from ffprobe_analyzer import FFProbe
+from ..views.player_window import PlayerWindow
+from ..lib.ffprobe import FFProbe
 
 import PySide2
 from PySide2 import QtCore
@@ -15,7 +21,7 @@ from PySide2 import QtMultimedia
 
 
 class PlayerController(QtCore.QObject):
-    def __init__(self):
+    def __init__(self, song_file = None):
         self.view = PlayerWindow()
         self.playlist = QtMultimedia.QMediaPlaylist()
         self.player = QtMultimedia.QMediaPlayer()
@@ -25,6 +31,10 @@ class PlayerController(QtCore.QObject):
         self.last_volume = None
 
         self.connect()
+
+        if song_file is not None:
+            self.add_song(song_file)
+            # TODO auto play?
 
     def connect(self):
 
@@ -63,23 +73,22 @@ class PlayerController(QtCore.QObject):
         self.progress_bar_pressed = False
 
 
-    def progress_changed(self, position):
+    def progress_changed(self, position: int):
         if self.progress_bar_pressed is True:
             self.player.setPosition(position)
 
 
-    def durationChanged(self, duration):
+    def durationChanged(self, duration: int):
         #
         print(f"{duration=}")
         self.view.progress_bar.setRange(0, duration)
 
-    def positionChanged(self, position):
+    def positionChanged(self, position: int):
         print(f"{position=}")
         self.view.progress_bar.setValue(position)
+        # TODO modula would be better here
         seconds = int(position / 1000)
-
         minutes = int(seconds / 60)
-
         corrected_seconds = int(seconds - (minutes * 60))
 
         self.view.time_display.setText(f"{minutes}:{corrected_seconds:02}")
@@ -89,14 +98,16 @@ class PlayerController(QtCore.QObject):
         raw_path = media.canonicalUrl().toString()
         if raw_path.strip() != "":
             print(f"{raw_path=}")
-            probe = FFProbe(raw_path)
-
-            for k,v in probe.info.items():
-                print(f"\t{k}: {v}")
+            probe = FFProbe.Load(raw_path)
 
             self.view.current_song.setText(f"{probe.listing} ({probe.duration_str})")
 
     def muted(self):
+        """
+            Toggles volume mute
+        Returns:
+
+        """
         if self.last_volume is not None:
             self.player.setVolume(self.last_volume)
             self.view.volume_slider.setValue(self.last_volume)
