@@ -291,7 +291,7 @@ class PlayerController(QtCore.QObject):
             self.view.current_song.setText(f"{probe.listing} ({probe.duration_str})")
 
 
-    def mediaError(self, error):
+    def mediaError(self, error: QtMultimedia.QMediaPlayer.Error.ResourceError):
         print(error)
 
 
