@@ -1,3 +1,13 @@
+"""
+https://stackoverflow.com/questions/15043620/cant-play-ogg-and-flac
+
+https://www.xiph.org/dshow/ - required by QT to play ogg files
+
+
+To implement, a clickable range slider.
+https://stackoverflow.com/questions/52689047/moving-qslider-to-mouse-click-position
+
+"""
 import sys
 import argparse
 import typing as T
