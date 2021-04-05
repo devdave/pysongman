@@ -310,12 +310,20 @@ class PlayerController(QtCore.QObject):
 
             self.player.play()
 
+    def add_song(self, song_file):
+        sanitized = str(song_file).replace("\\", "/")
+        url = QtCore.QUrl(sanitized)
+        content = QtMultimedia.QMediaContent(url)
+        self.playlist.addMedia(content)
+
+
 
 
 def main(music_file, argv):
 
     app = QtWidgets.QApplication(argv)
     controller = PlayerController()
+    controller.add_song(music_file)
     controller.view.show()
 
     app.exec_()
