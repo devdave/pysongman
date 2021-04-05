@@ -17,17 +17,35 @@ import pathlib
 from ffprobe_analyzer import FFProbe
 
 import PySide2
+from PySide2.QtGui import QPixmap
 from PySide2 import QtCore
 from PySide2.QtCore import Qt
 from PySide2 import QtWidgets
 from PySide2 import QtMultimedia
+
+ICO_DIR = pathlib.Path(__file__).parent / ".." / "pysongman" / "resources" / "icons"
+
+assert ICO_DIR.exists(), ICO_DIR
 
 
 class PlayerWindow(QtWidgets.QWidget):
     
     def __init__(self, *args, **kwargs):
         super(PlayerWindow, self).__init__(*args, **kwargs)
+        self.icons = None
         self.setupUI()
+
+    def load_icons(self, path=None):
+        icons = {}
+        ico_files = [file for file in ICO_DIR.iterdir() if file.is_file() and file.name.endswith(".png")]
+        for ifile in ico_files: # type: pathlib.Path
+            name, _ = ifile.name.split(".", 1)
+            icons[name] = QPixmap(str(ifile.absolute()))
+
+        self.icons = icons
+        return icons
+
+
 
     def setupUI(self):
         """            
@@ -56,6 +74,8 @@ class PlayerWindow(QtWidgets.QWidget):
             three horz layouts wrapped in one vertical
             
         """
+
+        icons = self.load_icons()
 
         #Main display body
         self.time_display = QtWidgets.QLabel("0:00")
@@ -137,22 +157,28 @@ class PlayerWindow(QtWidgets.QWidget):
 
 
         #line3 - previous, play, pause, stop, next - mute - volume slider
-        self.previous_btn = QtWidgets.QPushButton("PR")
+        self.previous_btn = QtWidgets.QPushButton()
         self.previous_btn.setObjectName("previousButton")
+        self.previous_btn.setIcon(icons['previous'])
 
-        self.play_btn = QtWidgets.QPushButton("PL")
+        self.play_btn = QtWidgets.QPushButton()
         self.play_btn.setObjectName("playButton")
+        self.play_btn.setIcon(icons['play'])
 
-        self.pause_btn = QtWidgets.QPushButton("PS")
+        self.pause_btn = QtWidgets.QPushButton()
+        self.pause_btn.setIcon(icons['pause'])
         self.pause_btn.setObjectName("pauseButton")
 
-        self.stop_btn = QtWidgets.QPushButton("ST")
+        self.stop_btn = QtWidgets.QPushButton()
+        self.stop_btn.setIcon(icons['stop'])
         self.stop_btn.setObjectName("stopButton")
 
-        self.next_btn = QtWidgets.QPushButton("NXT")
+        self.next_btn = QtWidgets.QPushButton()
+        self.next_btn.setIcon(icons['next'])
         self.next_btn.setObjectName("nextButton")
 
-        self.mute_btn = QtWidgets.QPushButton("MUTE")
+        self.mute_btn = QtWidgets.QPushButton()
+        self.mute_btn.setIcon(icons['volume-up'])
         self.mute_btn.setObjectName("muteButton")
 
         self.volume_slider = QtWidgets.QSlider(Qt.Horizontal)
@@ -165,7 +191,15 @@ class PlayerWindow(QtWidgets.QWidget):
         self.controls = QtWidgets.QHBoxLayout()
         self.controls.setObjectName("controlBar")
 
+        todo_remove_me = """
+            QPushButton {
+                border-radius: 10px;
+                padding: 10px 10px 10px 10px;
+            }
+        """
+
         for button in [self.previous_btn, self.play_btn, self.pause_btn, self.stop_btn, self.next_btn, self.mute_btn]:
+            button.setStyleSheet(todo_remove_me)
             button.setMinimumWidth(3)
             button.setMaximumWidth(25)
             self.controls.addWidget(button)
@@ -297,6 +331,7 @@ class PlayerController(QtCore.QObject):
         if self.last_volume is not None:
             self.player.setVolume(self.last_volume)
             self.view.volume_slider.setValue(self.last_volume)
+
             self.last_volume = None
         else:
             self.last_volume = self.player.volume()
