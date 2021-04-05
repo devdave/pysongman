@@ -216,6 +216,7 @@ class PlayerController(QtCore.QObject):
         self.player = QtMultimedia.QMediaPlayer()
         self.player.setPlaylist(self.playlist)
 
+        self.progress_bar_pressed = False
 
         self.connect()
 
@@ -223,11 +224,18 @@ class PlayerController(QtCore.QObject):
         self.view.play_btn.clicked.connect(self.player.play)
         self.view.pause_btn.clicked.connect(self.player.pause)
         self.view.stop_btn.clicked.connect(self.player.stop)
-        # self.player.position(). .connect(self.view.progress_bar.setTickPosition)
+
+        self.view.next_btn.clicked.connect(self.playlist.next)
+        self.view.previous_btn.clicked.connect(self.playlist.previous)
+
+        self.player.durationChanged.connect(self.durationChanged)
+        self.player.positionChanged.connect(self.positionChanged)
         self.view.progress_bar.sliderPressed.connect(self.progressPressed)
         self.view.progress_bar.sliderReleased.connect(self.progressReleased)
 
         self.view.progress_bar.valueChanged.connect(self.progress_changed)
+        # self.view.progress_bar.clicked.connect(self.progress_bar_pressed)
+
 
         self.view.load_btn.clicked.connect(self.open_song)
 
@@ -243,6 +251,23 @@ class PlayerController(QtCore.QObject):
     def progress_changed(self, position):
         if self.progress_bar_pressed is True:
             self.player.setPosition(position)
+
+
+    def durationChanged(self, duration):
+        #
+        print(f"{duration=}")
+        self.view.progress_bar.setRange(0, duration)
+
+    def positionChanged(self, position):
+        print(f"{position=}")
+        self.view.progress_bar.setValue(position)
+        seconds = int(position / 1000)
+
+        minutes = int(seconds / 60)
+
+        corrected_seconds = int(seconds - (minutes * 60))
+
+        self.view.time_display.setText(f"{minutes}:{corrected_seconds:02}")
 
     def open_song(self):
         print("load song to playlist")
