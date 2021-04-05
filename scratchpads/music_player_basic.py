@@ -222,6 +222,11 @@ class PlayerController(QtCore.QObject):
         self.connect()
 
     def connect(self):
+
+        self.view.volume_slider.setRange(0, 100)
+        self.view.volume_slider.setValue(100)
+        self.view.volume_slider.valueChanged.connect(self.player.setVolume)
+
         self.view.play_btn.clicked.connect(self.player.play)
         self.view.pause_btn.clicked.connect(self.player.pause)
         self.view.stop_btn.clicked.connect(self.player.stop)
