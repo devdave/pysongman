@@ -2,8 +2,8 @@ import sys
 import argparse
 import pathlib
 
-from PyQt5 import QtCore
-from PyQt5 import QtWidgets
+import PySide2
+from PySide2 import QtWidgets
 
 from .controllers.player import PlayerController
 
