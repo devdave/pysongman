@@ -116,7 +116,8 @@ class FFProbe:
         if self.metadata.artist and self.metadata.track:
             return f"{self.metadata.artist} - {self.metadata.title}"
         else:
-            return self.song_path.name
+            name, _ = self.song_path.name.split(".", 1)
+            return name
 
 
 
