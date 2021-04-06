@@ -10,15 +10,23 @@ from PySide2 import QtMultimedia
 
 from .. import ICON_DIR
 
+
 class PlayerWindow(QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs):
         super(PlayerWindow, self).__init__()
-        self.icons = {}
+        self.icons = self.load_icons()
         self.setupUI()
 
     def load_icons(self):
+        icons = {}
+        ico_files = [file for file in ICON_DIR.iterdir() if file.is_file() and file.name.endswith(".png")]
+        for ifile in ico_files:  # type: pathlib.Path
+            name, _ = ifile.name.split(".", 1)
+            icons[name] = QPixmap(str(ifile.absolute()))
 
+        self.icons = icons
+        return icons
 
     def setupUI(self):
         """
@@ -81,11 +89,13 @@ class PlayerWindow(QtWidgets.QWidget):
         self.info_dash.addWidget(self.current_song)
 
         # Playlist controls
-        self.repeat_button = QtWidgets.QPushButton("L")
+        self.repeat_button = QtWidgets.QPushButton()
         self.repeat_button.setObjectName("repeatButton")
+        self.repeat_button.setIcon(self.icons['repeat'])
 
-        self.random_button = QtWidgets.QPushButton("RA")
-        self.random_button.setObjectName("randonButton")
+        self.random_button = QtWidgets.QPushButton()
+        self.random_button.setObjectName("randomButton")
+        self.random_button.setIcon(self.icons["shuffle"])
 
         self.playlist = QtWidgets.QVBoxLayout()
         self.playlist.setObjectName("playListControls")
@@ -108,14 +118,17 @@ class PlayerWindow(QtWidgets.QWidget):
         self.progress_bar.setRange(0, 100)
         self.progress_bar.setFocusPolicy(Qt.NoFocus)
 
-        self.load_btn = QtWidgets.QPushButton("LD")
+        self.load_btn = QtWidgets.QPushButton()
         self.load_btn.setObjectName("loadButton")
+        self.load_btn.setIcon(self.icons['folder'])
 
-        self.playlist_btn = QtWidgets.QPushButton("PL")
+        self.playlist_btn = QtWidgets.QPushButton()
         self.playlist_btn.setObjectName("playlistButton")
+        self.playlist_btn.setIcon(self.icons['list'])
 
-        self.medialib_btn = QtWidgets.QPushButton("ML")
+        self.medialib_btn = QtWidgets.QPushButton()
         self.medialib_btn.setObjectName("medialibButton")
+        self.medialib_btn.setIcon(self.icons['board'])
 
         self.status_and_views = QtWidgets.QHBoxLayout()
         self.status_and_views.setObjectName("statusAndViews")
@@ -130,27 +143,28 @@ class PlayerWindow(QtWidgets.QWidget):
 
 
         # line3 - previous, play, pause, stop, next - mute - volume slider
-        self.previous_btn = QtWidgets.QPushButton("PR")
-        # self.previous_btn.setIcon(ico_files['previous'])
+        self.previous_btn = QtWidgets.QPushButton()
+        self.previous_btn.setIcon(self.icons['previous'])
         self.previous_btn.setObjectName("previousButton")
 
-        self.play_btn = QtWidgets.QPushButton("PL")
-        # self.previous_btn.setIcon(ico_files['play'])
+        self.play_btn = QtWidgets.QPushButton()
+        self.play_btn.setIcon(self.icons['play'])
         self.play_btn.setObjectName("playButton")
 
-        self.pause_btn = QtWidgets.QPushButton("PS")
-        # self.previous_btn.setIcon(ico_files['pause'])
+        self.pause_btn = QtWidgets.QPushButton()
+        self.pause_btn.setIcon(self.icons['pause'])
         self.pause_btn.setObjectName("pauseButton")
 
-        self.stop_btn = QtWidgets.QPushButton("ST")
-        # self.stop_btn.setIcon(ico_files['stop'])
+        self.stop_btn = QtWidgets.QPushButton()
+        self.stop_btn.setIcon(self.icons['stop'])
         self.stop_btn.setObjectName("stopButton")
 
-        self.next_btn = QtWidgets.QPushButton("NXT")
-        # self.next_btn.setIcon(ico_files['next'])
+        self.next_btn = QtWidgets.QPushButton()
+        self.next_btn.setIcon(self.icons['next'])
         self.next_btn.setObjectName("nextButton")
 
-        self.mute_btn = QtWidgets.QPushButton("MUTE")
+        self.mute_btn = QtWidgets.QPushButton()
+        self.mute_btn.setIcon(self.icons['volume-up'])
         self.mute_btn.setObjectName("muteButton")
 
         self.volume_slider = QtWidgets.QSlider(Qt.Horizontal)
