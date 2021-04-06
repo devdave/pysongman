@@ -46,7 +46,7 @@ class FFProbe:
 
 
     @classmethod
-    def Scan(cls, song_path: T.Union[str, pathlib.Path]):
+    def Load(cls, song_path: T.Union[str, pathlib.Path]):
 
         obj = cls(pathlib.Path(song_path))
         obj.probe_file()
