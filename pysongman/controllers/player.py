@@ -81,7 +81,11 @@ class PlayerController(QtCore.QObject):
     def durationChanged(self, duration: int):
         #
         print(f"{duration=}")
-        self.view.progress_bar.setRange(0, duration)
+        probe = FFProbe.Load(self.player.currentMedia().canonicalUrl().toString())
+        if probe.duration_ms > duration:
+            self.view.progress_bar.setRange(0, probe.duration_ms)
+        else:
+            self.view.progress_bar.setRange(0, duration)
 
     def positionChanged(self, position: int):
         print(f"{position=}")
