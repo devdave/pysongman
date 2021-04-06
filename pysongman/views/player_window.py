@@ -1,15 +1,7 @@
 import typing as T
 import pathlib
 
-# import PySide2
-# from PySide2.QtGui import QPixmap
-# from PySide2 import QtCore
-# from PySide2.QtCore import Qt
-# from PySide2 import QtWidgets
-
-# import PyQt5
-# from PyQt5.QtGui import QPixmap
-# from PyQt5 import QtCore
+import PyQt5
 from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets
 
@@ -19,8 +11,11 @@ class PlayerWindow(QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs):
         super(PlayerWindow, self).__init__()
-
+        self.icons = {}
         self.setupUI()
+
+    def load_icons(self):
+
 
     def setupUI(self):
         """
