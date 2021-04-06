@@ -36,6 +36,11 @@ class PlayerController(QtCore.QObject):
             self.add_song(song_file)
             # TODO auto play?
 
+    def show(self):
+        self.view.show()
+        self.playlist_view.show()
+
+
     def connect(self):
 
         self.view.volume_slider.setRange(0, 100)

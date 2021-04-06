@@ -13,7 +13,8 @@ def main(song_file):
     app = QtWidgets.QApplication(sys.argv)
 
     player = PlayerController()
-    player.view.show()
+    player.show()
+
 
     return sys.exit(app.exec_())
 
