@@ -74,6 +74,12 @@ class PlayerController(QtCore.QObject):
         self.view.load_btn.clicked.connect(self.open_song)
 
 
+    def mediaInserted(self, start, end):
+        print("mediaInserted", start, end)
+
+
+
+
     def progressPressed(self):
         self.progress_bar_pressed = True
 
@@ -90,14 +96,23 @@ class PlayerController(QtCore.QObject):
     def durationChanged(self, duration: int):
         #
         print(f"{duration=}")
-        probe = FFProbe.Load(self.player.currentMedia().canonicalUrl().toString())
-        if probe.duration_ms > duration:
-            self.view.progress_bar.setRange(0, probe.duration_ms)
+        song_path = self.player.currentMedia().canonicalUrl().toString()
+        if song_path not in ["", " ", "."]:
+            probe = FFProbe.Load(song_path)
+
+            if probe.duration_ms < duration:
+                print(f"DirectShow screwed up again: {duration=}, {probe.duration_ms=}")
+                self.view.progress_bar.setRange(0, probe.duration_ms)
+            else:
+                self.view.progress_bar.setRange(0, duration)
         else:
-            self.view.progress_bar.setRange(0, duration)
+            pass
 
     def positionChanged(self, position: int):
-        print(f"{position=}")
+
+        time = position / 1000
+        print(f"{position} - {int(time / 60)}:{int(time % 60):02}")
+
         self.view.progress_bar.setValue(position)
         # TODO modula would be better here
         seconds = int(position / 1000)
@@ -144,7 +159,10 @@ class PlayerController(QtCore.QObject):
         fileDialog = QtWidgets.QFileDialog(self.view)
         supportedMimeTypes = ['audio/mpeg', 'application/ogg','application/octet-stream']
         fileDialog.setMimeTypeFilters(supportedMimeTypes)
-        # fileDialog.setFileMode(fileDialog.Directory & fileDialog.ExistingFile)
+
+        index = self.playlist.currentIndex()
+
+
         if fileDialog.exec_() == QtWidgets.QDialog.Accepted:
             files = fileDialog.selectedFiles()
 
@@ -153,10 +171,12 @@ class PlayerController(QtCore.QObject):
                 content = QtMultimedia.QMediaContent(QtCore.QUrl(file))
                 self.playlist.addMedia(content)
 
+            self.playlist.setCurrentIndex(index + 1)
             self.player.play()
 
     def add_song(self, song_file):
         sanitized = str(song_file).replace("\\", "/")
         url = QtCore.QUrl(sanitized)
         content = QtMultimedia.QMediaContent(url)
+
         self.playlist.addMedia(content)
