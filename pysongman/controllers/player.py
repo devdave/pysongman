@@ -9,6 +9,7 @@ import argparse
 import typing as T
 import pathlib
 
+from ..views.playlist_window import PlaylistWindow
 from ..views.player_window import PlayerWindow
 from ..lib.ffprobe import FFProbe
 
@@ -23,9 +24,12 @@ from PySide2 import QtMultimedia
 class PlayerController(QtCore.QObject):
     def __init__(self, song_file = None):
         self.view = PlayerWindow()
+        self.playlist_view = PlaylistWindow()
         self.playlist = QtMultimedia.QMediaPlaylist()
         self.player = QtMultimedia.QMediaPlayer()
         self.player.setPlaylist(self.playlist)
+
+
 
         self.progress_bar_pressed = False
         self.last_volume = None
