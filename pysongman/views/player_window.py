@@ -1,3 +1,7 @@
+"""
+To research
+    https://gist.github.com/lambdalisue/9110299
+"""
 import typing as T
 import pathlib
 
@@ -9,6 +13,7 @@ from PySide2 import QtWidgets
 from PySide2 import QtMultimedia
 
 from .. import ICON_DIR
+from .. import CSS_DIR
 
 
 class PlayerWindow(QtWidgets.QWidget):
@@ -17,6 +22,7 @@ class PlayerWindow(QtWidgets.QWidget):
         super(PlayerWindow, self).__init__()
         self.icons = self.load_icons()
         self.setupUI()
+        self.load_stylesheets()
 
     def load_icons(self):
         icons = {}
@@ -145,6 +151,7 @@ class PlayerWindow(QtWidgets.QWidget):
         # line3 - previous, play, pause, stop, next - mute - volume slider
         self.previous_btn = QtWidgets.QPushButton()
         self.previous_btn.setIcon(self.icons['previous'])
+
         self.previous_btn.setObjectName("previousButton")
 
         self.play_btn = QtWidgets.QPushButton()
@@ -179,7 +186,9 @@ class PlayerWindow(QtWidgets.QWidget):
         for button in [self.previous_btn, self.play_btn, self.pause_btn, self.stop_btn, self.next_btn, self.mute_btn]:
             button.setMinimumWidth(3)
             button.setMaximumWidth(25)
+            button.setProperty("cssClass", "controlButton")
             self.controls.addWidget(button)
+
 
         self.controls.addWidget(self.volume_slider)
 
@@ -206,7 +215,7 @@ class PlayerWindow(QtWidgets.QWidget):
         self.setWindowTitle("PySongMan")
         self.setMinimumWidth(350)
 
-    def load_stylesheets(self, filepath: T.Union[str, pathlib.Path]) -> None:
+    def load_stylesheets(self, filepath: T.Union[str, pathlib.Path] = None) -> None:
         """
             Given a valid file path(relative or absolute), load up the stylesheet file and
             inject it into the QWidget to ideally cascade downward.
@@ -217,6 +226,8 @@ class PlayerWindow(QtWidgets.QWidget):
             filepath:
 
         """
+        sheet = (CSS_DIR / "player.css").read_text()
+        self.setStyleSheet(sheet)
         pass
 
     def toggle_volume_icon(self, volume_muted=False):
