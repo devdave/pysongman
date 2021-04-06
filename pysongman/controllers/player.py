@@ -116,10 +116,12 @@ class PlayerController(QtCore.QObject):
             self.player.setVolume(self.last_volume)
             self.view.volume_slider.setValue(self.last_volume)
             self.last_volume = None
+            self.view.toggle_volume_icon(False)
         else:
             self.last_volume = self.player.volume()
             self.player.setVolume(0)
             self.view.volume_slider.setValue(0)
+            self.view.toggle_volume_icon(True)
 
     def mediaError(self, error: QtMultimedia.QMediaPlayer.Error.ResourceError):
         print(error)

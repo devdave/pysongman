@@ -204,3 +204,9 @@ class PlayerWindow(QtWidgets.QWidget):
 
         """
         pass
+
+    def toggle_volume_icon(self, volume_muted=False):
+        if volume_muted is True:
+            self.mute_btn.setIcon(self.icons['volume-off'])
+        else:
+            self.mute_btn.setIcon(self.icons['volume-up'])
