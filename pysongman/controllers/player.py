@@ -26,10 +26,11 @@ class PlayerController(QtCore.QObject):
     def __init__(self, song_file = None):
         self.view = PlayerWindow()
         self.playlist_view = PlaylistWindow()
+
+
         self.playlist = QtMultimedia.QMediaPlaylist()
         self.player = QtMultimedia.QMediaPlayer()
         self.player.setPlaylist(self.playlist)
-
 
 
         self.progress_bar_pressed = False
@@ -42,7 +43,6 @@ class PlayerController(QtCore.QObject):
             # TODO auto play?
 
     def show(self):
-        self.view.show()
         self.playlist_view.show()
         self.view.show()
 
