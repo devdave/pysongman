@@ -12,6 +12,7 @@ import pathlib
 from ..views.playlist_window import PlaylistWindow
 from ..views.player_window import PlayerWindow
 from ..lib.ffprobe import FFProbe
+from .playlist import PlaylistController
 
 import PySide2
 from PySide2 import QtCore
@@ -43,6 +44,11 @@ class PlayerController(QtCore.QObject):
     def show(self):
         self.view.show()
         self.playlist_view.show()
+        self.view.show()
+
+    def play(self):
+        self.player.play()
+
 
 
     def connect(self):
