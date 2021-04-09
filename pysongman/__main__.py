@@ -17,6 +17,7 @@ def main(song_file = None):
 
     if song_file is not None:
         player.add_song(song_file)
+        player.play()
 
     return sys.exit(app.exec_())
 
