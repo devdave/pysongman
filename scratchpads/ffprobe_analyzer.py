@@ -112,6 +112,13 @@ class FFProbe:
         else:
             return self.song_path.name
 
+    @property
+    def title(self):
+        if self.metadata.artist and self.metadata.track:
+            return f"{self.metadata.artist} - {self.metadata.title}"
+        else:
+            return self.song_path.name
+
 
 
 def main(song_path):
