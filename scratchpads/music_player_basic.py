@@ -370,7 +370,8 @@ class PlayerController(QtCore.QObject):
 
             for file in files:
                 print("Adding", file)
-                content = QtMultimedia.QMediaContent(QtCore.QUrl(file))
+                url = QtCore.QUrl(file)
+                content = QtMultimedia.QMediaContent(url)
                 self.playlist.addMedia(content)
 
             self.player.play()
