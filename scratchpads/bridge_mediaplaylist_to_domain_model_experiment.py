@@ -120,10 +120,32 @@ class BasicPlayer(QtWidgets.QWidget):
 
         self.body.addWidget(self.playtable, 1)
         self.body.setStretch(0, 1)
+
+        # basic player controls
+        self.controls = QtWidgets.QHBoxLayout()
+
+        self.playBtn = QtWidgets.QPushButton("Play")
+        self.playBtn.clicked.connect(self.on_play_click)
+        
+        self.stopBtn = QtWidgets.QPushButton("Stop")
+        self.stopBtn.clicked.connect(self.on_stop_click)
+
+        self.controls.addWidget(self.playBtn)
+        self.controls.addWidget(self.stopBtn)
+
+        self.body.addLayout(self.controls)
+
+
         self.setLayout(self.body)
 
 
         self.playtable.doubleClicked.connect(self.on_doubleclick)
+
+    def on_media_error(self, error):
+        print(error)
+        if self.playlist.currentIndex() < self.playlist.currentIndex():
+            self.playlist.next()
+            self.player.play()
 
     # for now no controller
     def on_doubleclick(self, index: QtCore.QModelIndex):
@@ -133,7 +155,11 @@ class BasicPlayer(QtWidgets.QWidget):
 
         debug = 1
 
-
+    def on_play_click(self):
+        self.player.play()
+        
+    def on_stop_click(self):
+        self.player.stop()
 
     def load_directory(self, song_dir):
         home = pathlib.Path(song_dir)
