@@ -97,9 +97,8 @@ class BasicPlayer(QtWidgets.QWidget):
     def __init__(self, song_dir):
         super(BasicPlayer, self).__init__()
 
-        self.player = QtMultimedia.QMediaPlayer()
         self.playlist = QtMultimedia.QMediaPlaylist()
-        self.load_directory(song_dir)
+        self.player = QtMultimedia.QMediaPlayer()
         self.player.setPlaylist(self.playlist)
 
         self.body = QtWidgets.QVBoxLayout()
