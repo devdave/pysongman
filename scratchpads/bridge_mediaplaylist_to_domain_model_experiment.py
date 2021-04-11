@@ -125,12 +125,11 @@ class BasicPlayer(QtWidgets.QWidget):
         self.playtable.doubleClicked.connect(self.on_doubleclick)
 
     # for now no controller
-    def on_doubleclick(self, index:QtCore.QModelIndex):
+    def on_doubleclick(self, index: QtCore.QModelIndex):
         row = index.row()
         self.playlist.setCurrentIndex(row)
         self.player.play()
-        ers = self.player.errorString()
-        erc = self.player.error()
+
         debug = 1
 
 
