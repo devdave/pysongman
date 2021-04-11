@@ -179,7 +179,6 @@ class BasicPlayer(QtWidgets.QWidget):
 
 def main(song_dir):
 
-    MockDomain.Generate(song_dir)
     app = QtWidgets.QApplication(sys.argv)
     view = BasicPlayer(song_dir)
 
