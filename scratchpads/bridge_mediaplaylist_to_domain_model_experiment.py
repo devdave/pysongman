@@ -110,6 +110,7 @@ class BasicPlayer(QtWidgets.QWidget):
         self.playtable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.playtable.verticalHeader().hide()
         self.playtable.horizontalHeader().hide()
+        self.playtable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.playtable.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.playtable.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.playtable.resizeColumnsToContents()
