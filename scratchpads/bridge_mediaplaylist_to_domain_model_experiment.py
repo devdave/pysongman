@@ -99,6 +99,9 @@ class BasicPlayer(QtWidgets.QWidget):
 
         self.playlist = QtMultimedia.QMediaPlaylist()
         self.player = QtMultimedia.QMediaPlayer()
+        self.player.error.connect(self.on_media_error)
+
+
         self.player.setPlaylist(self.playlist)
 
         self.body = QtWidgets.QVBoxLayout()
