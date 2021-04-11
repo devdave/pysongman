@@ -163,7 +163,7 @@ class BasicPlayer(QtWidgets.QWidget):
 
     def load_directory(self, song_dir):
         home = pathlib.Path(song_dir)
-        files = (element for element in home.iterdir() if element.is_file() and element.name.endswith(".ogg"))
+        files = (element for element in home.iterdir() if element.is_file() and element.name.endswith(".mp3"))
         for fake_id, file in enumerate(files):
             media = QtMultimedia.QMediaContent(QtCore.QUrl(str(file)))
             self.playlist.addMedia(media)
