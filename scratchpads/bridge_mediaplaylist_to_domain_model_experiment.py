@@ -17,6 +17,40 @@ from PySide2 import QtMultimedia
 
 from ffprobe_analyzer import FFProbe
 
+class MockRecord:
+    def __init__(self, meta, path):
+        self.meta = meta
+        self.path = path
+
+    @property
+    def title(self):
+        if getattr(self.meta, "title", None) is None:
+            # assume everything but duration is missing
+            if "-" in self.path.name:
+                # assume artist - title
+                _, title = self.path.name.split("-", 1)
+                return title
+            else:
+                return self.path.name
+
+        else:
+            return self.meta.title
+
+    @property
+    def filename(self):
+        return self.path
+
+    @property
+    def duration_str(self):
+        time = self.meta.info.length
+        minutes = int(time / 60)
+        seconds = int(time % 60)
+        return f"{minutes}:{seconds:02}"
+
+
+
+
+
 class MockDomain:
 
     data = []
