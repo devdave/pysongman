@@ -217,7 +217,7 @@ class BasicPlayer(QtWidgets.QWidget):
         home = pathlib.Path(song_dir)
         files = (element for element in home.iterdir() if element.is_file() and element.name.endswith(".mp3"))
         for fake_id, file in enumerate(files):
-            url = QtCore.QUrl(str(file).replace("\\", "/"))
+            url = QtCore.QUrl(file.as_posix())
             media = QtMultimedia.QMediaContent(url)
             self.playlist.addMedia(media)
 
