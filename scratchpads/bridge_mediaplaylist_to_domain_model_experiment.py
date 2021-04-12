@@ -144,7 +144,13 @@ class BasicPlayer(QtWidgets.QWidget):
 
         self.body = QtWidgets.QVBoxLayout()
 
-        self.play2table = Playlist2Table(self.playlist, {"Title": lambda r: r.title, "Duration": lambda r: r.duration_str})
+        def fetch_title(record):
+            return record.title
+
+        def fetch_dur(record):
+            return record.duration_str
+
+        self.play2table = Playlist2Table(self.playlist, {"Title": fetch_title, "Duration": fetch_dur})
 
         self.playtable = QtWidgets.QTableView()
         self.playtable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
