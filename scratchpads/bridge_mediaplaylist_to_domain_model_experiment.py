@@ -137,9 +137,9 @@ class BasicPlayer(QtWidgets.QWidget):
 
         self.player = QtMultimedia.QMediaPlayer()
         self.player.error.connect(self.on_media_error)
-
-
         self.player.setPlaylist(self.playlist)
+
+
         self.load_directory(song_dir)
 
         self.body = QtWidgets.QVBoxLayout()
