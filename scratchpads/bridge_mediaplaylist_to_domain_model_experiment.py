@@ -8,6 +8,9 @@ import sys
 import argparse
 import typing
 import pathlib
+import pprint
+
+import mutagen
 
 import PySide2
 from PySide2 import QtCore
@@ -57,17 +60,23 @@ class MockDomain:
 
     @classmethod
     def Generate(cls, song_dir):
+
         song_dir = pathlib.Path(song_dir)
         files = (file for file in song_dir.iterdir() if file.is_file() and file.name.endswith((".ogg", ".mp3")))
         for file in files:
-            probe = FFProbe(file)
-            cls.data.append(probe)
+            url = QtCore.QUrl(file.as_posix())
+            media = QtMultimedia.QMediaContent(url)
+
+            meta = mutagen.File(file.as_posix())
+
+            # probe = FFProbe(file)
+            cls.data.append(MockRecord(meta, file))
 
     @classmethod
     def GetByPath(cls, path):
         search_path = pathlib.Path(path)
         for record in cls.data:  # type: FFProbe
-            if record.song_path == search_path:
+            if pathlib.Path(record.filename) == search_path:
                 return record
 
 
