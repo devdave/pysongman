@@ -132,6 +132,9 @@ class BasicPlayer(QtWidgets.QWidget):
         super(BasicPlayer, self).__init__()
 
         self.playlist = QtMultimedia.QMediaPlaylist()
+        self.playlist.currentIndexChanged.connect(self.on_index_changed)
+
+
         self.player = QtMultimedia.QMediaPlayer()
         self.player.error.connect(self.on_media_error)
 
@@ -177,6 +180,10 @@ class BasicPlayer(QtWidgets.QWidget):
 
 
         self.playtable.doubleClicked.connect(self.on_doubleclick)
+
+    def on_index_changed(self, position):
+        self.playtable.selectRow(position)
+
 
     def on_media_error(self, error):
         print(error)
