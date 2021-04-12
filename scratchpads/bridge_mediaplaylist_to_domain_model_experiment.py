@@ -187,9 +187,11 @@ class BasicPlayer(QtWidgets.QWidget):
 
     def on_media_error(self, error):
         print(error)
-        if self.playlist.currentIndex() < self.playlist.currentIndex():
-            self.playlist.next()
-            self.player.play()
+        media = self.player.currentMedia()
+        print(media, media.canonicalUrl())
+        probe = FFProbe(media.canonicalUrl().toString())
+        pprint.pprint(probe.info)
+
 
     # for now no controller
     def on_doubleclick(self, index: QtCore.QModelIndex):
