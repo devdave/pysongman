@@ -17,6 +17,36 @@ class PlaylistWindow(QtWidgets.QWidget):
     def __init__(self):
         super(PlaylistWindow, self).__init__()
 
+        self.table = None
+        self.body = None
+
+        self.setupUI()
+
+
     def setupUI(self):
-        self.label = QtWidgets.QLabel("Hello world")
-        self.addWidget(self.label)
+        self.setWindowTitle("Playlist editor")
+        self.body = QtWidgets.QVBoxLayout(self)
+
+        self.table = QtWidgets.QTableView()
+
+        self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.table.verticalHeader().hide()
+        self.table.horizontalHeader().hide()
+        self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.table.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.table.resizeColumnsToContents()
+        # Ever get the feeling I REALLY want this to expand?
+
+
+        self.body.addWidget(self.table)
+        self.body.setStretch(0, 1)
+
+
+
+
+
+
+
+
+
