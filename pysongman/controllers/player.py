@@ -11,6 +11,7 @@ import pathlib
 
 from ..views.playlist_window import PlaylistWindow
 from ..views.player_window import PlayerWindow
+from ..views.media_window import Media as MediaWindow
 from ..lib.ffprobe import FFProbe
 from .playlist import PlaylistController
 
@@ -26,6 +27,7 @@ class PlayerController(QtCore.QObject):
     def __init__(self, song_file = None):
         self.view = PlayerWindow()
         self.playlist_view = PlaylistWindow()
+        self.media_view = MediaWindow()
 
 
         self.playlist = QtMultimedia.QMediaPlaylist()
@@ -43,6 +45,7 @@ class PlayerController(QtCore.QObject):
             # TODO auto play?
 
     def show(self):
+        self.media_view.show()
         self.playlist_view.show()
         self.view.show()
 
