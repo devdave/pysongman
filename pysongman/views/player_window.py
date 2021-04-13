@@ -70,11 +70,6 @@ class PlayerWindow(QtWidgets.QWidget):
 
         """
 
-        # icons = {}
-        # ico_files = [file for file in ICON_DIR.iterdir() if file.is_file() and file.name.endswith("png")]
-        # for file in ico_files:
-        #     fname, _ = file.name.split(".", 1)
-        #     icons[fname] = QPixmap(file)
 
         # Main display body
         self.time_display = QtWidgets.QLabel("0:00")
