@@ -1,3 +1,4 @@
+import typing
 
 import PySide2
 from PySide2 import QtCore
@@ -6,6 +7,7 @@ from PySide2 import QtMultimedia
 
 from . import initialize_db
 from .base import Base
+from .song import Song
 
 
 
