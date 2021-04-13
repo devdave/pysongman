@@ -96,11 +96,6 @@ class MediaLibraryWindow(QtWidgets.QMainWindow):
             table.setSortingEnabled(True)
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
-        # setup the data
-        # self.artist_table.setModel(self.artist_model)
-        # self.album_table.setModel(self.album_model)
-        # self.songs_table.setModel(self.song_model)
-
         # layouts
         # top body
         self.top = QtWidgets.QHBoxLayout()
@@ -114,7 +109,6 @@ class MediaLibraryWindow(QtWidgets.QMainWindow):
         self.body.setAlignment(Qt.AlignLeft)  # Ever get a feeling I really want this to be alligned left?
         self.body.addWidget(divide)
         self.body.addWidget(self.songs_table)
-
 
         self.frame = QtWidgets.QFrame(self)
         self.frame.setLayout(self.body)
