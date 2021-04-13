@@ -18,11 +18,19 @@ from .. import CSS_DIR
 
 class PlayerWindow(QtWidgets.QWidget):
 
+    onClose = QtCore.Signal()
+
     def __init__(self, *args, **kwargs):
         super(PlayerWindow, self).__init__()
         self.icons = self.load_icons()
         self.setupUI()
         self.load_stylesheets()
+
+
+    def closeEvent(self, event):
+        self.onClose.emit()
+        event.accept()
+
 
     def load_icons(self):
         icons = {}
