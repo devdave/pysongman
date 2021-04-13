@@ -122,7 +122,6 @@ class Playlist2Table(QtCore.QAbstractTableModel):
                 fetcher = self.fetchers[index.column() - 1]
                 media = self.playlist.media(index.row())  # type: QtMultimedia.QMediaContent
                 path = media.canonicalUrl().toString()
-                path = path.replace("%5C", "\\")
                 record = MockDomain.GetByPath(path)
                 if record is None:
                     # ruh uh
