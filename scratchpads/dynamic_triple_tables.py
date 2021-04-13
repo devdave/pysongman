@@ -252,9 +252,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # layouts
         # top body
         self.top = QtWidgets.QHBoxLayout()
-        self.top.setAlignment(Qt.AlignLeft)
-        self.top.addWidget(self.artist_table, 1, Qt.AlignLeft)
-        self.top.addWidget(self.album_table, 1, Qt.AlignLeft)
+        self.top.setAlignment(Qt.AlignJustify)
+        self.top.addWidget(self.artist_table, 1, Qt.AlignJustify)
+        self.top.addWidget(self.album_table, 1, Qt.AlignJustify)
 
         # main body
         self.body = QtWidgets.QVBoxLayout()
