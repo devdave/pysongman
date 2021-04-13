@@ -2,7 +2,9 @@
 import PySide2
 from PySide2 import QtCore
 from PySide2.QtCore import Qt
+from PySide2 import QtMultimedia
 
+from . import initialize_db
 from .base import Base
 
 
@@ -10,12 +12,49 @@ from .base import Base
 
 class Table(QtCore.QAbstractTableModel):
 
-    def __init__(self, playlist_obj):
+
+    playlist: QtMultimedia.QMediaPlaylist
+
+    def __init__(self, playlist, headers_fetchers):
         super(Table, self).__init__()
-        self.obj = playlist_obj
+        self.playlist = playlist
+        self.headers = list(headers_fetchers.keys())
+        self.fetchers = list(headers_fetchers.values())
 
-    pass
+    def rowCount(self, parent: PySide2.QtCore.QModelIndex = ...) -> int:
+        return self.playlist.mediaCount()
+
+    def columnCount(self, parent: PySide2.QtCore.QModelIndex = ...) -> int:
+        """
+            Row ID, header[0], header[...]
+        Args:
+            parent:
+
+        Returns:
+
+        """
+        return len(self.headers) + 1
+
+    def headerData(self, section: int, orientation: PySide2.QtCore.Qt.Orientation, role: int = ...) -> typing.Any:
+        if role == Qt.DisplayRole:
+            if section == 0:
+                return "RID"
+            else:
+                return self.headers[section - 1]
+
+    def data(self, index: PySide2.QtCore.QModelIndex, role: int = ...) -> typing.Any:
+        if role == Qt.DisplayRole:
+
+            if index.column() == 0:
+                return index.row()
+            else:
+                fetcher = self.fetchers[index.column() - 1]
+                media = self.playlist.media(index.row())  # type: QtMultimedia.QMediaContent
+                path = media.canonicalUrl().toString()
+                record = Domain.GetByPath(path)
+                if record is None:
+                    # ruh uh
+                    print("Failed to lookup path: ", path)
+                return fetcher(record)
 
 
-class Domain(Base):
-    pass
