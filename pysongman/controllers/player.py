@@ -90,7 +90,22 @@ class PlayerController(QtCore.QObject):
 
         self.view.onClose.connect(self.do_close)
 
+        self.view.playlist_btn.clicked.connect(self.toggle_playlist_view)
+        self.view.medialib_btn.clicked.connect(self.toggle_media_view)
+
         self.view.load_btn.clicked.connect(self.open_song)
+
+    def toggle_playlist_view(self):
+        if self.playlist_view.isVisible():
+            self.playlist_view.hide()
+        else:
+            self.playlist_view.show()
+
+    def toggle_media_view(self):
+        if self.media_view.isVisible():
+            self.media_view.hide()
+        else:
+            self.media_view.show()
 
     def do_close(self):
         self.view.close()
