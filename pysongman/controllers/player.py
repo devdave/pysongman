@@ -88,9 +88,14 @@ class PlayerController(QtCore.QObject):
         self.view.progress_bar.valueChanged.connect(self.progress_changed)
         # self.view.progress_bar.clicked.connect(self.progress_bar_pressed)
 
+        self.view.onClose.connect(self.do_close)
 
         self.view.load_btn.clicked.connect(self.open_song)
 
+    def do_close(self):
+        self.view.close()
+        self.playlist_view.close()
+        self.media_view.close()
 
     def mediaInserted(self, start, end):
         print("mediaInserted", start, end)
