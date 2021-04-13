@@ -25,14 +25,15 @@ from PySide2 import QtMultimedia
 
 class PlayerController(QtCore.QObject):
     def __init__(self, song_file = None):
-        self.view = PlayerWindow()
-        self.playlist_view = PlaylistWindow()
-        self.media_view = MediaWindow()
 
+        self.playlist_obj = QtMultimedia.QMediaPlaylist()
 
-        self.playlist = QtMultimedia.QMediaPlaylist()
+        self.playlist = PlaylistController(self.playlist_obj)
         self.player = QtMultimedia.QMediaPlayer()
-        self.player.setPlaylist(self.playlist)
+        self.player.setPlaylist(self.playlist_obj)
+
+        self.view = PlayerWindow()
+        self.media_view = MediaWindow()
 
 
         self.progress_bar_pressed = False
@@ -46,14 +47,14 @@ class PlayerController(QtCore.QObject):
 
     def show(self):
         self.media_view.show()
-        self.playlist_view.show()
+        self.playlist.view.show()
         self.view.show()
 
         player_bottom = self.view.height() + self.view.y()
         player_right = self.view.width() + self.view.x()
 
         self.media_view.move(self.media_view.x(), player_bottom + 1)
-        self.playlist_view.move(player_right, self.playlist_view.y())
+        self.playlist.view.move(player_right, self.playlist.view.y())
 
 
 
@@ -74,8 +75,8 @@ class PlayerController(QtCore.QObject):
         self.view.pause_btn.clicked.connect(self.player.pause)
         self.view.stop_btn.clicked.connect(self.player.stop)
 
-        self.view.next_btn.clicked.connect(self.playlist.next)
-        self.view.previous_btn.clicked.connect(self.playlist.previous)
+        self.view.next_btn.clicked.connect(self.playlist_obj.next)
+        self.view.previous_btn.clicked.connect(self.playlist_obj.previous)
 
         self.player.durationChanged.connect(self.durationChanged)
         self.player.positionChanged.connect(self.positionChanged)
@@ -217,4 +218,4 @@ class PlayerController(QtCore.QObject):
         url = QtCore.QUrl(sanitized)
         content = QtMultimedia.QMediaContent(url)
 
-        self.playlist.addMedia(content)
+        self.playlist_obj.addMedia(content)
