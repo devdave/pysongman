@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import Column, Integer
 
 
-@as_declarative
+@as_declarative()
 class Base:
 
     @declared_attr
