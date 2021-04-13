@@ -149,7 +149,7 @@ class PlayerController(QtCore.QObject):
     def positionChanged(self, position: int):
 
         time = position / 1000
-        print(f"{position} - {int(time / 60)}:{int(time % 60):02}")
+        # print(f"{position} - {int(time / 60)}:{int(time % 60):02}")
 
         self.view.progress_bar.setValue(position)
         # TODO modula would be better here
