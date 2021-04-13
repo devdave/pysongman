@@ -1,4 +1,11 @@
-PySide2~=5.15.2
-SQLAlchemy~=1.4.4
-tinytag~=1.5.0
-mutagen~=1.45.1
+appdirs==1.4.4
+cefpython3==66.1
+delegator.py==0.1.1
+greenlet==1.0.0
+mutagen==1.45.1
+pexpect==4.8.0
+ptyprocess==0.7.0
+PySide2==5.15.2
+shiboken2==5.15.2
+SQLAlchemy==1.4.4
+tinytag==1.5.0
