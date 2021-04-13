@@ -49,6 +49,15 @@ class PlayerController(QtCore.QObject):
         self.playlist_view.show()
         self.view.show()
 
+        player_bottom = self.view.height() + self.view.y()
+        player_right = self.view.width() + self.view.x()
+
+        self.media_view.move(self.media_view.x(), player_bottom + 1)
+        self.playlist_view.move(player_right, self.playlist_view.y())
+
+
+
+
     def play(self):
         self.player.play()
 
