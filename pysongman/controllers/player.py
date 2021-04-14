@@ -98,6 +98,12 @@ class PlayerController(QtCore.QObject):
 
         self.view.load_btn.clicked.connect(self.open_song)
 
+
+
+        # controller to controller
+        # self.playlist.song_selected.connect(self.on_song_selected)
+        self.playlist_obj.currentMediaChanged.connect(self.on_song_selected)
+
         self.view.keyPressed.connect(self.on_keypress)
 
     def on_keypress(self, event: QtGui.QKeyEvent):
@@ -113,6 +119,11 @@ class PlayerController(QtCore.QObject):
             self.playlist_obj.next()
 
         event.accept()
+
+
+    def on_song_selected(self, media: QtMultimedia.QMediaContent, *args):
+        self.player.play()
+
     def toggle_playlist_view(self):
         if self.playlist.view.isVisible():
             self.playlist.view.hide()
