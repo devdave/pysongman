@@ -114,10 +114,10 @@ class PlayerController(QtCore.QObject):
 
         event.accept()
     def toggle_playlist_view(self):
-        if self.playlist_view.isVisible():
-            self.playlist_view.hide()
+        if self.playlist.view.isVisible():
+            self.playlist.view.hide()
         else:
-            self.playlist_view.show()
+            self.playlist.view.show()
 
     def toggle_media_view(self):
         if self.media_view.isVisible():
