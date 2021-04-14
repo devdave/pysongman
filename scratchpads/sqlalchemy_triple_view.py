@@ -61,7 +61,7 @@ class DynamicModel(QtCore.QAbstractTableModel):
         if column == -1:
             return
 
-        # self.emit(PySide2.QtCore.SIGNAL("layoutAboutToBeChanged()") )
+
         self.layoutAboutToBeChanged.emit()
         column_name = list(self._header_map.values())[column]
 
@@ -70,7 +70,7 @@ class DynamicModel(QtCore.QAbstractTableModel):
         else:
             self._data.sort(key=lambda row: row[column_name], reverse=True)
         self.layoutChanged.emit()
-        # self.emit(PySide2.QtCore.SIGNAL("layoutChanged()"))
+
 
     def updateData(self, data):
 
