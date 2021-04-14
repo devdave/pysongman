@@ -206,7 +206,7 @@ class PlayerController(QtCore.QObject):
 
     def mediaError(self, error: QtMultimedia.QMediaPlayer.Error.ResourceError):
         print(error)
-        current_song = self.playlist.currentMedia()
+        current_song = self.playlist_obj.currentMedia()
         qurl = current_song.canonicalUrl()
         print("Unable to play", qurl.toString())
 
