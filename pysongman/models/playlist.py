@@ -28,8 +28,8 @@ class PlaylistItem:
     def duration_str(self):
         return self.probed.duration_str
 
-class Table(QtCore.QAbstractTableModel):
 
+class Table(QtCore.QAbstractTableModel):
 
     playlist: QtMultimedia.QMediaPlaylist
 
