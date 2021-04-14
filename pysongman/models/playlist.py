@@ -8,9 +8,25 @@ from PySide2 import QtMultimedia
 from . import initialize_db
 from .base import Base
 from .song import Song
+from ..lib.ffprobe import FFProbe
 
 
+class PlaylistItem:
 
+    @classmethod
+    def Load(cls, file_path):
+        return cls(FFProbe.Load(file_path))
+
+    def __init__(self, probed: FFProbe):
+        self.probed = probed
+
+    @property
+    def title(self):
+        return self.probed.listing
+
+    @property
+    def duration_str(self):
+        return self.probed.duration_str
 
 class Table(QtCore.QAbstractTableModel):
 
