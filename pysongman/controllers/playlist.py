@@ -19,7 +19,7 @@ class PlaylistController(QtCore.QObject):
 
 
         self.playlist = playlist_obj
-        self.table_model = PlaylistTable(self.playlist, {"Title": lambda r: r.title, "Duration": lambda r: r.duration_ms} )
+        self.table_model = PlaylistTable(self.playlist, {"Title": lambda r: r.title, "Duration": lambda r: r.duration_str} )
 
         self.setupUI()
         self.connect()
