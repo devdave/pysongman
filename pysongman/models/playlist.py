@@ -32,10 +32,13 @@ class PlaylistItem:
 class Table(QtCore.QAbstractTableModel):
 
     playlist: QtMultimedia.QMediaPlaylist
+    # Signals
+    media_removed = QtCore.Signal()
+    media_added = QtCore.Signal()
 
     def __init__(self, playlist, headers_fetchers):
         super(Table, self).__init__()
-        self.playlist = playlist
+        self.playlist = playlist # type: QtMultimedia.QMediaPlaylist
         self.headers = list(headers_fetchers.keys())
         self.fetchers = list(headers_fetchers.values())
 
@@ -52,6 +55,17 @@ class Table(QtCore.QAbstractTableModel):
         self.layoutAboutToBeChanged().emit()
         self.media_removed.emit()
         self.layoutchanged.emit()
+
+    def on_index_changed(self, index):
+        print(f"PLT: {index}")
+
+    def select_song_by_path(self, path):
+        for index in range(self.playlist.mediaCount()):
+            media_url = self.playlist.media(index).canonicalUrl()
+            if media_url == path:
+                self.playlist.setCurrentIndex(index)
+
+
     def rowCount(self, parent: PySide2.QtCore.QModelIndex = ...) -> int:
         return self.playlist.mediaCount()
 
@@ -82,10 +96,12 @@ class Table(QtCore.QAbstractTableModel):
                 fetcher = self.fetchers[index.column() - 1]
                 media = self.playlist.media(index.row())  # type: QtMultimedia.QMediaContent
                 path = media.canonicalUrl().toString()
-                record = Domain.GetByPath(path)
+                record = Song.GetByPath(path)
                 if record is None:
-                    # ruh uh
-                    print("Failed to lookup path: ", path)
+                    record = PlaylistItem.Load(path)
+
                 return fetcher(record)
+
+
 
 
