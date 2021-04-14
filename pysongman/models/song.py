@@ -1,3 +1,4 @@
+import sqlite3
 
 from . import initialize_db
 from .base import Base
@@ -35,7 +36,9 @@ class Song(Base):
 
         result = cursor.fetchone()
         sid = result[0]
+
         return Song.query.filter(Song.id == sid).first()
+
 
 
 
