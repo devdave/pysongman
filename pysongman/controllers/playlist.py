@@ -3,13 +3,18 @@ import PySide2
 from PySide2 import QtCore
 from PySide2.QtCore import Qt
 from PySide2 import QtWidgets
+from PySide2 import QtMultimedia
 
 from ..views.playlist_window import PlaylistWindow
 from ..models.playlist import Table as PlaylistTable
 
 
 class PlaylistController(QtCore.QObject):
-    def __init__(self, playlist_obj):
+
+    song_selected = QtCore.Signal(str)
+
+
+    def __init__(self, playlist_obj: QtMultimedia.QMediaPlaylist):
         super(PlaylistController, self).__init__()
 
 
