@@ -27,8 +27,12 @@ class Song(Base):
         """
         conn = initialize_db()
         raw = conn.e.raw_connection()
-        cursor = raw()
-        cursor.execute(SQL, path)
+        cursor = raw.cursor()
+        try:
+            cursor.execute(SQL, path)
+        except sqlite3.OperationalError:
+            return None
+
         result = cursor.fetchone()
         sid = result[0]
         return Song.query.filter(Song.id == sid).first()
