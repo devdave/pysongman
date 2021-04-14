@@ -33,8 +33,6 @@ class PlaylistController(QtCore.QObject):
         self.view.table.doubleClicked.connect(self.on_dbl_click)
 
     def on_dbl_click(self, index):
-        print(f"PLC: {index=}")
-        # ARGH
         print(f"PLC: dbl click {index=}")
         # TODO this will be problematic later when I want to sort the playlist
         self.playlist.media(index.row())
