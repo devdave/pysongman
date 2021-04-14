@@ -28,7 +28,7 @@ def initialize_db() -> SAConnection:
         home_path = Path(HOME)
         engine_url = f"sqlite:///{home_path.as_posix()}/{APP_NAME}.sqlite3"
         SA_ENGINE = create_engine(engine_url)
-        base.metadata.bind = SA_ENGINE
+        Base.metadata.bind = SA_ENGINE
 
     if SA_FACTORY is None:
         sm = sessionmaker(bind=SA_ENGINE)
