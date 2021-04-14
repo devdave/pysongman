@@ -22,13 +22,22 @@ class PlaylistController(QtCore.QObject):
         self.table_model = PlaylistTable(self.playlist, {"Title": lambda r: r.title, "Duration": lambda r: r.duration_ms} )
 
         self.setupUI()
+        self.connect()
 
     def setupUI(self):
         self.view = PlaylistWindow()
 
 
     def connect(self):
-        pass
+        self.view.table.setModel(self.table_model)
+        self.view.table.doubleClicked.connect(self.on_dbl_click)
+
+    def on_dbl_click(self, index):
+        print(f"PLC: {index=}")
+        # ARGH
+
+
+
 
     def show(self):
         self.view.show()
