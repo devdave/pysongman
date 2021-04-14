@@ -39,6 +39,19 @@ class Table(QtCore.QAbstractTableModel):
         self.headers = list(headers_fetchers.keys())
         self.fetchers = list(headers_fetchers.values())
 
+        self.playlist.mediaInserted.connect(self.on_media_inserted)
+        self.playlist.mediaRemoved.connect(self.on_media_removed)
+        self.playlist.currentIndexChanged.connect(self.on_index_changed)
+
+    def on_media_inserted(self):
+        self.layoutAboutToBeChanged.emit()
+        self.media_added.emit()
+        self.layoutChanged.emit()
+
+    def on_media_removed(self):
+        self.layoutAboutToBeChanged().emit()
+        self.media_removed.emit()
+        self.layoutchanged.emit()
     def rowCount(self, parent: PySide2.QtCore.QModelIndex = ...) -> int:
         return self.playlist.mediaCount()
 
