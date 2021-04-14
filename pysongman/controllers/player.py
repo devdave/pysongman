@@ -200,7 +200,8 @@ class PlayerController(QtCore.QObject):
         supportedMimeTypes = ['audio/mpeg', 'application/ogg','application/octet-stream']
         fileDialog.setMimeTypeFilters(supportedMimeTypes)
 
-        index = self.playlist.currentIndex()
+
+        index = self.playlist_obj.currentIndex()
 
 
         if fileDialog.exec_() == QtWidgets.QDialog.Accepted:
@@ -209,9 +210,9 @@ class PlayerController(QtCore.QObject):
             for file in files:
                 print("Adding", file)
                 content = QtMultimedia.QMediaContent(QtCore.QUrl(file))
-                self.playlist.addMedia(content)
+                self.playlist_obj.addMedia(content)
 
-            self.playlist.setCurrentIndex(index + 1)
+            self.playlist_obj.setCurrentIndex(index + 1)
             self.player.play()
 
     def add_song(self, song_file):
