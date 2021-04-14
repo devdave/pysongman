@@ -9,7 +9,12 @@ HOME = None
 APP_NAME = "pysongman"
 APP_AUTHOR = "DJW"
 
-HOME = appdirs.user_data_dir(APP_NAME, APP_AUTHOR)
+HOME = Path(appdirs.user_data_dir(APP_NAME, APP_AUTHOR))
+
+if HOME.exists() is False:
+    HOME.mkdir(parents=True, exist_ok=True)
+
+
 HERE = Path(__file__).parent.absolute()
 RSRC_DIR = HERE / "resources"
 ICON_DIR = RSRC_DIR / "icons"
