@@ -11,6 +11,11 @@ QPushButton {
     padding: 5px 5px 5px 5px;
 }
 
+QMenuBar {
+    background: #eeeeee;
+
+}
+
 QSlider::groove:horizontal {
 border: 1px solid #bbb;
 background: white;
