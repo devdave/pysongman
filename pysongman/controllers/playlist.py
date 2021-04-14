@@ -11,7 +11,7 @@ from ..models.playlist import Table as PlaylistTable
 
 class PlaylistController(QtCore.QObject):
 
-    song_selected = QtCore.Signal(str)
+    song_selected = QtCore.Signal(QtMultimedia.QMediaContent)
 
 
     def __init__(self, playlist_obj: QtMultimedia.QMediaPlaylist):
@@ -35,6 +35,12 @@ class PlaylistController(QtCore.QObject):
     def on_dbl_click(self, index):
         print(f"PLC: {index=}")
         # ARGH
+        print(f"PLC: dbl click {index=}")
+        # TODO this will be problematic later when I want to sort the playlist
+        self.playlist.media(index.row())
+        self.playlist.setCurrentIndex(index.row())
+        media = self.playlist.currentMedia()
+        self.song_selected.emit(media)
 
 
 
