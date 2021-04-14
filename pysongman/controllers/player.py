@@ -110,7 +110,8 @@ class PlayerController(QtCore.QObject):
 
     def do_close(self):
         self.view.close()
-        self.playlist_view.close()
+        self.playlist.view.close()
+
         self.media_view.close()
 
     def mediaInserted(self, start, end):
