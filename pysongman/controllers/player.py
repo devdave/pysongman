@@ -249,3 +249,14 @@ class PlayerController(QtCore.QObject):
         content = QtMultimedia.QMediaContent(url)
 
         self.playlist_obj.addMedia(content)
+
+    def add_directory(self, songs_path):
+        path = pathlib.Path(songs_path)
+        assert path.is_dir() and path.exists(), f"{path.is_dir()=} and {path.exists()=}"
+        files = (file for file in path.iterdir() if file.is_file() and file.suffix in [".ogg", ".mp3"])
+        dirs = (file for file in path.iterdir() if file.is_dir())
+        for song_file in files:
+            self.add_song(song_file)
+
+        for subdir in dirs:
+            self.add_directory(subdir)
