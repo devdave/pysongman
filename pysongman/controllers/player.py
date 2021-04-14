@@ -20,10 +20,12 @@ from PySide2 import QtCore
 from PySide2.QtCore import Qt
 from PySide2 import QtWidgets
 from PySide2 import QtMultimedia
+from PySide2 import QtGui
 
 
 
 class PlayerController(QtCore.QObject):
+
     def __init__(self, song_file = None):
 
         self.playlist_obj = QtMultimedia.QMediaPlaylist()
@@ -96,6 +98,21 @@ class PlayerController(QtCore.QObject):
 
         self.view.load_btn.clicked.connect(self.open_song)
 
+        self.view.keyPressed.connect(self.on_keypress)
+
+    def on_keypress(self, event: QtGui.QKeyEvent):
+        if event.key() == Qt.Key_Z:
+            self.playlist_obj.previous()
+        elif event.key() == Qt.Key_X:
+            self.player.play()
+        elif event.key() == Qt.Key_C:
+            self.player.pause()
+        elif event.key() == Qt.Key_V:
+            self.player.stop()
+        elif event.key() == Qt.Key_B:
+            self.playlist_obj.next()
+
+        event.accept()
     def toggle_playlist_view(self):
         if self.playlist_view.isVisible():
             self.playlist_view.hide()
