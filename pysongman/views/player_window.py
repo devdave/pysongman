@@ -11,6 +11,7 @@ from PySide2 import QtCore
 from PySide2.QtCore import Qt
 from PySide2 import QtWidgets
 from PySide2 import QtMultimedia
+from PySide2 import QtGui
 
 from .. import ICON_DIR
 from .. import CSS_DIR
@@ -19,12 +20,17 @@ from .. import CSS_DIR
 class PlayerWindow(QtWidgets.QWidget):
 
     onClose = QtCore.Signal()
+    keyPressed = QtCore.Signal(QtGui.QKeyEvent)
 
     def __init__(self, *args, **kwargs):
         super(PlayerWindow, self).__init__()
         self.icons = self.load_icons()
         self.setupUI()
         self.load_stylesheets()
+
+    def keyPressEvent(self, event):
+        super(PlayerWindow, self).keyPressEvent(event)
+        self.keyPressed.emit(event)
 
 
     def closeEvent(self, event):
