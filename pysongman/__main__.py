@@ -16,7 +16,12 @@ def main(song_file = None):
     player.show()
 
     if song_file is not None:
-        player.add_song(song_file)
+        song_file = pathlib.Path(song_file)
+        if song_file.is_file():
+            player.add_song(song_file)
+        elif song_file.is_dir():
+            player.add_directory(song_file)
+
         player.play()
 
     return sys.exit(app.exec_())
