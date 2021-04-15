@@ -32,4 +32,4 @@ if __name__ == '__main__':
     parser.add_argument("song_file", nargs="?", default=None)
     args = parser.parse_args()
 
-    main(args.song_file)
+    main(args.song_file.strip("\""))
