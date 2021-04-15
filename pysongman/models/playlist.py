@@ -11,22 +11,53 @@ from .song import Song
 from ..lib.ffprobe import FFProbe
 
 
+
 class PlaylistItem:
 
     @classmethod
     def Load(cls, file_path):
-        return cls(FFProbe.Load(file_path))
+        data = mutagen.File(file_path)
+        return cls(data, file_path)
 
-    def __init__(self, probed: FFProbe):
-        self.probed = probed
+    def __init__(self, data, file_path):
+        self.data = data
+        self.file_path = file_path
+
+    def tiny_title(self):
+        """
+            Attempt to
+        Returns:
+        """
+        tags = tinytag.TinyTag.get(self.file_path)
+        artist = tags.artist
+        title = tags.title
+        if None in [artist, title]:
+            return pathlib.Path(self.file_path).stem
+        else:
+            return f"{artist} - {title}"
+
 
     @property
     def title(self):
-        return self.probed.listing
+
+
+        artist = self.data.get("artist", [None])[0]
+        title = self.data.get("title", [None])[0]
+        if None in [artist, title]:
+            # TODO Amazon and similar vendors like to sneak in an anti-piracy ID3 hash string which wrecks mutagen
+            # try to detect if that is why there is no artist/title
+            return self.tiny_title()
+        else:
+            return f"{artist} - {title}"
+
+
 
     @property
     def duration_str(self):
-        return self.probed.duration_str
+        duration = self.data.info.length
+        seconds = int(duration % 60)
+        minutes = int(duration / 60)
+        return f"{minutes}:{seconds:02}"
 
 
 class Table(QtCore.QAbstractTableModel):
