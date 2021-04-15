@@ -1,3 +1,4 @@
+import pathlib
 import typing
 
 import PySide2
@@ -113,7 +114,7 @@ class Table(QtCore.QAbstractTableModel):
         Returns:
 
         """
-        return len(self.headers) + 1
+        return len(self.headers)
 
     def headerData(self, section: int, orientation: PySide2.QtCore.Qt.Orientation, role: int = ...) -> typing.Any:
         if role == Qt.DisplayRole:
@@ -125,17 +126,18 @@ class Table(QtCore.QAbstractTableModel):
     def data(self, index: PySide2.QtCore.QModelIndex, role: int = ...) -> typing.Any:
         if role == Qt.DisplayRole or role == Qt.ToolTipRole:
 
-            if index.column() == 0:
-                return index.row()
-            else:
-                fetcher = self.fetchers[index.column() - 1]
-                media = self.playlist.media(index.row())  # type: QtMultimedia.QMediaContent
-                path = media.canonicalUrl().toString()
-                record = Song.GetByPath(path)
-                if record is None:
-                    record = PlaylistItem.Load(path)
+            fetcher = self.fetchers[index.column()]
+            media = self.playlist.media(index.row())  # type: QtMultimedia.QMediaContent
+            path = media.canonicalUrl().toString()
+            record = Song.GetByPath(path)
+            if record is None:
+                record = PlaylistItem.Load(path)
 
-                return fetcher(record)
+            data = fetcher(record)
+
+            return data
+
+
 
 
 
