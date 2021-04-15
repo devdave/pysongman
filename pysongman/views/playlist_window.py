@@ -12,6 +12,12 @@ from .. import ICON_DIR
 from .. import CSS_DIR
 
 
+class DurationAlignDelegate(QtWidgets.QStyledItemDelegate):
+    def initStyleOption(self, option:PySide2.QtWidgets.QStyleOptionViewItem, index:PySide2.QtCore.QModelIndex) -> None:
+        super(DurationAlignDelegate, self).initStyleOption(option, index)
+        option.displayAlignment = Qt.AlignRight
+
+
 class PlaylistWindow(QtWidgets.QWidget):
 
     def __init__(self):
@@ -37,14 +43,12 @@ class PlaylistWindow(QtWidgets.QWidget):
         self.table.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.table.resizeColumnsToContents()
         # Ever get the feeling I REALLY want this to expand?
+        durationDelegate = DurationAlignDelegate(self.table)
+        self.table.setItemDelegateForColumn(1, durationDelegate)
 
 
         self.body.addWidget(self.table)
         self.body.setStretch(0, 1)
-
-
-
-
 
 
 
