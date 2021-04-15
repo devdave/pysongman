@@ -118,10 +118,7 @@ class Table(QtCore.QAbstractTableModel):
 
     def headerData(self, section: int, orientation: PySide2.QtCore.Qt.Orientation, role: int = ...) -> typing.Any:
         if role == Qt.DisplayRole:
-            if section == 0:
-                return "RID"
-            else:
-                return self.headers[section - 1]
+            return self.headers[section]
 
     def data(self, index: PySide2.QtCore.QModelIndex, role: int = ...) -> typing.Any:
         if role == Qt.DisplayRole or role == Qt.ToolTipRole:
