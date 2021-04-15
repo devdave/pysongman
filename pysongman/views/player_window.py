@@ -130,6 +130,8 @@ class PlayerWindow(QtWidgets.QWidget):
         # Line2
         self.progress_bar = QtWidgets.QSlider(Qt.Horizontal)
         self.progress_bar.setObjectName("progressBar")
+        self.progress_bar.setTickInterval(5)
+        self.progress_bar.setTickPosition(QtWidgets.QSlider.TicksAbove)
         self.progress_bar.setRange(0, 100)
         self.progress_bar.setFocusPolicy(Qt.NoFocus)
 
