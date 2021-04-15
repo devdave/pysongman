@@ -3,7 +3,11 @@ import typing
 import PySide2
 from PySide2 import QtCore
 from PySide2.QtCore import Qt
+from PySide2 import QtWidgets
 from PySide2 import QtMultimedia
+
+import mutagen
+import tinytag
 
 from . import initialize_db
 from .base import Base
