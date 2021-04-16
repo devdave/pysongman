@@ -93,7 +93,7 @@ class Table(QtCore.QAbstractTableModel):
         self.layoutchanged.emit()
 
     def on_index_changed(self, index):
-        print(f"PLT: {index}")
+        print(f"PLT: {index=}")
 
     def select_song_by_path(self, path):
         for index in range(self.playlist.mediaCount()):
