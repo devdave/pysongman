@@ -8,6 +8,7 @@ from PySide2 import QtWidgets
 from .controllers.player import PlayerController
 
 
+log = logging.getLogger(__name__)
 
 
 def configure_logging():
