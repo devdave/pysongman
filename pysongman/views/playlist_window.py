@@ -15,7 +15,7 @@ from .. import CSS_DIR
 class DurationAlignDelegate(QtWidgets.QStyledItemDelegate):
     def initStyleOption(self, option:PySide2.QtWidgets.QStyleOptionViewItem, index:PySide2.QtCore.QModelIndex) -> None:
         super(DurationAlignDelegate, self).initStyleOption(option, index)
-        option.displayAlignment = Qt.AlignRight
+        option.displayAlignment = Qt.AlignLeft
 
 
 class PlaylistWindow(QtWidgets.QWidget):
