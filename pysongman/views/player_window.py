@@ -174,8 +174,8 @@ class PlayerWindow(QtWidgets.QWidget):
         self.status_and_views.addWidget(self.progress_bar)
 
         for button in [self.load_btn, self.playlist_btn, self.medialib_btn]:
-            button.setMinimumWidth(3)
-            button.setMaximumWidth(25)
+            button.setMinimumWidth(35)
+            button.setMaximumWidth(55)
             self.status_and_views.addWidget(button)
 
     def setupControlBar(self):
