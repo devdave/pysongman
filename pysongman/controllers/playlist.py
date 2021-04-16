@@ -1,4 +1,6 @@
 
+import logging
+
 import PySide2
 from PySide2 import QtCore
 from PySide2.QtCore import Qt
@@ -7,6 +9,8 @@ from PySide2 import QtMultimedia
 
 from ..views.playlist_window import PlaylistWindow
 from ..models.playlist import Table as PlaylistTable
+
+log = logging.getLogger(__name__)
 
 
 class PlaylistController(QtCore.QObject):
@@ -33,7 +37,8 @@ class PlaylistController(QtCore.QObject):
         self.view.table.doubleClicked.connect(self.on_dbl_click)
 
     def on_dbl_click(self, index):
-        print(f"PLC: dbl click {index=}")
+        log.debug("double click index=%s", index.row())
+
         # TODO this will be problematic later when I want to sort the playlist
         self.playlist.media(index.row())
         self.playlist.setCurrentIndex(index.row())

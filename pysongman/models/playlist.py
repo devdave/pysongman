@@ -1,3 +1,4 @@
+import logging
 import pathlib
 import typing
 
@@ -14,6 +15,9 @@ from . import initialize_db
 from .base import Base
 from .song import Song
 from ..lib.ffprobe import FFProbe
+
+log = logging.getLogger(__name__)
+
 
 
 
@@ -38,6 +42,7 @@ class PlaylistItem:
         title = tags.title
         if None in [artist, title]:
             return pathlib.Path(self.file_path).stem
+            # log.debug("Tiny tag ID3 lookup failed on %s", self.file_path)
         else:
             return f"{artist} - {title}"
 
@@ -93,7 +98,7 @@ class Table(QtCore.QAbstractTableModel):
         self.layoutchanged.emit()
 
     def on_index_changed(self, index):
-        print(f"PLT: {index=}")
+        log.debug("index=%s", index)
 
     def select_song_by_path(self, path):
         for index in range(self.playlist.mediaCount()):

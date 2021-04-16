@@ -2,8 +2,7 @@
 
 MP2/Layer 2 mp3 codec - https://www.microsoft.com/en-us/p/mpeg-2-video-extension/9n95q1zzpmh4?activetab=pivot:overviewtab
 """
-
-
+import logging
 import sys
 import argparse
 import typing as T
@@ -23,6 +22,7 @@ from PySide2 import QtMultimedia
 from PySide2 import QtGui
 
 
+log = logging.getLogger(__name__)
 
 class PlayerController(QtCore.QObject):
 
@@ -167,14 +167,15 @@ class PlayerController(QtCore.QObject):
 
 
     def durationChanged(self, duration: int):
-        #
-        print(f"{duration=}")
+
+        log.debug("Duration=%s", duration)
         song_path = self.player.currentMedia().canonicalUrl().toString()
         if song_path not in ["", " ", "."]:
             probe = FFProbe.Load(song_path)
 
             if probe.duration_ms < duration:
-                print(f"DirectShow screwed up again: {duration=}, {probe.duration_ms=}")
+                log.debug("DirectShow screwed up again: duration=%d probed=%d", duration, probe.duration_ms)
+
                 self.view.progress_bar.setRange(0, probe.duration_ms)
             else:
                 self.view.progress_bar.setRange(0, duration)
@@ -184,7 +185,7 @@ class PlayerController(QtCore.QObject):
     def positionChanged(self, position: int):
 
         time = position / 1000
-        # print(f"{position} - {int(time / 60)}:{int(time % 60):02}")
+
 
         self.view.progress_bar.setValue(position)
         # TODO modula would be better here
@@ -195,10 +196,10 @@ class PlayerController(QtCore.QObject):
         self.view.time_display.setText(f"{minutes}:{corrected_seconds:02}")
 
     def mediaChanged(self, media: QtMultimedia.QMediaContent):
-        # print(media, vars(media), dir(media))
         raw_path = media.canonicalUrl().toString()
         if raw_path.strip() != "":
-            print(f"{raw_path=}")
+            log.debug("raw_path=%s", raw_path)
+
             probe = FFProbe.Load(raw_path)
 
             self.view.current_song.setText(f"{probe.listing} ({probe.duration_str})")
