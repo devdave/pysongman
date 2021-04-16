@@ -107,10 +107,12 @@ class PlayerWindow(QtWidgets.QWidget):
         self.repeat_button = QtWidgets.QPushButton()
         self.repeat_button.setObjectName("repeatButton")
         self.repeat_button.setIcon(self.icons['repeat'])
+        self.repeat_button.setCheckable(True)
 
         self.random_button = QtWidgets.QPushButton()
         self.random_button.setObjectName("randomButton")
         self.random_button.setIcon(self.icons["shuffle"])
+        self.random_button.setCheckable(True)
 
         self.playlist = QtWidgets.QVBoxLayout()
         self.playlist.setObjectName("playListControls")
