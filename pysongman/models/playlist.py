@@ -81,6 +81,7 @@ class Table(QtCore.QAbstractTableModel):
     # Signals
     media_removed = QtCore.Signal()
     media_added = QtCore.Signal()
+    index_changed = QtCore.Signal()
 
     def __init__(self, playlist, headers_fetchers):
         super(Table, self).__init__()
@@ -105,6 +106,7 @@ class Table(QtCore.QAbstractTableModel):
 
     def on_index_changed(self, index):
         log.debug("index=%s", index)
+        self.index_changed.emit(index)
 
     def select_song_by_path(self, path):
         for index in range(self.playlist.mediaCount()):
