@@ -128,6 +128,28 @@ class PlayerWindow(QtWidgets.QWidget):
         self.body_playlist_behavior.addLayout(self.playlist)
 
         # Line2
+        self.setupProgressAndViews()
+        self.setupControlBar()
+        self.setupMenuBar()
+
+
+        # Put it all together
+        self.main_body = QtWidgets.QVBoxLayout()
+        self.main_body.setObjectName("mainBody")
+        self.main_body.layout().setMenuBar(self.menu_bar)
+        self.main_body.addLayout(self.body_playlist_behavior)
+        self.main_body.addLayout(self.status_and_views)
+        self.main_body.addLayout(self.controls)
+
+        self.setLayout(self.main_body)
+        self.setWindowTitle("PySongMan")
+        self.setMinimumWidth(350)
+
+    def setupProgressAndViews(self):
+
+        self.status_and_views = QtWidgets.QHBoxLayout()
+        self.status_and_views.setObjectName("statusAndViews")
+
         self.progress_bar = QtWidgets.QSlider(Qt.Horizontal)
         self.progress_bar.setObjectName("progressBar")
         self.progress_bar.setTickInterval(5)
@@ -147,8 +169,7 @@ class PlayerWindow(QtWidgets.QWidget):
         self.medialib_btn.setObjectName("medialibButton")
         self.medialib_btn.setIcon(self.icons['board'])
 
-        self.status_and_views = QtWidgets.QHBoxLayout()
-        self.status_and_views.setObjectName("statusAndViews")
+
 
         self.status_and_views.addWidget(self.progress_bar)
 
@@ -157,8 +178,7 @@ class PlayerWindow(QtWidgets.QWidget):
             button.setMaximumWidth(25)
             self.status_and_views.addWidget(button)
 
-
-
+    def setupControlBar(self):
         # line3 - previous, play, pause, stop, next - mute - volume slider
         self.previous_btn = QtWidgets.QPushButton()
         self.previous_btn.setIcon(self.icons['previous'])
@@ -200,9 +220,9 @@ class PlayerWindow(QtWidgets.QWidget):
             button.setProperty("cssClass", "controlButton")
             self.controls.addWidget(button)
 
-
         self.controls.addWidget(self.volume_slider)
 
+    def setupMenuBar(self):
         # Menu bar
         self.menu_bar = QtWidgets.QMenuBar()
         self.menu_file = QtWidgets.QMenu("&File")
@@ -213,18 +233,6 @@ class PlayerWindow(QtWidgets.QWidget):
 
         for menu in [self.menu_file, self.menu_play, self.menu_options, self.menu_view, self.menu_help]:
             self.menu_bar.addMenu(menu)
-
-        # Put it all together
-        self.main_body = QtWidgets.QVBoxLayout()
-        self.main_body.setObjectName("mainBody")
-        self.main_body.layout().setMenuBar(self.menu_bar)
-        self.main_body.addLayout(self.body_playlist_behavior)
-        self.main_body.addLayout(self.status_and_views)
-        self.main_body.addLayout(self.controls)
-
-        self.setLayout(self.main_body)
-        self.setWindowTitle("PySongMan")
-        self.setMinimumWidth(350)
 
     def load_stylesheets(self, filepath: T.Union[str, pathlib.Path] = None) -> None:
         """
