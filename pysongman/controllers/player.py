@@ -21,7 +21,6 @@ from PySide2 import QtWidgets
 from PySide2 import QtMultimedia
 from PySide2 import QtGui
 
-
 log = logging.getLogger(__name__)
 
 class PlayerController(QtCore.QObject):
@@ -196,6 +195,7 @@ class PlayerController(QtCore.QObject):
         self.view.time_display.setText(f"{minutes}:{corrected_seconds:02}")
 
     def mediaChanged(self, media: QtMultimedia.QMediaContent):
+
         raw_path = media.canonicalUrl().toString()
         if raw_path.strip() != "":
             log.debug("raw_path=%s", raw_path)
