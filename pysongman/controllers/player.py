@@ -102,13 +102,15 @@ class PlayerController(QtCore.QObject):
 
         self.view.load_btn.clicked.connect(self.open_song)
 
-
-
         # controller to controller
         # self.playlist.song_selected.connect(self.on_song_selected)
         self.playlist_obj.currentMediaChanged.connect(self.on_song_selected)
 
         self.view.keyPressed.connect(self.on_keypress)
+
+        # Wire up menu's
+        self.view.act_exit.triggered.connect(self.on_action_exit)
+
 
     def on_keypress(self, event: QtGui.QKeyEvent):
         if event.key() == Qt.Key_Z:
@@ -139,6 +141,9 @@ class PlayerController(QtCore.QObject):
             self.media_view.hide()
         else:
             self.media_view.show()
+
+    def on_action_exit(self):
+        self.do_close()
 
     def do_close(self):
         self.view.close()
