@@ -23,7 +23,13 @@ class PlaylistController(QtCore.QObject):
 
 
         self.playlist = playlist_obj
-        self.table_model = PlaylistTable(self.playlist, {"Title": lambda r: r.title, "Duration": lambda r: r.duration_str} )
+        headers = {
+            "Duration": lambda r: r.duration_str,
+            "title": lambda r: r.title
+
+        }
+        # old headers = {"Title": lambda r: r.title, "Duration": lambda r: r.duration_str}
+        self.table_model = PlaylistTable(self.playlist, headers)
 
         self.setupUI()
         self.connect()
@@ -35,6 +41,8 @@ class PlaylistController(QtCore.QObject):
     def connect(self):
         self.view.table.setModel(self.table_model)
         self.view.table.doubleClicked.connect(self.on_dbl_click)
+
+        self.table_model.index_changed.connect(lambda i: log.debug("icChanged %d", i.row()))
 
     def on_dbl_click(self, index):
         log.debug("double click index=%s", index.row())
