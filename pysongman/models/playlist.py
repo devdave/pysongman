@@ -41,8 +41,13 @@ class PlaylistItem:
         artist = tags.artist
         title = tags.title
         if None in [artist, title]:
-            return pathlib.Path(self.file_path).stem
             # log.debug("Tiny tag ID3 lookup failed on %s", self.file_path)
+            stem = pathlib.Path(self.file_path).stem
+            if "-" in stem:
+                artist, title = stem.split("-",1)
+                return f"{artist} - {title}"
+            else:
+                return stem
         else:
             return f"{artist} - {title}"
 
@@ -86,6 +91,7 @@ class Table(QtCore.QAbstractTableModel):
         self.playlist.mediaInserted.connect(self.on_media_inserted)
         self.playlist.mediaRemoved.connect(self.on_media_removed)
         self.playlist.currentIndexChanged.connect(self.on_index_changed)
+
 
     def on_media_inserted(self):
         self.layoutAboutToBeChanged.emit()
