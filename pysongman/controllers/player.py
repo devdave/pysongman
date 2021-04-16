@@ -65,6 +65,11 @@ class PlayerController(QtCore.QObject):
         self.player.play()
 
 
+    def on_repeat_clicked(self):
+        pass
+
+    def on_random_clicked(self):
+        pass
 
     def connect(self):
 
