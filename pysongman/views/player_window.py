@@ -76,8 +76,25 @@ class PlayerWindow(QtWidgets.QWidget):
 
         """
 
+        self.setupMainBody()
+        self.setupProgressAndViews()
+        self.setupControlBar()
+        self.setupMenuBar()
 
-        # Main display body
+
+        # Put it all together
+        self.main_body = QtWidgets.QVBoxLayout()
+        self.main_body.setObjectName("mainBody")
+        self.main_body.layout().setMenuBar(self.menu_bar)
+        self.main_body.addLayout(self.body_playlist_behavior)
+        self.main_body.addLayout(self.status_and_views)
+        self.main_body.addLayout(self.controls)
+
+        self.setLayout(self.main_body)
+        self.setWindowTitle("PySongMan")
+        self.setMinimumWidth(350)
+
+    def setupMainBody(self):
         self.time_display = QtWidgets.QLabel("0:00")
         self.time_display.setObjectName("timeDisplay")
 
@@ -118,7 +135,7 @@ class PlayerWindow(QtWidgets.QWidget):
         self.playlist.setObjectName("playListControls")
 
         for button in [self.repeat_button, self.random_button]:
-            button.setMinimumWidth(3)
+            button.setMinimumWidth(25)
             button.setMaximumWidth(25)
             self.playlist.addWidget(button)
 
@@ -129,23 +146,6 @@ class PlayerWindow(QtWidgets.QWidget):
         self.body_playlist_behavior.addLayout(self.info_dash)
         self.body_playlist_behavior.addLayout(self.playlist)
 
-        # Line2
-        self.setupProgressAndViews()
-        self.setupControlBar()
-        self.setupMenuBar()
-
-
-        # Put it all together
-        self.main_body = QtWidgets.QVBoxLayout()
-        self.main_body.setObjectName("mainBody")
-        self.main_body.layout().setMenuBar(self.menu_bar)
-        self.main_body.addLayout(self.body_playlist_behavior)
-        self.main_body.addLayout(self.status_and_views)
-        self.main_body.addLayout(self.controls)
-
-        self.setLayout(self.main_body)
-        self.setWindowTitle("PySongMan")
-        self.setMinimumWidth(350)
 
     def setupProgressAndViews(self):
 
@@ -166,6 +166,7 @@ class PlayerWindow(QtWidgets.QWidget):
         self.playlist_btn = QtWidgets.QPushButton()
         self.playlist_btn.setObjectName("playlistButton")
         self.playlist_btn.setIcon(self.icons['list'])
+
 
         self.medialib_btn = QtWidgets.QPushButton()
         self.medialib_btn.setObjectName("medialibButton")
