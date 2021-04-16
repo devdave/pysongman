@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 def configure_logging():
     from . import log as root_log
-    # logging.basicConfig(level=logging.DEBUG)
+
     root_log.setLevel(logging.DEBUG)
     log.setLevel(logging.DEBUG)
 
