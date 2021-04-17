@@ -2,6 +2,7 @@
 To research
     https://gist.github.com/lambdalisue/9110299
 """
+import logging
 import typing as T
 import pathlib
 
@@ -16,6 +17,7 @@ from PySide2 import QtGui
 from .. import ICON_DIR
 from .. import CSS_DIR
 
+log = logging.getLogger(__name__)
 
 class PlayerWindow(QtWidgets.QWidget):
 
