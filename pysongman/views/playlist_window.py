@@ -50,6 +50,8 @@ class PlaylistWindow(QtWidgets.QWidget):
 
         self.body.addWidget(self.table)
         self.body.setStretch(0, 1)
+        self.setMinimumWidth(725)
+        self.setMaximumWidth(750)
 
 
 
