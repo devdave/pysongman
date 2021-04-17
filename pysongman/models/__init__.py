@@ -37,6 +37,12 @@ def initialize_db() -> SAConnection:
 
     session = SA_FACTORY()
 
+    if create is True:
+        from .song import Song
+        from .artist import Artist
+        from .album import Album
+        from .parent_dir import ParentDir
+
     return SAConnection(SA_ENGINE, session)
 
 
