@@ -6,7 +6,8 @@ import logging
 import PySide2
 from PySide2 import QtWidgets
 
-from .controllers.player import PlayerController
+from .controllers.application import Application
+# from .controllers.player import PlayerController
 
 
 log = logging.getLogger(__name__)
@@ -32,23 +33,12 @@ def main(song_file = None):
     configure_logging()
     log.info("Starting")
 
-    app = QtWidgets.QApplication(sys.argv)
+    app = Application(sys.argv)
 
-    player = PlayerController()
-    player.show()
+    # player = PlayerController()
+    # player.show()
 
-    if song_file is not None:
-
-        song_file = pathlib.Path(song_file)
-        if song_file.is_file():
-            log.debug("Adding song %s", song_file)
-            player.add_song(song_file)
-        elif song_file.is_dir():
-            log.debug("Adding directory to play %s", song_file)
-            player.add_directory(song_file)
-
-        player.play()
-
+    app.startup(song_file)
     return sys.exit(app.exec_())
 
 
