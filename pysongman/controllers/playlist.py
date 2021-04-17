@@ -42,7 +42,13 @@ class PlaylistController(QtCore.QObject):
         self.view.table.setModel(self.table_model)
         self.view.table.doubleClicked.connect(self.on_dbl_click)
 
-        self.table_model.index_changed.connect(lambda i: log.debug("icChanged %d", i.row()))
+        self.table_model.index_changed.connect(self.on_index_change)
+
+
+
+    def on_index_change(self, index):
+        log.debug("index Changed %d", index)
+        self.view.table.selectRow(index)
 
     def on_dbl_click(self, index):
         log.debug("double click index=%s", index.row())
