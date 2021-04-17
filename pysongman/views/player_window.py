@@ -278,3 +278,7 @@ class PlayerWindow(QtWidgets.QMainWindow):
             self.mute_btn.setIcon(self.icons['volume-off'])
         else:
             self.mute_btn.setIcon(self.icons['volume-up'])
+
+    def focusInEvent(self, event:PySide2.QtGui.QFocusEvent) -> None:
+        super(PlayerWindow, self).focusInEvent(event)
+        logging.debug("Got focus")
