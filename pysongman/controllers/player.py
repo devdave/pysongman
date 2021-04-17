@@ -65,17 +65,33 @@ class PlayerController(QtCore.QObject):
 
 
     def on_repeat_clicked(self):
-        pass
+        log.debug("Repeat clicked")
+        if self.view.repeat_button.isChecked():
+            self.playlist_obj.setPlaybackMode(self.playlist_obj.PlaybackMode.Loop)
+        else:
+            self.playlist_obj.setPlaybackMode(self.playlist_obj.PlaybackMode.CurrentItemOnce)
+
 
     def on_random_clicked(self):
-        pass
+        log.debug("Random clicked")
+        if self.view.random_button.isChecked():
+            self.playlist_obj.setPlaybackMode(self.playlist_obj.PlaybackMode.Random)
+        else:
+            self.playlist_obj.setPlaybackMode(self.playlist_obj.PlaybackMode.Sequential)
+
+
 
     def connect(self):
+
+        self.view.random_button.clicked.connect(self.on_random_clicked)
+        self.view.repeat_button.clicked.connect(self.on_repeat_clicked)
 
         self.view.volume_slider.setRange(0, 100)
         self.view.volume_slider.setValue(100)
         self.view.volume_slider.valueChanged.connect(self.player.setVolume)
         self.view.mute_btn.clicked.connect(self.muted)
+
+
 
         self.view.play_btn.clicked.connect(self.player.play)
         self.view.pause_btn.clicked.connect(self.player.pause)
