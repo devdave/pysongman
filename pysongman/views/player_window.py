@@ -16,6 +16,7 @@ from PySide2 import QtGui
 
 from .. import ICON_DIR
 from .. import CSS_DIR
+from ..lib.qclickable_slider import QClickableSlider
 
 log = logging.getLogger(__name__)
 
@@ -154,7 +155,8 @@ class PlayerWindow(QtWidgets.QWidget):
         self.status_and_views = QtWidgets.QHBoxLayout()
         self.status_and_views.setObjectName("statusAndViews")
 
-        self.progress_bar = QtWidgets.QSlider(Qt.Horizontal)
+        # self.progress_bar = QtWidgets.QSlider(Qt.Horizontal)
+        self.progress_bar = QClickableSlider(Qt.Horizontal)
         self.progress_bar.setObjectName("progressBar")
         self.progress_bar.setTickInterval(5)
         self.progress_bar.setTickPosition(QtWidgets.QSlider.TicksAbove)
