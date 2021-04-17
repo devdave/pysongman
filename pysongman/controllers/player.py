@@ -57,6 +57,16 @@ class PlayerController(QtCore.QObject):
         self.media_view.move(self.media_view.x(), player_bottom + 1)
         self.playlist.view.move(player_right, self.playlist.view.y())
 
+    def focus(self):
+
+        if self.media_view.isVisible():
+            self.media_view.activateWindow()
+
+        if self.playlist.view.isVisible():
+            self.playlist.view.activateWindow()
+
+        self.view.activateWindow()
+
 
 
 
