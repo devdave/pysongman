@@ -107,9 +107,9 @@ class PlayerController(QtCore.QObject):
 
         self.view.progress_bar.sliderPressed.connect(self.progressPressed)
         self.view.progress_bar.sliderReleased.connect(self.progressReleased)
-
+        self.view.progress_bar.progress_changed.connect(self.progress_changed_unsafe)
         self.view.progress_bar.valueChanged.connect(self.progress_changed)
-        # self.view.progress_bar.clicked.connect(self.progress_bar_pressed)
+
 
         self.view.onClose.connect(self.do_close)
 
@@ -117,6 +117,8 @@ class PlayerController(QtCore.QObject):
         self.view.medialib_btn.clicked.connect(self.toggle_media_view)
 
         self.view.load_btn.clicked.connect(self.open_song)
+
+
 
         # controller to controller
         # self.playlist.song_selected.connect(self.on_song_selected)
@@ -184,6 +186,9 @@ class PlayerController(QtCore.QObject):
     def progress_changed(self, position: int):
         if self.progress_bar_pressed is True:
             self.player.setPosition(position)
+
+    def progress_changed_unsafe(self, position: int):
+        self.player.setPosition(position)
 
 
     def durationChanged(self, duration: int):
