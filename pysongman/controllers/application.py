@@ -6,6 +6,8 @@ import logging
 
 from PySide2.QtWidgets import QApplication
 
+from .. import HOME, HERE
+from ..models import initialize_db
 from .player import PlayerController
 
 log = logging.getLogger(__name__)
@@ -16,6 +18,7 @@ class Application(QApplication):
         super(Application, self).__init__()
 
         self.song_file = song_file
+        self.player = PlayerController()
 
     def startup(self, song_file):
         self.player = PlayerController()
