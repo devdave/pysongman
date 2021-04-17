@@ -12,9 +12,9 @@ from .. import ICON_DIR
 from .. import CSS_DIR
 
 
-class DurationAlignDelegate(QtWidgets.QStyledItemDelegate):
+class AlignLeftDelegate(QtWidgets.QStyledItemDelegate):
     def initStyleOption(self, option:PySide2.QtWidgets.QStyleOptionViewItem, index:PySide2.QtCore.QModelIndex) -> None:
-        super(DurationAlignDelegate, self).initStyleOption(option, index)
+        super(AlignLeftDelegate, self).initStyleOption(option, index)
         option.displayAlignment = Qt.AlignLeft
 
 
@@ -37,15 +37,15 @@ class PlaylistWindow(QtWidgets.QWidget):
 
         self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.table.verticalHeader().hide()
-        # self.table.horizontalHeader().hide()
+
         self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        # self.table.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
         self.table.resizeColumnsToContents()
         self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         # Ever get the feeling I REALLY want this to expand?
-        durationDelegate = DurationAlignDelegate(self.table)
-        self.table.setItemDelegateForColumn(1, durationDelegate)
+        alignleft = AlignLeftDelegate(self.table)
+        self.table.setItemDelegateForColumn(1, alignleft)
 
 
         self.body.addWidget(self.table)
