@@ -21,8 +21,17 @@ class Application(QApplication):
         self.player = PlayerController()
 
         self.focusChanged.connect(self.on_focus_changed)
+
+    def first_startup(self):
+        return (HOME / "started.txt").exists()
+
     def startup(self, song_file):
-        self.player = PlayerController()
+
+        if self.first_startup() is False:
+            log.info("First startup")
+            log.debug("Creating DB @ %s", HOME.as_posix())
+            initialize_db(create=True)
+
 
         if song_file is not None:
 
