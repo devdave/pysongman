@@ -258,6 +258,8 @@ class PlayerWindow(QtWidgets.QMainWindow):
         for menu in [self.menu_file, self.menu_play, self.menu_options, self.menu_view, self.menu_help]:
             self.menu_bar.addMenu(menu)
 
+
+
     def load_stylesheets(self, filepath: T.Union[str, pathlib.Path] = None) -> None:
         """
             Given a valid file path(relative or absolute), load up the stylesheet file and
