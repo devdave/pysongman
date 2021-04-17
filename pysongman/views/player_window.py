@@ -20,7 +20,8 @@ from ..lib.qclickable_slider import QClickableSlider
 
 log = logging.getLogger(__name__)
 
-class PlayerWindow(QtWidgets.QWidget):
+
+class PlayerWindow(QtWidgets.QMainWindow):
 
     onClose = QtCore.Signal()
     keyPressed = QtCore.Signal(QtGui.QKeyEvent)
@@ -93,9 +94,15 @@ class PlayerWindow(QtWidgets.QWidget):
         self.main_body.addLayout(self.status_and_views)
         self.main_body.addLayout(self.controls)
 
+        self.main_widget = QtWidgets.QWidget(self)
+        self.main_widget.setLayout(self.main_body)
+        self.setCentralWidget(self.main_widget)
         self.setLayout(self.main_body)
+
         self.setWindowTitle("PySongMan")
         self.setMinimumWidth(350)
+        self.setMaximumWidth(350)
+        self.setFocusPolicy(Qt.StrongFocus)
 
     def setupMainBody(self):
         self.time_display = QtWidgets.QLabel("0:00")
