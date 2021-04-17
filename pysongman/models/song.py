@@ -1,10 +1,24 @@
 import sqlite3
 
+from sqlalchemy import Column, String, Integer, ForeignKey, Float
+from sqlalchemy.orm import relationship
+
 from . import initialize_db
 from .base import Base
 
 
 class Song(Base):
+    title = Column(String())
+    track = Column(String())
+
+    artist_id = Column(Integer(), ForeignKey("Artist.id"))
+    artist = relationship("Artist", backref="songs")
+
+    album_id = Column(Integer(), ForeignKey("Album.id"))
+    album = relationship("Album", backref="songs")
+
+    filesize = Column(Float)  # Bytes
+
 
     @classmethod
     def GetByPath(cls, path):
