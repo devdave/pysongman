@@ -1,6 +1,6 @@
 import sqlite3
 
-from sqlalchemy import Column, String, Integer, ForeignKey, Float
+from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime, func
 from sqlalchemy.orm import relationship
 
 from . import initialize_db
@@ -18,6 +18,11 @@ class Song(Base):
     album = relationship("Album", backref="songs")
 
     filesize = Column(Float)  # Bytes
+
+
+    #library metadata
+    play_count = Column(Integer, default=0)
+    last_played = Column(DateTime, default=None)
 
 
     @classmethod
