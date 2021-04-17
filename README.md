@@ -25,3 +25,11 @@ Support small python scripts for selecting songs for a library "view"
 ## Nice to have but not necessary
 
 * spectrographic visualization
+
+## TODO
+
+1. Right now the Player controller is becoming increasingly overloaded
+so perhaps a better solution would be to make a faceless controller/Application
+which implements the anti-pattern God Module pattern but lords over
+the whole application.
+   
