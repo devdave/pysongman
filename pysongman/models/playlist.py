@@ -81,7 +81,7 @@ class Table(QtCore.QAbstractTableModel):
     # Signals
     media_removed = QtCore.Signal()
     media_added = QtCore.Signal()
-    index_changed = QtCore.Signal()
+    index_changed = QtCore.Signal(int)
 
     def __init__(self, playlist, headers_fetchers):
         super(Table, self).__init__()
