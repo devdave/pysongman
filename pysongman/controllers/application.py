@@ -20,6 +20,7 @@ class Application(QApplication):
         self.song_file = song_file
         self.player = PlayerController()
 
+        self.focusChanged.connect(self.on_focus_changed)
     def startup(self, song_file):
         self.player = PlayerController()
 
@@ -35,5 +36,13 @@ class Application(QApplication):
 
             self.player.show()
             self.player.play()
+
+    def on_focus_changed(self, old, new):
+        if old is None:
+            self.player.focus()
+
+        
+        log.debug("Focus changed %s to %s", old, new)
+
 
 
