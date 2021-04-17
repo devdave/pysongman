@@ -255,7 +255,7 @@ class PlayerWindow(QtWidgets.QMainWindow):
         # self.menu_view = QtWidgets.QMenu("&View")
         self.menu_help = QtWidgets.QMenu("&Help")
 
-        for menu in [self.menu_file, self.menu_play, self.menu_options, self.menu_view, self.menu_help]:
+        for menu in [self.menu_file, self.menu_play, self.menu_options, self.menu_help]:
             self.menu_bar.addMenu(menu)
 
 
