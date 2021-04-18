@@ -25,6 +25,9 @@ class Application(QApplication):
     def first_startup(self):
         return (HOME / "started.txt").exists()
 
+    def set_as_configured(self):
+        return (HOME / "started.txt").touch(exist_ok=True)
+
     def startup(self, song_file):
 
         self.player = PlayerController()
