@@ -21,7 +21,7 @@ class SAConnection:
     q: orm.query
 
 
-def initialize_db() -> SAConnection:
+def initialize_db(create=False) -> SAConnection:
     global SA_ENGINE, SA_FACTORY
 
     if SA_ENGINE is None:
@@ -42,6 +42,10 @@ def initialize_db() -> SAConnection:
         from .artist import Artist
         from .album import Album
         from .parent_dir import ParentDir
+
+        Base.metadata.create_all(SA_ENGINE)
+
+
 
     return SAConnection(SA_ENGINE, session)
 
