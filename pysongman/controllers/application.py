@@ -15,17 +15,20 @@ log = logging.getLogger(__name__)
 class Application(QApplication):
 
     def __init__(self, *args, song_file=None):
-        super(Application, self).__init__()
+        super(Application, self).__init__(*args)
 
         self.song_file = song_file
-        self.player = PlayerController()
+        self.player = None
 
-        self.focusChanged.connect(self.on_focus_changed)
+
 
     def first_startup(self):
         return (HOME / "started.txt").exists()
 
     def startup(self, song_file):
+
+        self.player = PlayerController()
+        self.focusChanged.connect(self.on_focus_changed)
 
         if self.first_startup() is False:
             log.info("First startup")
