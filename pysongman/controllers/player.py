@@ -258,14 +258,14 @@ class PlayerController(QtCore.QObject):
             self.view.toggle_volume_icon(True)
 
     def mediaError(self, error: QtMultimedia.QMediaPlayer.Error.ResourceError):
-        print(error)
         current_song = self.playlist_obj.currentMedia()
         qurl = current_song.canonicalUrl()
-        print("Unable to play", qurl.toString())
+        log.critical("Unable to play %s because %s", qurl, error)
 
 
     def open_song(self):
-        print("load song to playlist")
+        # print("load song to playlist")
+        log.debug("Loading song to playlist")
         fileDialog = QtWidgets.QFileDialog(self.view)
         supportedMimeTypes = ['audio/mpeg', 'application/ogg','application/octet-stream']
         fileDialog.setMimeTypeFilters(supportedMimeTypes)
@@ -278,7 +278,7 @@ class PlayerController(QtCore.QObject):
             files = fileDialog.selectedFiles()
 
             for file in files:
-                print("Adding", file)
+                log.debug("Adding %s", file)
                 content = QtMultimedia.QMediaContent(QtCore.QUrl(file))
                 self.playlist_obj.addMedia(content)
 
