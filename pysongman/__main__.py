@@ -35,9 +35,6 @@ def main(song_file = None):
 
     app = Application(sys.argv)
 
-    # player = PlayerController()
-    # player.show()
-
     app.startup(song_file)
     return sys.exit(app.exec_())
 
