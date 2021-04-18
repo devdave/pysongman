@@ -89,7 +89,7 @@ class PlayerWindow(QtWidgets.QMainWindow):
         # Put it all together
         self.main_body = QtWidgets.QVBoxLayout()
         self.main_body.setObjectName("mainBody")
-        self.main_body.layout().setMenuBar(self.menu_bar)
+        # self.main_body.layout().setMenuBar(self.menu_bar)
         self.main_body.addLayout(self.body_playlist_behavior)
         self.main_body.addLayout(self.status_and_views)
         self.main_body.addLayout(self.controls)
@@ -257,6 +257,8 @@ class PlayerWindow(QtWidgets.QMainWindow):
 
         for menu in [self.menu_file, self.menu_play, self.menu_options, self.menu_help]:
             self.menu_bar.addMenu(menu)
+
+        self.setMenuBar(self.menu_bar)
 
 
 
