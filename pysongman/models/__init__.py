@@ -20,13 +20,15 @@ class SAConnection:
     e: sqlalchemy.engine
     q: orm.query
 
+def get_db_name():
+    return f"sqlite:///{home_path.as_posix()}/{APP_NAME}.sqlite3"
 
 def initialize_db(create=False) -> SAConnection:
     global SA_ENGINE, SA_FACTORY
 
     if SA_ENGINE is None:
         home_path = Path(HOME)
-        engine_url = f"sqlite:///{home_path.as_posix()}/{APP_NAME}.sqlite3"
+        engine_url = get_db_name()
         SA_ENGINE = create_engine(engine_url)
         Base.metadata.bind = SA_ENGINE
 
