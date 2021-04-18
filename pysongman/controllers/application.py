@@ -50,7 +50,7 @@ class Application(QApplication):
         if old is None:
             self.player.focus()
 
-        
+
         log.debug("Focus changed %s to %s", old, new)
 
 
