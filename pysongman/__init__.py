@@ -18,7 +18,6 @@ if HOME.exists() is False:
     log.debug("Home directory %s doesn't exist, creating.", HOME)
     HOME.mkdir(parents=True, exist_ok=True)
 
-
 HERE = Path(__file__).parent.absolute()
 
 DB_FILE = HOME / f"{APP_NAME}.sqlite3"

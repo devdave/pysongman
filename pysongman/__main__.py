@@ -27,7 +27,7 @@ def configure_logging():
     log.addHandler(sh)
 
 
-def main(song_file = None):
+def main(song_file = None, nuclear_option=False):
 
 
     configure_logging()
@@ -35,13 +35,14 @@ def main(song_file = None):
 
     app = Application(sys.argv)
 
-    app.startup(song_file)
+    app.startup(song_file, nuke_everything=nuclear_option)
     return sys.exit(app.exec_())
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("song_file", nargs="?", default=None)
+    parser.add_argument("--nuclear_option", default=False, help="Reset to clean slate.  WARNING deletes everything")
     args = parser.parse_args()
 
-    main(args.song_file.strip("\""))
+    main(args.song_file.strip("\""), nuclear_option=args.nuclear_option)
