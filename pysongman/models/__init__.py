@@ -2,8 +2,7 @@
 SA_ENGINE = None
 SA_FACTORY = None
 
-from .. import HOME, APP_NAME
-from .base import Base
+
 
 from pathlib import Path
 from dataclasses import dataclass
@@ -14,20 +13,22 @@ from sqlalchemy.ext import declarative
 from sqlalchemy import orm
 from sqlalchemy.orm import scoped_session, sessionmaker, session, query
 
+from .. import HOME, APP_NAME, DB_FILE
+from .base import Base
 
 @dataclass
 class SAConnection:
     e: sqlalchemy.engine
     q: orm.query
 
-def get_db_name():
-    return f"sqlite:///{Path(HOME).as_posix()}/{APP_NAME}.sqlite3"
+def get_db_url():
+    return f"sqlite:///{DB_FILE.as_posix()}"
 
 def initialize_db(create=False) -> SAConnection:
     global SA_ENGINE, SA_FACTORY
 
     if SA_ENGINE is None:
-        SA_ENGINE = create_engine(get_db_name())
+        SA_ENGINE = create_engine(get_db_url())
         Base.metadata.bind = SA_ENGINE
 
     if SA_FACTORY is None:

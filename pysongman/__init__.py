@@ -20,6 +20,9 @@ if HOME.exists() is False:
 
 
 HERE = Path(__file__).parent.absolute()
+
+DB_FILE = HOME / f"{APP_NAME}.sqlite3"
+CONFIGURED_FLAG = HOME / "installed.txt"
 RSRC_DIR = HERE / "resources"
 ICON_DIR = RSRC_DIR / "icons"
 CSS_DIR = RSRC_DIR / "css"
