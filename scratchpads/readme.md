@@ -16,6 +16,12 @@ Continuation of the hello world
 
 ### basic_abstract_model_experiments.py
 ### basic_abstract_model_view.py
+Learn how to work with the AbstractTableModel class.
+
+Unfortunately I've run into a problem where QMediaPlaylist
+only tracks the QUrl/song path which make it difficult to bridge
+all of the additional data mined from a specific music file (artist, album
+, title, duration, etc).
 
 ### basic_qml.py & basic.qml
 Just a quick hello world using QML for the view instead.
@@ -24,13 +30,15 @@ Experiments with function and design
 ====================================
 
 ### table_qml.py and table.qml
-
-
-
+In some ways a QML would have been ideal but I didn't like
+how difficult it was to wire up QML created view elements to
+backend logic.
 
 ### triple_model_view.py
+Experiment with having three tables
 
 ### dynamic_triple_tables.py
+Test of triple tables integrated with SqlAlchemy. 
 
 Experiments with data interaction
 ====================================
