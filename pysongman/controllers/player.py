@@ -65,7 +65,10 @@ class PlayerController(QtCore.QObject):
         if self.playlist.view.isVisible():
             self.playlist.view.activateWindow()
 
+        self.view.show()
         self.view.activateWindow()
+        self.view.setFocus()
+
 
 
 
