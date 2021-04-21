@@ -10,6 +10,16 @@ import PySide2
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtCore import Qt
 
+class Controller(QtCore.QObject):
+
+    def __init__(self):
+        super(Controller, self).__init__()
+        self.view = Master()
+
+    def on_folder_click(self, treeitem):
+        print(treeitem)
+
+
 class Master(QtWidgets.QMainWindow):
 
     def __init__(self):
@@ -18,13 +28,14 @@ class Master(QtWidgets.QMainWindow):
 
     def setupUI(self):
 
-        self.left_side = QtWidgets.QVBoxLayout()
-        self.body_layout = QtWidgets.QHBoxLayout()
+        self.left_side = QtWidgets.QVBoxLayout(self)
+        self.body_layout = QtWidgets.QHBoxLayout(self)
 
 
         # left side
-        self.menu_tree = QtWidgets.QTreeWidget()
+        self.menu_tree = QtWidgets.QTreeWidget(self)
         self.menu_tree.setMinimumHeight(450)
+        self.menu_tree.setMinimumWidth(180)
 
         self.close_btn = QtWidgets.QPushButton("Close")
         self.left_side.addWidget(self.menu_tree)
@@ -43,6 +54,18 @@ class Master(QtWidgets.QMainWindow):
 
         self.setCentralWidget(self.frame)
 
+        self.buildTree()
+
+
+    def buildTree(self):
+        self.root_header = QtWidgets.QTreeWidgetItem(["Main config"])
+        # root.setText(1, "Configuration")
+        self.menu_tree.setHeaderItem(self.root_header)
+
+        self.media_fldr = QtWidgets.QTreeWidgetItem(self.menu_tree, ["Media library"])
+        self.media_fldr.setData(2, QtCore.Qt.EditRole, "media_lib")
+
+
 
 
 
@@ -51,8 +74,8 @@ class Master(QtWidgets.QMainWindow):
 def main():
     app = QtWidgets.QApplication(sys.argv)
 
-    window = Master()
-    window.show()
+    controller = Controller()
+    controller.view.show()
 
     return app.exec_()
 
