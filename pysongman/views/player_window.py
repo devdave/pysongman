@@ -30,7 +30,7 @@ class PlayerWindow(QtWidgets.QMainWindow):
         super(PlayerWindow, self).__init__()
         self.icons = self.load_icons()
         self.setupUI()
-        self.load_stylesheets()
+        self.load_stylesheet()
 
     def keyPressEvent(self, event):
         super(PlayerWindow, self).keyPressEvent(event)
@@ -255,11 +255,10 @@ class PlayerWindow(QtWidgets.QMainWindow):
 
         return
 
-        # self.setMenuBar(self.menu_bar)
 
 
 
-    def load_stylesheets(self, filepath: T.Union[str, pathlib.Path] = None) -> None:
+    def load_stylesheet(self, filepath: T.Union[str, pathlib.Path] = None) -> None:
         """
             Given a valid file path(relative or absolute), load up the stylesheet file and
             inject it into the QWidget to ideally cascade downward.
