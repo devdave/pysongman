@@ -25,10 +25,10 @@ class PlaylistController(QtCore.QObject):
         self.playlist = playlist_obj
         headers = {
             "Duration": lambda r: r.duration_str,
-            "title": lambda r: r.title
+            "title": lambda r: r.listing
 
         }
-        # old headers = {"Title": lambda r: r.title, "Duration": lambda r: r.duration_str}
+
         self.table_model = PlaylistTable(self.playlist, headers)
 
         self.setupUI()
