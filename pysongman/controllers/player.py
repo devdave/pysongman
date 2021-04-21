@@ -15,6 +15,7 @@ from ..lib.ffprobe import FFProbe
 from ..lib.song_info import SongInfo
 from .playlist import PlaylistController
 
+
 import PySide2
 from PySide2 import QtCore
 from PySide2.QtCore import Qt
@@ -103,7 +104,7 @@ class PlayerController(QtCore.QObject):
         self.view.volume_slider.setRange(0, 100)
         self.view.volume_slider.setValue(100)
         self.view.volume_slider.valueChanged.connect(self.player.setVolume)
-        self.view.mute_btn.clicked.connect(self.muted)
+        self.view.mute_btn.clicked.connect(self.on_muted)
 
 
 
@@ -248,7 +249,7 @@ class PlayerController(QtCore.QObject):
             except:
                 log.exception()
 
-    def muted(self):
+    def on_muted(self):
         """
             Toggles volume mute
         Returns:
