@@ -33,3 +33,17 @@ so perhaps a better solution would be to make a faceless controller/Application
 which implements the anti-pattern God Module pattern but lords over
 the whole application.
    
+
+## PyTaglib adventure
+
+The issues with reading id3/file tag data is pissing me off so
+I've decided to bring out the big guns and search for a viable
+c++ library to do the work for me.   Tag lib seems to be the best option
+at the moment.
+
+My steps:
+Install Visual Studio 2019 community edition
+Grab the 8.1 SDK - https://stackoverflow.com/a/53840125/9908
+git clone'd pytaglib from github
+python windows/build_win.py
+Minor issue cropped up and my fix was here https://github.com/supermihi/pytaglib/issues/49
