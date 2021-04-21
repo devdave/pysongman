@@ -12,6 +12,7 @@ from ..views.playlist_window import PlaylistWindow
 from ..views.player_window import PlayerWindow
 from ..views.media_window import Media as MediaWindow
 from ..lib.ffprobe import FFProbe
+from ..lib.song_info import SongInfo
 from .playlist import PlaylistController
 
 import PySide2
@@ -209,7 +210,7 @@ class PlayerController(QtCore.QObject):
         log.debug("Duration=%s", duration)
         song_path = self.player.currentMedia().canonicalUrl().toString()
         if song_path not in ["", " ", "."]:
-            probe = FFProbe.Load(song_path)
+            probe = SongInfo(song_path)
 
             if probe.duration_ms < duration:
                 log.debug("DirectShow screwed up again: duration=%d probed=%d", duration, probe.duration_ms)
@@ -239,9 +240,12 @@ class PlayerController(QtCore.QObject):
         if raw_path.strip() != "":
             log.debug("raw_path=%s", raw_path)
 
-            probe = FFProbe.Load(raw_path)
-
-            self.view.current_song.setText(f"{probe.listing} ({probe.duration_str})")
+            # probe = FFProbe.Load(raw_path)
+            try:
+                probe = SongInfo(raw_path)
+                self.view.current_song.setText(f"{probe.listing} ({probe.duration_str})")
+            except:
+                log.exception()
 
     def muted(self):
         """
