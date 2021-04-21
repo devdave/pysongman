@@ -7,6 +7,8 @@ from PySide2 import QtCore
 from PySide2.QtCore import Qt
 from PySide2 import QtWidgets
 from PySide2 import QtMultimedia
+DisplayRole = Qt.DisplayRole
+ToolTipRole = Qt.ToolTipRole
 
 import mutagen
 import tinytag
@@ -135,6 +137,7 @@ class Table(QtCore.QAbstractTableModel):
 
     def data(self, index: PySide2.QtCore.QModelIndex, role: int = ...) -> typing.Any:
         if role == Qt.DisplayRole or role == Qt.ToolTipRole:
+        if role == DisplayRole:
 
             fetcher = self.fetchers[index.column()]
             media = self.playlist.media(index.row())  # type: QtMultimedia.QMediaContent
@@ -147,6 +150,8 @@ class Table(QtCore.QAbstractTableModel):
 
             return data
 
+        elif role == ToolTipRole:
+            return media.canonicalUrl().toString()
 
 
 
