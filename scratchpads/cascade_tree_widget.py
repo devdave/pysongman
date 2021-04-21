@@ -16,8 +16,25 @@ class Controller(QtCore.QObject):
         super(Controller, self).__init__()
         self.view = Master()
 
-    def on_folder_click(self, treeitem):
-        print(treeitem)
+        self.connect()
+
+    def connect(self):
+        self.view.menu_tree.itemClicked.connect(self.on_treeitem_clicked)
+
+
+    def on_treeitem_clicked(self, treeItem: QtWidgets.QTreeWidgetItem):
+        label = treeItem.text(0)
+        identifier = treeItem.text(2)
+        print(treeItem, label, identifier)
+
+
+class MediaConfig(QtWidgets.QWidget):
+
+    def __init__(self):
+        super(MediaConfig, self).__init__()
+
+    def setupUI(self):
+        vlay = QtWidgets.QVBoxLayout()
 
 
 class Master(QtWidgets.QMainWindow):
@@ -55,6 +72,8 @@ class Master(QtWidgets.QMainWindow):
         self.setCentralWidget(self.frame)
 
         self.buildTree()
+
+
 
 
     def buildTree(self):
