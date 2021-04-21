@@ -116,7 +116,7 @@ class PlayerController(QtCore.QObject):
 
         self.player.durationChanged.connect(self.durationChanged)
         self.player.positionChanged.connect(self.positionChanged)
-        self.player.currentMediaChanged.connect(self.mediaChanged)
+        self.player.currentMediaChanged.connect(self.on_media_changed)
         self.player.error.connect(self.mediaError)
 
         self.view.progress_bar.sliderPressed.connect(self.progressPressed)
@@ -234,7 +234,7 @@ class PlayerController(QtCore.QObject):
 
         self.view.time_display.setText(f"{minutes}:{corrected_seconds:02}")
 
-    def mediaChanged(self, media: QtMultimedia.QMediaContent):
+    def on_media_changed(self, media: QtMultimedia.QMediaContent):
 
         raw_path = media.canonicalUrl().toString()
         if raw_path.strip() != "":
