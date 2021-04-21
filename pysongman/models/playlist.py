@@ -136,15 +136,15 @@ class Table(QtCore.QAbstractTableModel):
             return self.headers[section]
 
     def data(self, index: PySide2.QtCore.QModelIndex, role: int = ...) -> typing.Any:
-        if role == Qt.DisplayRole or role == Qt.ToolTipRole:
+        media = self.playlist.media(index.row())  # type: QtMultimedia.QMediaContent
+
         if role == DisplayRole:
 
             fetcher = self.fetchers[index.column()]
-            media = self.playlist.media(index.row())  # type: QtMultimedia.QMediaContent
             path = media.canonicalUrl().toString()
             record = Song.GetByPath(path)
             if record is None:
-                record = PlaylistItem.Load(path)
+                record = SongInfo(path)
 
             data = fetcher(record)
 
