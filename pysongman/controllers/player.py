@@ -265,6 +265,32 @@ class PlayerController(QtCore.QObject):
             self.view.toggle_volume_icon(True)
 
     def mediaError(self, error: QtMultimedia.QMediaPlayer.Error.ResourceError):
+        """
+            Apparently the person/people who worked on PyQTMultimedia eat glue because this is the
+            worst mechanism for reporting errors.
+
+            >>>error
+            PySide2.QtMultimedia.QMediaPlayer.Error.ResourceError
+            >>>self.player.error()
+            PySide2.QtMultimedia.QMediaPlayer.Error.ResourceError
+            >>>self.player.errorString()
+            ''
+            >>>self.playlist_obj
+            <PySide2.QtMultimedia.QMediaPlaylist(0x1fb19ab4f60) at 0x000001FB1AE97240>
+            >>>self.playlist_obj.error()
+            PySide2.QtMultimedia.QMediaPlaylist.Error.NoError
+            >>>self.playlist_obj.errorString()
+
+            Seriously?  NoResource error with nothing else to go by is the ultimate "Something is broken, get fucked"
+            as it provides no means to debug the problem and except speculate.
+
+        Args:
+            error:
+
+        Returns:
+
+        """
+        error_string = self.playlist_obj.errorString()
         current_song = self.playlist_obj.currentMedia()
         qurl = current_song.canonicalUrl()
         log.critical("Unable to play %s because %s", qurl, error)
