@@ -17,6 +17,7 @@ from . import initialize_db
 # from .base import Base
 from .song import Song
 from ..lib.ffprobe import FFProbe
+from ..lib.song_info import SongInfo
 
 log = logging.getLogger(__name__)
 
