@@ -255,26 +255,6 @@ class PlayerWindow(QtWidgets.QMainWindow):
 
         return
 
-        # self.menu_bar = QtWidgets.QMenuBar()
-        # self.menu_file = QtWidgets.QMenu("&File")
-        #
-        # self.act_play_song = self.menu_file.addAction("Play &file")
-        # self.act_play_dir = self.menu_file.addAction("Play &directory")
-        # self.menu_file.addSeparator()
-        # self.act_open_playlist = self.menu_file.addAction("Open &playlist")
-        # self.act_save_playlist = self.menu_file.addAction("&Save playlist")
-        # self.menu_file.addSeparator()
-        #
-        # self.act_exit = self.menu_file.addAction("E&xit")
-        #
-        # self.menu_play = QtWidgets.QMenu("&Play")
-        # self.menu_options = QtWidgets.QMenu("&Options")
-        # # self.menu_view = QtWidgets.QMenu("&View")
-        # self.menu_help = QtWidgets.QMenu("&Help")
-        #
-        # for menu in [self.menu_file, self.menu_play, self.menu_options, self.menu_help]:
-        #     self.menu_bar.addMenu(menu)
-        #
         # self.setMenuBar(self.menu_bar)
 
 
