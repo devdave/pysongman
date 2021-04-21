@@ -14,7 +14,7 @@ import mutagen
 import tinytag
 
 from . import initialize_db
-from .base import Base
+# from .base import Base
 from .song import Song
 from ..lib.ffprobe import FFProbe
 
