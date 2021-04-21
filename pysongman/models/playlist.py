@@ -58,7 +58,6 @@ class PlaylistItem:
     @property
     def title(self):
 
-
         artist = self.data.get("artist", [None])[0]
         title = self.data.get("title", [None])[0]
         if None in [artist, title]:
@@ -153,6 +152,7 @@ class Table(QtCore.QAbstractTableModel):
 
         elif role == ToolTipRole:
             return media.canonicalUrl().toString()
+
 
 
 
