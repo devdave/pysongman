@@ -244,6 +244,7 @@ class PlayerController(QtCore.QObject):
             try:
                 probe = SongInfo(raw_path)
                 self.view.current_song.setText(f"{probe.listing} ({probe.duration_str})")
+                self.view.current_song.setToolTip(probe.song_file.name)
             except:
                 log.exception()
 
