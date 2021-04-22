@@ -54,4 +54,13 @@ Experiments with data interaction
 
 
 
+Stackoverflow questions
+=======================
+https://stackoverflow.com/questions/19001933/qt-hide-column-in-qtableview
+https://stackoverflow.com/questions/46505130/creating-a-marquee-effect-in-pyside
+https://stackoverflow.com/questions/35333236/how-to-round-qwidget-corners
 
+Web blogs/forums
+================
+https://doc.qt.io/qt-5/qtwidgets-widgets-groupbox-example.html
+https://www.geeksforgeeks.org/pyqt5-how-to-hide-the-title-bar-of-window/
