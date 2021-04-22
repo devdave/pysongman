@@ -238,7 +238,7 @@ class PlayerWindow(QtWidgets.QMainWindow):
 
     def setupMenuBar(self):
         # Menu bar
-        self.m_file = self.menuBar().addMenu("File")
+        self.m_file = self.menuBar().addMenu("&File")
         self.a_play_file = self.m_file.addAction("Play &file")
         self.a_play_dir = self.m_file.addAction("Play &directory")
         self.a_open_playlist = self.m_file.addAction("Open &playlist")
@@ -254,8 +254,6 @@ class PlayerWindow(QtWidgets.QMainWindow):
 
 
         return
-
-
 
 
     def load_stylesheet(self, filepath: T.Union[str, pathlib.Path] = None) -> None:
