@@ -64,3 +64,6 @@ Web blogs/forums
 ================
 https://doc.qt.io/qt-5/qtwidgets-widgets-groupbox-example.html
 https://www.geeksforgeeks.org/pyqt5-how-to-hide-the-title-bar-of-window/
+
+PyQt GroupBox Example
+https://pythonbasics.org/pyqt-groupbox/
