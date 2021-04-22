@@ -5,16 +5,50 @@ Tree - selected config panel
 
 """
 import sys
+from dataclasses import dataclass
+import typing
 
 import PySide2
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtCore import Qt
+DisplayRole = Qt.DisplayRole
 
-class Controller(QtCore.QObject):
+
+from sa_models1 import initialize_db, ParentDir
+
+
+class ParentTableBridge(QtCore.QAbstractTableModel):
+
+    def rowCount(self, parent:PySide2.QtCore.QModelIndex=...) -> int:
+        return ParentDir.query.count()
+
+    def columnCount(self, parent:PySide2.QtCore.QModelIndex=...) -> int:
+        return 2
+
+    def headerData(self, section:int, orientation:PySide2.QtCore.Qt.Orientation, role:int=...) -> typing.Any:
+        if role == Qt.DisplayRole:
+            if section == 0:
+                return None
+            elif section == 1:
+                return "Path"
+
+    def data(self, index:PySide2.QtCore.QModelIndex, role:int=...) -> typing.Any:
+        if role == Qt.DisplayRole:
+            record = ParentDir.query.limit(1).offset(index.row()).first()  # type: ParentDir
+            if index.column() == 0:
+                return record.id
+            else:
+                return record.path
+
+
+
+class MasterConfigController(QtCore.QObject):
 
     def __init__(self):
-        super(Controller, self).__init__()
-        self.view = Master()
+        super(MasterConfigController, self).__init__()
+        self.view = MasterConfig()
+
+        self.subviews = {}
 
         self.connect()
 
@@ -26,24 +60,82 @@ class Controller(QtCore.QObject):
         label = treeItem.text(0)
         identifier = treeItem.text(2)
         print(treeItem, label, identifier)
+        mconfig = MediaConfigWidget()
+        mconfig.setWindowTitle("Media Config")
+        if identifier not in self.subviews:
+            sub = self.view.mdi.addSubWindow(mconfig)
+            sub.setWindowFlag(Qt.FramelessWindowHint, True)
+            sub.showMaximized()
+            sub.show()
+            self.subviews[identifier] = sub
+        else:
+            sub = self.subviews[identifier]
+            sub.show()
+            sub.showMaximized()
 
 
-class MediaConfig(QtWidgets.QWidget):
+class MediaConfigWidget(QtWidgets.QWidget):
 
     def __init__(self):
-        super(MediaConfig, self).__init__()
-
-    def setupUI(self):
-        vlay = QtWidgets.QVBoxLayout()
-
-
-class Master(QtWidgets.QMainWindow):
-
-    def __init__(self):
-        super(Master, self).__init__()
+        super(MediaConfigWidget, self).__init__()
         self.setupUI()
 
     def setupUI(self):
+
+        self.setWindowTitle("Media configuration")
+
+        layout = QtWidgets.QGridLayout()
+        self.setLayout(layout)
+
+        groupbox = QtWidgets.QGroupBox("Watch folder settings")
+        layout.addWidget(groupbox)
+
+        vbox = QtWidgets.QVBoxLayout()
+        vbox.setAlignment(Qt.AlignTop)
+
+        groupbox.setLayout(vbox)
+
+        label = QtWidgets.QLabel("New media found in the following folders will automatically be added to the library:")
+        label.setWordWrap(True)
+        vbox.addWidget(label)
+
+        self.table = QtWidgets.QTableView()
+        self.model = ParentTableBridge()
+
+        self.table.setModel(self.model)
+        self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.table.setColumnHidden(0, True)
+        self.table.setMaximumHeight(150)
+        self.table.setMaximumWidth(300)
+
+        vbox.addWidget(self.table)
+
+        action_layout = QtWidgets.QHBoxLayout()
+
+        self.add_folder = QtWidgets.QPushButton("Add folder...")
+        self.edit_folder = QtWidgets.QPushButton("Edit selected")
+        self.remove_folder = QtWidgets.QPushButton("Remove selected")
+
+        action_layout.addWidget(self.add_folder)
+        action_layout.addWidget(self.edit_folder)
+        action_layout.addWidget(self.remove_folder)
+
+        vbox.addLayout(action_layout)
+        vbox.addStretch()
+
+
+
+
+
+class MasterConfig(QtWidgets.QMainWindow):
+
+    def __init__(self):
+        super(MasterConfig, self).__init__()
+        self.setupUI()
+
+    def setupUI(self):
+
+        self.setWindowTitle("Master configuration")
 
         self.left_side = QtWidgets.QVBoxLayout(self)
         self.body_layout = QtWidgets.QHBoxLayout(self)
@@ -73,6 +165,9 @@ class Master(QtWidgets.QMainWindow):
 
         self.buildTree()
 
+        self.setMinimumSize(600, 400)
+        self.setMaximumSize(600, 400)
+
 
 
 
@@ -91,9 +186,12 @@ class Master(QtWidgets.QMainWindow):
 
 
 def main():
+
+    db = initialize_db("./pysongman.sqlite3")
+
     app = QtWidgets.QApplication(sys.argv)
 
-    controller = Controller()
+    controller = MasterConfigController()
     controller.view.show()
 
     return app.exec_()
