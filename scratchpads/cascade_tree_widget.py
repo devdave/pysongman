@@ -89,7 +89,7 @@ class MasterConfig(QtWidgets.QMainWindow):
         self.setMaximumSize(600, 400)
 
 
-    def add_controller(self, controller_cls, identifier, label, group_id=None):
+    def add_controller(self, controller_cls, identifier, label, group_id=None, show = False):
         if group_id is None:
             root = self.menu_tree
         elif group_id in self.folders:
@@ -98,8 +98,14 @@ class MasterConfig(QtWidgets.QMainWindow):
             raise Exception(f"{group_id} is not a valid folder id. - options are {self.folders.keys()}")
 
         self.controllers[identifier] = controller_cls()
+
         self.folders[identifier] = QtWidgets.QTreeWidgetItem(root, [label])
         self.folders[identifier].setData(2, QtCore.Qt.EditRole, identifier)
+
+        if show is True:
+            self.subviews[identifier] = self.mdi.addSubWindow(self.controllers[identifier].view)
+            self.show_subview(self.subviews[identifier])
+
 
     def buildTree(self):
         self.root_header = QtWidgets.QTreeWidgetItem(["Main config"])
@@ -112,7 +118,6 @@ class MasterConfig(QtWidgets.QMainWindow):
         print(treeItem, label, identifier)
         controller = self.controllers[identifier]
 
-
         if identifier not in self.subviews:
             sub = self.mdi.addSubWindow(controller.view)
             self.subviews[identifier] = sub
@@ -120,7 +125,10 @@ class MasterConfig(QtWidgets.QMainWindow):
             for subview in self.subviews.values():
                 subview.hide()
 
-        sub = self.subviews[identifier]
+        self.show_subview(self.subviews[identifier])
+
+    def show_subview(self, sub):
+
 
         sub.setWindowFlag(Qt.FramelessWindowHint, True)
         sub.showMaximized()
@@ -134,8 +142,8 @@ class MasterConfigController(QtCore.QObject):
         super(MasterConfigController, self).__init__()
         self.view = MasterConfig()
 
-        self.view.add_controller(MediaConfigController, "media_config", "Media Library")
-        self.view.add_controller(lambda : MediaConfigController("Second Config"), "media_config2", "Second config")
+        self.view.add_controller(MediaConfigController, "media_config", "Media Library", show=True)
+        # self.view.add_controller(lambda : MediaConfigController("Second Config"), "media_config2", "Second config")
 
         self.subviews = {}
 
@@ -155,29 +163,33 @@ class MasterConfigController(QtCore.QObject):
 
 
 class MediaConfigController(QtCore.QObject):
-    def __init__(self, optional_tile=None):
-        self.view = MediaConfigWidget(optional_tile=optional_tile)
+    def __init__(self, optional_title=None):
+        self.optional_title = optional_title
+        self.view = MediaConfigWidget(optional_title=optional_title)
         self.make_connections()
 
     def make_connections(self):
+        self.view.add_folder.clicked.connect(self.on_click_add_folder)
+        self.view.edit_folder.clicked.connect(self.on_click_edit_folder)
+        self.view.remove_folder.clicked.connect(self.on_click_remove_folder)
         pass
 
     def on_click_add_folder(self):
-        print("Add Folder")
+        print("Add Folder", self.optional_title)
 
     def on_click_edit_folder(self):
-        print("Edit folder")
+        print("Edit folder", self.optional_title)
 
     def on_click_remove_folder(self):
-        print("Remove Folder")
+        print("Remove Folder", self.optional_title)
 
 
 
 class MediaConfigWidget(QtWidgets.QWidget):
 
-    def __init__(self, optional_tile=None):
+    def __init__(self, optional_title=None):
         super(MediaConfigWidget, self).__init__()
-        self.optional_title = optional_tile
+        self.optional_title = optional_title
         self.setupUI()
 
     def setupUI(self):
