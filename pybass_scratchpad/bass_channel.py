@@ -25,6 +25,12 @@ BASS_ChannelGetPosition = func_type(QWORD,
                                     ctypes.c_ulong,
                                     ctypes.c_ulong)(('BASS_ChannelGetPosition', bass_module))
 
+BASS_ChannelBytes2Seconds = func_type(
+    ctypes.c_double,
+    ctypes.c_ulong, QWORD)(('BASS_ChannelBytes2Seconds', bass_module))
+
+BASS_ChannelGetLength = func_type(QWORD, ctypes.c_ulong, ctypes.c_ulong)(('BASS_ChannelGetLength', bass_module))
+
 class BassChannel:
 
     @classmethod
@@ -72,3 +78,20 @@ class BassChannel:
     @classmethod
     def GetPositionBytes(cls, stream_handle):
         return BASS_ChannelGetPosition(stream_handle, channel.POS_BYTE)
+
+    @classmethod
+    def GetPositionSeconds(cls, stream_handle: HANDLE) -> int:
+        bytes = cls.GetPositionBytes(stream_handle)
+        return BASS_ChannelBytes2Seconds(stream_handle, bytes)
+
+
+    @classmethod
+    def GetLengthSeconds(cls, stream_handle, bytes = None):
+        if bytes is None:
+            bytes = cls.GetLengthBytes(stream_handle)
+
+        return BASS_ChannelBytes2Seconds(stream_handle, bytes)
+
+    @classmethod
+    def GetLengthBytes(cls, stream_handle: HANDLE):
+        return BASS_ChannelGetLength(stream_handle, channel.POS_BYTE)
