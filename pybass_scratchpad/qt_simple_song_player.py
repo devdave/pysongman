@@ -38,6 +38,7 @@ class Simple(QtWidgets.QWidget):
 
     def setupUI(self):
 
+        self.load_file = QtWidgets.QPushButton("Load song")
         self.play_btn = QtWidgets.QPushButton("Play")
         self.stop_btn = QtWidgets.QPushButton("Stop")
         self.pause_btn = QtWidgets.QPushButton("Pause")
@@ -47,6 +48,7 @@ class Simple(QtWidgets.QWidget):
         self.configureTable()
 
         vbox = QtWidgets.QVBoxLayout()
+        vbox.addWidget(self.load_file)
         vbox.addWidget(self.play_btn)
         vbox.addWidget(self.stop_btn)
         vbox.addWidget(self.pause_btn)
@@ -113,6 +115,7 @@ class Simple(QtWidgets.QWidget):
         self.play_btn.clicked.connect(self.on_play_clicked)
         self.stop_btn.clicked.connect(self.on_stop_clicked)
         self.pause_btn.clicked.connect(self.on_pause_clicked)
+        self.load_file.clicked.connect(self.on_load_song_clicked)
 
 
     def on_play_clicked(self):
@@ -127,6 +130,22 @@ class Simple(QtWidgets.QWidget):
     def on_pause_clicked(self):
         print("Pause clicked")
         self.song.pause()
+
+    def on_load_song_clicked(self):
+        fileDialog = QtWidgets.QFileDialog(self)
+        supportedMimeTypes = ['audio/mpeg', 'application/ogg', 'application/octet-stream']
+        fileDialog.setMimeTypeFilters(supportedMimeTypes)
+        # fileDialog.setFileMode(fileDialog.Directory & fileDialog.ExistingFile)
+        if fileDialog.exec_() == QtWidgets.QDialog.Accepted:
+            files = fileDialog.selectedFiles()
+            file = files[0]
+            if self.song is not None:
+                self.song.stop()
+                del self.song
+
+            self.song = Song(file)
+            self.duration.setText(str(self.song.seconds))
+            self.song.play()
 
 
 
