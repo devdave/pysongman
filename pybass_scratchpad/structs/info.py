@@ -17,3 +17,11 @@ class BASS_INFO(ctypes.Structure):
                 ('speakers', ctypes.c_ulong),  # number of speakers available
                 ('freq', ctypes.c_ulong)  # current output rate (Vista/OSX only)
                 ]
+
+
+# Device info structure
+class BASS_DEVICEINFO(ctypes.Structure):
+    _fields_ = [('name', ctypes.c_char_p),  # description
+                ('driver', ctypes.c_char_p),  # driver
+                ('flags', ctypes.c_ulong)
+                ]

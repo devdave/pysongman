@@ -31,6 +31,8 @@ BASS_ChannelBytes2Seconds = func_type(
 
 BASS_ChannelGetLength = func_type(QWORD, ctypes.c_ulong, ctypes.c_ulong)(('BASS_ChannelGetLength', bass_module))
 
+BASS_ChannelSetPosition = func_type(ctypes.c_bool, ctypes.c_ulong, QWORD, ctypes.c_ulong)(('BASS_ChannelSetPosition', bass_module))
+
 class BassChannel:
 
     @classmethod

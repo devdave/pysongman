@@ -7,7 +7,8 @@ import sys
 from codes import errors
 from codes import config
 from codes.errors import get_description
-from structs.info import BASS_INFO
+from structs.info import BASS_INFO, BASS_DEVICEINFO
+from datatypes import QWORD, HANDLE
 
 BASSVERSION = 0x204
 BASSVERSIONTEXT = '2.4'
@@ -52,6 +53,11 @@ BASS_GetConfig = func_type(ctypes.c_ulong, ctypes.c_ulong)(('BASS_GetConfig', ba
 BASS_GetVersion = func_type(ctypes.c_ulong)(('BASS_GetVersion', bass_module))
 
 BASS_GetInfo = func_type(ctypes.c_bool, ctypes.POINTER(BASS_INFO))(('BASS_GetInfo', bass_module))
+
+BASS_GetDevice = func_type(ctypes.c_ulong)(('BASS_GetDevice', bass_module))
+BASS_GetDeviceInfo = func_type(ctypes.c_bool, ctypes.c_ulong, ctypes.POINTER(BASS_DEVICEINFO))(('BASS_GetDeviceInfo', bass_module))
+
+
 
 @dataclasses.dataclass
 class BassError:
@@ -127,14 +133,13 @@ class Bass:
 
             return True
 
-        cls.LAST_ERROR = cls.GetError()
-        # raise BassError
+        cls.RaiseError()
         return False
 
     @classmethod
     def GetCPU(cls) -> float:
         """
-        Get the current CPU usage by Bass Lib
+        Get the current CPU usage by Bass Lib.  This either works or it doesn't and I don't care right now.
 
         Returns: CPU usage as a floating point between 0 and 1
 
@@ -192,10 +197,40 @@ class Bass:
         return BASS_GetVersion()
 
     @classmethod
-    def GetLibInfo(cls):
+    def GetLibInfo(cls) -> BASS_INFO:
+        """
+            This could be a memory leak vector if called too often and not del'd
+
+        Returns:
+
+        """
         bi = BASS_INFO()
         retval = BASS_GetInfo(bi)
         if retval is not True:
             cls.RaiseError()
 
         return bi
+
+    @classmethod
+    def GetCurrentDeviceID(cls) -> ctypes.c_ulong:
+        return BASS_GetDevice()
+
+    @classmethod
+    def GetDeviceInfo(cls, device_id = None) -> BASS_DEVICEINFO:
+        """
+            Just like GetLibInfo, this could be a potential memory leak
+        Args:
+            device_id:
+
+        Returns:
+
+        """
+        if device_id is None:
+            device_id = cls.GetCurrentDeviceID()
+
+        bd = BASS_DEVICEINFO()
+        retval = BASS_GetDeviceInfo(device_id, bd)
+        if retval is not True:
+            cls.RaiseError()
+
+        return bd
