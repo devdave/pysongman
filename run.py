@@ -11,7 +11,7 @@ from PyQt5 import QtWidgets
 
 
 # from .controllers.player import PlayerController
-from pysongman.controllers.player import PlayerController
+from pysongman_old.controllers.player import PlayerController
 
 class Test(PyQt5.QtWidgets.QTabWidget):
     pass

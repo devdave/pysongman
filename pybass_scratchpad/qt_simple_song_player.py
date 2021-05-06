@@ -33,7 +33,7 @@ class Simple(QtWidgets.QWidget):
         self.song.position_updated.connect(self.on_song_position_updated)
 
     def on_song_position_updated(self, seconds):
-        self.duration.setText(repr(seconds))
+        self.position.setText(repr(seconds))
 
 
     def setupUI(self):
@@ -42,18 +42,22 @@ class Simple(QtWidgets.QWidget):
         self.play_btn = QtWidgets.QPushButton("Play")
         self.stop_btn = QtWidgets.QPushButton("Stop")
         self.pause_btn = QtWidgets.QPushButton("Pause")
-        self.duration = QtWidgets.QLabel("0000")
+        self.position = QtWidgets.QLabel("0000")
         self.length = QtWidgets.QLabel("0000")
+        self.position_slide = QtWidgets.QSlider(QT.Horizontal)
         self.table = QtWidgets.QTableWidget(1, 2)
         self.configureTable()
 
         vbox = QtWidgets.QVBoxLayout()
+        time_box = QtWidgets.QHBoxLayout()
         vbox.addWidget(self.load_file)
         vbox.addWidget(self.play_btn)
         vbox.addWidget(self.stop_btn)
         vbox.addWidget(self.pause_btn)
-        vbox.addWidget(self.duration)
-        vbox.addWidget(self.length)
+        time_box.addWidget(self.position)
+        time_box.addWidget(self.length)
+        vbox.addLayout(time_box)
+        vbox.addWidget(self.position_slide)
         vbox.addWidget(self.table)
 
         self.setLayout(vbox)
@@ -105,12 +109,6 @@ class Simple(QtWidgets.QWidget):
         self.table.resizeColumnsToContents()
 
 
-
-
-
-
-
-
     def connectUI(self):
         self.play_btn.clicked.connect(self.on_play_clicked)
         self.stop_btn.clicked.connect(self.on_stop_clicked)
@@ -144,8 +142,10 @@ class Simple(QtWidgets.QWidget):
                 del self.song
 
             self.song = Song(file)
-            self.duration.setText(str(self.song.seconds))
+            self.song.position_updated.connect(self.on_song_position_updated)
             self.song.play()
+            seconds = self.song.seconds
+            self.length.setText(str(seconds))
 
 
 
