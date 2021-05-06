@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 import appdirs
 
 HOME = None
-APP_NAME = "pysongman"
+APP_NAME = "pysongman_old"
 APP_AUTHOR = "DJW"
 
 HOME = Path(appdirs.user_data_dir(APP_NAME, APP_AUTHOR))
