@@ -11,9 +11,11 @@ from ..controllers.player import PlayerControl
 
 class Application(QApplication):
 
-    def __init__(self, song_path=None, nuke_everything=False):
-
+    def __init__(self, song_path: list = None, nuke_everything: bool = False):
         super(Application, self).__init__()
+        self.song_path = song_path
+        self.nuke_everything = nuke_everything
+
         self.playlist = Pys2Playlist()
         self.plc = PlayerControl(self.playlist)
 
