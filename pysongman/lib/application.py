@@ -1,9 +1,10 @@
 from .. import USE_PYSIDE
 
-from PySide2.QtWidgets import QApplication
+from .. import USE_PYSIDE
 
 if USE_PYSIDE:
     from pybass3.pys2_playlist import Pys2Playlist
+    from PySide2.QtWidgets import QApplication
 
 
 from ..controllers.player import PlayerControl
