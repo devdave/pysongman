@@ -1,3 +1,4 @@
+from pathlib import Path
 
 from .. import USE_PYSIDE
 
@@ -21,3 +22,17 @@ class Application(QApplication):
 
     def startup(self):
         self.plc.show()
+
+        if self.song_path is not None:
+            if isinstance(self.song_path, list) is False:
+                raise ValueError(f"Expected song_path to be a list but got {type(self.song_path)} instead")
+
+            for element in self.song_path:
+                file_dir = Path(element)
+                if file_dir.is_dir():
+                    self.playlist.add_directory(file_dir)
+                elif file_dir.is_file():
+                    self.playlist.add_song(file_dir)
+
+            if len(self.playlist) > 0:
+                self.playlist.play()
