@@ -12,6 +12,7 @@ CONFIGURED_FLAG = HOME / "installed.txt"
 RSRC_DIR = HERE / "resources"
 ICON_DIR = RSRC_DIR / "icons"
 CSS_DIR = RSRC_DIR / "css"
+USE_PYSIDE = True
 
 if HOME.exists() is False:
     HOME.mkdir(parents=True, exist_ok=True)
