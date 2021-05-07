@@ -11,7 +11,7 @@ from PySide2.QtGui import QPixmap
 from PySide2 import QtCore
 from PySide2.QtCore import Qt
 from PySide2 import QtWidgets
-from PySide2 import QtMultimedia
+from PySide2.QtWidgets import QAction, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
 from PySide2 import QtGui
 
 from .. import ICON_DIR
@@ -25,6 +25,51 @@ class PlayerWindow(QtWidgets.QMainWindow):
 
     onClose = QtCore.Signal()
     keyPressed = QtCore.Signal(QtGui.QKeyEvent)
+
+    m_file: QtWidgets.QMenu
+    a_open_playlist: QAction
+    a_play_dir: QAction
+    a_play_file: QAction
+    a_save_playlist: QAction
+    act_exit: QAction
+
+    m_play: QtWidgets.QMenu
+
+    m_options: QtWidgets.QMenu
+
+    m_help: QtWidgets.QMenu
+
+    body_playlist_behavior: QHBoxLayout
+    controls: QHBoxLayout
+
+    info_dash1: QHBoxLayout
+    time_display: QLabel
+    diagnostics: QLabel
+    spectrogram: QLabel
+
+    info_dash: QVBoxLayout
+    current_song: QLabel
+
+    playlist: QVBoxLayout
+    repeat_button: QPushButton
+    random_button: QPushButton
+
+    status_and_views: QHBoxLayout
+    progress_bar: QClickableSlider
+    load_btn: QPushButton
+    playlist_btn: QPushButton
+    medialib_btn: QPushButton
+
+    controls: QHBoxLayout
+    previous_btn: QPushButton
+    play_btn: QPushButton
+    pause_btn: QPushButton
+    stop_btn: QPushButton
+    next_btn: QPushButton
+    mute_btn: QPushButton
+    volume_slider: QtWidgets.QSlider
+
+
 
     def __init__(self, *args, **kwargs):
         super(PlayerWindow, self).__init__()
@@ -178,12 +223,9 @@ class PlayerWindow(QtWidgets.QMainWindow):
         self.playlist_btn.setObjectName("playlistButton")
         self.playlist_btn.setIcon(self.icons['list'])
 
-
         self.medialib_btn = QtWidgets.QPushButton()
         self.medialib_btn.setObjectName("medialibButton")
         self.medialib_btn.setIcon(self.icons['board'])
-
-
 
         self.status_and_views.addWidget(self.progress_bar)
 
@@ -196,7 +238,6 @@ class PlayerWindow(QtWidgets.QMainWindow):
         # line3 - previous, play, pause, stop, next - mute - volume slider
         self.previous_btn = QtWidgets.QPushButton()
         self.previous_btn.setIcon(self.icons['previous'])
-
         self.previous_btn.setObjectName("previousButton")
 
         self.play_btn = QtWidgets.QPushButton()
