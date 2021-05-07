@@ -1,4 +1,3 @@
-from .. import USE_PYSIDE
 
 from .. import USE_PYSIDE
 
