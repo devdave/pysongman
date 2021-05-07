@@ -13,6 +13,9 @@ def setup_logging():
 
 def main(song_path = None, nuke_everything = False):
     setup_logging()
+
+    log.debug(f"Pysongman.main called with {song_path=} and {nuke_everything=}")
+
     # TODO put a QMessageBox.confirm for nuke everything
 
     app = Application(song_path, nuke_everything)
@@ -23,7 +26,7 @@ def main(song_path = None, nuke_everything = False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("song_path", nargs="?", default=list())
-    parser.add_argument("-nuke_everything", default=False, help="Wipe out the database and reset config files")
+    parser.add_argument("song_path", nargs="*", default=list(), help="Optional individual songs or whole directories to play on start")
+    parser.add_argument("--nuke_everything", default=False, help="Wipe out the database and reset config files")
     args = parser.parse_args()
     main(args.song_path, nuke_everything=args.nuke_everything)
