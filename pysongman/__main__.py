@@ -1,9 +1,20 @@
+import sys
 import argparse
+import logging
 
 from .lib.application import Application
 
+log = logging.getLogger(__name__)
+
+def setup_logging():
+    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    log.debug("Basic config logging enabled")
+
 
 def main(song_path = None, nuke_everything = False):
+    setup_logging()
+    # TODO put a QMessageBox.confirm for nuke everything
+
     app = Application(song_path, nuke_everything)
     app.startup()
     return app.exec_()
