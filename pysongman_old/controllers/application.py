@@ -61,10 +61,7 @@ class Application(QApplication):
             self.player.play()
 
     def on_focus_changed(self, old, new):
-        if old is None:
-            pass
-            # log.debug("Focus changed %s to %s", old, new)
-            # self.player.focus()
+        pass
 
 
 
