@@ -34,10 +34,10 @@ class PlayerControl(QObject):
 
         log.debug("Initialized Player controller")
 
-        self.setupConnections()
+        self.setup_connections()
 
 
-    def setupConnections(self):
+    def setup_connections(self):
         log.debug("Setting up Player control connections")
 
         self.view.load_btn.clicked.connect(self.on_add_file)
