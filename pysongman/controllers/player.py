@@ -9,9 +9,9 @@ from ..views.player_window import PlayerWindow
 if USE_PYSIDE:
     from pybass3.pys2_playlist import Pys2Playlist
 
-
     from PySide2.QtCore import QObject, Signal
-    from PySide2 import QtWidgets
+    from PySide2 import QtWidgets, QtGui
+    from PySide2.QtCore import Qt
 
 log = logging.getLogger(__name__)
 
@@ -55,6 +55,7 @@ class PlayerControl(QObject):
 
         # Playlist behavior
         self.view.random_button.clicked.connect(self.on_random_clicked)
+        self.view.keyPressed.connect(self.on_keypress)
 
         #Song controls
         self.view.progress_bar.sliderPressed.connect(self.on_progress_pressed)
@@ -184,3 +185,17 @@ class PlayerControl(QObject):
 
     def toggle_medialib(self):
         self.showMedialib.emit(True)
+
+    def on_keypress(self, event: QtGui.QKeyEvent):
+        if event.key() == Qt.Key_Z:
+            self.playlist.previous()
+        elif event.key() == Qt.Key_X:
+            self.playlist.play()
+        elif event.key() == Qt.Key_C:
+            self.playlist.pause()
+        elif event.key() == Qt.Key_V:
+            self.playlist.stop()
+        elif event.key() == Qt.Key_B:
+            self.playlist.next()
+
+        event.accept()
