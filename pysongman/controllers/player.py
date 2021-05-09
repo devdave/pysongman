@@ -9,7 +9,8 @@ from ..views.player_window import PlayerWindow
 if USE_PYSIDE:
     from pybass3.pys2_playlist import Pys2Playlist
 
-    from PySide2.QtCore import QObject
+
+    from PySide2.QtCore import QObject, Signal
     from PySide2 import QtWidgets
 
 log = logging.getLogger(__name__)
@@ -18,6 +19,10 @@ class PlayerControl(QObject):
 
     playlist: Pys2Playlist
     view: PlayerWindow
+
+    viewClosed = Signal()
+    showPlayList = Signal(bool)
+    showMedialib = Signal(bool)
 
     def __init__(self, playlist: Pys2Playlist):
         super(PlayerControl, self).__init__()
