@@ -31,10 +31,10 @@ class PlaylistWindow(QtWidgets.QWidget):
         self.table = None
         self.body = None
 
-        self.setupUI()
+        self.setup_UI()
 
 
-    def setupUI(self):
+    def setup_UI(self):
         self.setWindowTitle("Playlist editor")
         self.body = QtWidgets.QVBoxLayout(self)
 
