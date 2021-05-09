@@ -21,7 +21,8 @@ class Application(QApplication):
         self.plc = PlayerControl(self.playlist)
 
     def startup(self):
-        self.plc.show()
+        self.playlist_control.show()
+        self.player_control.show()
 
         if self.song_path is not None:
             if isinstance(self.song_path, list) is False:
