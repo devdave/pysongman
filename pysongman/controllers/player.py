@@ -62,7 +62,11 @@ class PlayerControl(QObject):
         self.view.progress_bar.progress_changed.connect(self.on_progress_clicked)
         self.view.progress_bar.valueChanged.connect(self.on_progress_slider_value_changed)
 
-        pass
+        #View controls
+        self.view.playlist_btn.clicked.connect(self.toggle_playlist)
+        self.view.medialib_btn.clicked.connect(self.toggle_medialib)
+
+        self.view.onClose.connect(self.on_close)
 
     def show(self):
         log.debug("Showing Player control view(s)")
@@ -170,5 +174,9 @@ class PlayerControl(QObject):
             self.playlist.current.move2position_bytes(self.view.progress_bar.value())
 
 
+    def toggle_playlist(self):
+        log.debug("Please toggle playlist")
+        self.showPlayList.emit(True)
 
-
+    def toggle_medialib(self):
+        self.showMedialib.emit(True)
