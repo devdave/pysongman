@@ -1,4 +1,5 @@
 from pathlib import Path
+import logging
 
 from .. import USE_PYSIDE
 
@@ -8,7 +9,9 @@ if USE_PYSIDE:
 
 
 from ..controllers.player import PlayerControl
+from ..controllers.playlist import Playlist as PlaylistController
 
+log = logging.getLogger(__name__)
 
 class Application(QApplication):
 
@@ -18,7 +21,32 @@ class Application(QApplication):
         self.nuke_everything = nuke_everything
 
         self.playlist = Pys2Playlist()
-        self.plc = PlayerControl(self.playlist)
+        self.player_control = PlayerControl(self.playlist)
+        self.playlist_control = PlaylistController(self.playlist)
+
+        self.setup_connections()
+
+
+    def setup_connections(self):
+
+        self.player_control.viewClosed.connect(self.do_close)
+        self.player_control.showMedialib.connect(self.toggle_medialib)
+        self.player_control.showPlayList.connect(self.toggle_playlist)
+
+    def toggle_medialib(self, toggle):
+        pass
+
+    def toggle_playlist(self, toggle):
+        log.debug("Should toggle playlist, %s", toggle)
+        if self.playlist_control.view.isVisible() is False or self.playlist_control.view.isHidden() is True:
+            self.playlist_control.show()
+        else:
+            self.playlist_control.hide()
+
+
+    def do_close(self, return_code=0):
+        log.debug("Closing application")
+        self.exit(return_code)
 
     def startup(self):
         self.playlist_control.show()
