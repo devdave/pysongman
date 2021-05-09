@@ -14,6 +14,7 @@ if USE_PYSIDE:
 
 from .. import ICON_DIR
 from .. import CSS_DIR
+from ..tables.playlist import PlaylistTableModel
 
 
 class AlignLeftDelegate(QtWidgets.QStyledItemDelegate):
