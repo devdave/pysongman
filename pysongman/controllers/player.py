@@ -53,6 +53,9 @@ class PlayerControl(QObject):
         self.playlist.song_changed.connect(self.on_song_changed)
         self.playlist.ticked.connect(self.on_playlist_tick)
 
+        # Playlist behavior
+        self.view.random_button.clicked.connect(self.on_random_clicked)
+
         #Song controls
         self.view.progress_bar.sliderPressed.connect(self.on_progress_pressed)
         self.view.progress_bar.sliderReleased.connect(self.on_progress_released)
@@ -134,6 +137,15 @@ class PlayerControl(QObject):
             self.view.progress_bar.setValue(self.playlist.current.position_bytes)
         else:
             log.error("Playlist ticked but current is None, that shouldn't be happening")
+
+    def on_random_clicked(self, is_toggled):
+        log.debug("Random toggled %s", is_toggled)
+
+        if is_toggled is True:
+            self.playlist.set_randomize(restart_and_play=False)
+        else:
+            self.playlist.set_sequential(restart_and_play=False)
+
 
     def on_progress_pressed(self):
         self.progress_slider_pressed = True
