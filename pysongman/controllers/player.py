@@ -173,6 +173,9 @@ class PlayerControl(QObject):
         if self.progress_slider_pressed is True and self.playlist.current is not None:
             self.playlist.current.move2position_bytes(self.view.progress_bar.value())
 
+    def on_close(self):
+        log.debug("Player closed")
+        self.viewClosed.emit()
 
     def toggle_playlist(self):
         log.debug("Please toggle playlist")
