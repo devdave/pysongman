@@ -74,7 +74,7 @@ class PlayerWindow(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super(PlayerWindow, self).__init__()
         self.icons = self.load_icons()
-        self.setupUI()
+        self.setup_UI()
         self.load_stylesheet()
 
     def keyPressEvent(self, event):
@@ -97,7 +97,7 @@ class PlayerWindow(QtWidgets.QMainWindow):
         self.icons = icons
         return icons
 
-    def setupUI(self):
+    def setup_UI(self):
         """
 
             main body
