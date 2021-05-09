@@ -1,12 +1,16 @@
+from .. import USE_PYSIDE
 import typing as T
 import pathlib
 
-import PySide2
-from PySide2.QtGui import QPixmap
-from PySide2 import QtCore
-from PySide2.QtCore import Qt
-from PySide2 import QtWidgets
-from PySide2 import QtMultimedia
+if USE_PYSIDE:
+    import PySide2
+    from PySide2.QtGui import QPixmap
+    from PySide2 import QtCore
+    from PySide2.QtCore import Qt
+    from PySide2 import QtWidgets
+    from PySide2 import QtMultimedia
+
+    from pybass3.pys2_playlist import Pys2Playlist
 
 from .. import ICON_DIR
 from .. import CSS_DIR
