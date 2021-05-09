@@ -25,11 +25,17 @@ class AlignLeftDelegate(QtWidgets.QStyledItemDelegate):
 
 class PlaylistWindow(QtWidgets.QWidget):
 
-    def __init__(self):
+    model: PlaylistTableModel
+    body: QtWidgets.QVBoxLayout
+    table: QtWidgets.QTableView
+
+    def __init__(self, playlist: Pys2Playlist, playlist_table_model: PlaylistTableModel ):
         super(PlaylistWindow, self).__init__()
 
-        self.table = None
+        self.model = playlist_table_model
+
         self.body = None
+        self.table = None
 
         self.setup_UI()
 
