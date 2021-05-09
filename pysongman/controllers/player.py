@@ -129,6 +129,7 @@ class PlayerControl(QObject):
         self.playlist.next()
 
     def on_song_changed(self, song_id):
+        log.debug("Song was changed")
         current_song_label = f"{self.playlist.current.title}({self.playlist.current.duration_time})"
         self.view.current_song.setText(current_song_label)
         self.view.progress_bar.setRange(0, self.playlist.current.duration_bytes)
