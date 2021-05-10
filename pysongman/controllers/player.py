@@ -23,6 +23,7 @@ class PlayerControl(QObject):
     viewClosed = Signal()
     showPlayList = Signal(bool)
     showMedialib = Signal(bool)
+    key_pressed = Signal(QtGui.QKeyEvent)
 
     def __init__(self, playlist: Pys2Playlist):
         super(PlayerControl, self).__init__()
@@ -187,15 +188,10 @@ class PlayerControl(QObject):
         self.showMedialib.emit(True)
 
     def on_keypress(self, event: QtGui.QKeyEvent):
-        if event.key() == Qt.Key_Z:
-            self.playlist.previous()
-        elif event.key() == Qt.Key_X:
-            self.playlist.play()
-        elif event.key() == Qt.Key_C:
-            self.playlist.pause()
-        elif event.key() == Qt.Key_V:
-            self.playlist.stop()
-        elif event.key() == Qt.Key_B:
-            self.playlist.next()
+        self.tracked_keys = [Qt.Key_Z, Qt.Key_X, Qt.Key_C, Qt.Key_V, Qt.Key_B]
+
+        if event.key() in self.tracked_keys:
+            log.debug("%s was pressed, emitting", event.key())
+            self.key_pressed.emit(event)
 
         event.accept()

@@ -5,7 +5,8 @@ from .. import USE_PYSIDE
 
 if USE_PYSIDE:
     from pybass3.pys2_playlist import Pys2Playlist
-    from PySide2.QtWidgets import QApplication
+    from PySide2.QtCore import Qt
+    from PySide2 import QtGui
 
 
 from ..controllers.player import PlayerControl
@@ -32,6 +33,7 @@ class Application(QApplication):
         self.player_control.viewClosed.connect(self.do_close)
         self.player_control.showMedialib.connect(self.toggle_medialib)
         self.player_control.showPlayList.connect(self.toggle_playlist)
+        self.player_control.key_pressed.connect(self.on_key_pressed)
 
     def toggle_medialib(self, toggle):
         pass
@@ -65,3 +67,13 @@ class Application(QApplication):
 
             if len(self.playlist) > 0:
                 self.playlist.play()
+        if event.key() == Qt.Key_Z:
+            self.playlist.previous()
+        elif event.key() == Qt.Key_X:
+            self.playlist.play()
+        elif event.key() == Qt.Key_C:
+            self.playlist.pause()
+        elif event.key() == Qt.Key_V:
+            self.playlist.stop()
+        elif event.key() == Qt.Key_B:
+            self.playlist.next()
