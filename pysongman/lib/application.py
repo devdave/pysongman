@@ -5,6 +5,7 @@ from .. import USE_PYSIDE
 
 if USE_PYSIDE:
     from pybass3.pys2_playlist import Pys2Playlist
+    from PySide2.QtWidgets import QApplication, QMessageBox
     from PySide2.QtCore import Qt
     from PySide2 import QtGui
 
@@ -61,6 +62,10 @@ class Application(QApplication):
             for element in self.song_path:
                 file_dir = Path(element)
                 if file_dir.is_dir():
+                    QMessageBox.information(self.player_control.view,
+                                            "Loading directory",
+                                            "Loading a directory, this might take a while.")
+
                     self.playlist.add_directory(file_dir)
                 elif file_dir.is_file():
                     self.playlist.add_song(file_dir)
