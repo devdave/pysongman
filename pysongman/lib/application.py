@@ -72,6 +72,10 @@ class Application(QApplication):
 
             if len(self.playlist) > 0:
                 self.playlist.play()
+
+
+    def on_key_pressed(self, event: QtGui.QKeyEvent):
+
         if event.key() == Qt.Key_Z:
             self.playlist.previous()
         elif event.key() == Qt.Key_X:
