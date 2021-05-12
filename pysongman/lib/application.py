@@ -17,10 +17,12 @@ log = logging.getLogger(__name__)
 
 class Application(QApplication):
 
-    def __init__(self, song_path: list = None, nuke_everything: bool = False):
+    def __init__(self, song_path: list = None, nuke_everything: bool = False, debug_flag: bool = False):
         super(Application, self).__init__()
+        log.debug("Initialized Application")
         self.song_path = song_path
         self.nuke_everything = nuke_everything
+        self._debug_enabled = debug_flag
 
         self.playlist = Pys2Playlist()
         self.player_control = PlayerControl(self.playlist)
@@ -35,6 +37,8 @@ class Application(QApplication):
         self.player_control.showMedialib.connect(self.toggle_medialib)
         self.player_control.showPlayList.connect(self.toggle_playlist)
         self.player_control.key_pressed.connect(self.on_key_pressed)
+
+        log.debug("Application connections setup")
 
     def toggle_medialib(self, toggle):
         pass
@@ -52,6 +56,8 @@ class Application(QApplication):
         self.exit(return_code)
 
     def startup(self):
+        log.debug("Running startup")
+
         self.playlist_control.show()
         self.player_control.show()
 
@@ -75,7 +81,7 @@ class Application(QApplication):
 
 
     def on_key_pressed(self, event: QtGui.QKeyEvent):
-
+        log.debug("Application is handling keypress %s", event.key())
         if event.key() == Qt.Key_Z:
             self.playlist.previous()
         elif event.key() == Qt.Key_X:
