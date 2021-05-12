@@ -47,6 +47,8 @@ class Application(QApplication):
         log.debug("Should toggle playlist, %s", toggle)
         if self.playlist_control.view.isVisible() is False or self.playlist_control.view.isHidden() is True:
             self.playlist_control.show()
+            # TODO add an activate method to controller
+            self.playlist_control.view.activateWindow()
         else:
             self.playlist_control.hide()
 
