@@ -74,7 +74,7 @@ class Application(QApplication):
                                             "Loading directory",
                                             "Loading a directory, this might take a while.")
 
-                    self.playlist.add_directory(file_dir)
+                    self.playlist.add_directory(file_dir, top=True)
                 elif file_dir.is_file():
                     self.playlist.add_song(file_dir)
 
