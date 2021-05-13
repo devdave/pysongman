@@ -19,17 +19,23 @@ class SearchFilterProxy(QtCore.QSortFilterProxyModel):
     def __init__(self, parent_model):
         super(SearchFilterProxy, self).__init__(parent_model)
         self.filter_string = None
+        self._filters = []
 
     def setFilterString(self, text):
         logging.debug("setFilterString %s", text)
         if text is None:
             self.filter_string = None
+            self._filters = []
 
-        elif isinstance(text, str) and text.strip() == "":
-            self.filter_string = None
+        elif isinstance(text, str):
 
-        else:
-            self.filter_string = QtCore.QRegExp(text, cs=Qt.CaseInsensitive, syntax=QtCore.QRegExp.Wildcard)
+            if text.strip() == "":
+                self.filter_string = None
+            else:
+                self.filter_string = text
+                self._filters = [QtCore.QRegExp(span, cs=Qt.CaseInsensitive, syntax=QtCore.QRegExp.Wildcard)
+                                 for span in text.split(" ")]
+                log.debug("Created %d filters against %s", len(self._filters), text)
 
         self.invalidateFilter()
 
@@ -38,18 +44,25 @@ class SearchFilterProxy(QtCore.QSortFilterProxyModel):
         song = model.getSong(source_row)
         should_free = True if song.handle is None else False
 
-        if self.filter_string is None:
-            return True
-
-        elif self.filter_string:
-
-            if self.filter_string.indexIn(song.title) != -1:
-                return True
-            elif self.filter_string.indexIn(song.file_path.as_posix()) != -1:
+        try:
+            if self.filter_string is None:
                 return True
 
-        if should_free:
-            song.free_stream()
+            elif self.filter_string:
+                results = []
+                for test in self._filters:
+
+                    if test.indexIn(song.title) != -1:
+                        results.append(True)
+                    elif test.indexIn(song.file_path.as_posix()) != -1:
+                        results.append(True)
+                    else:
+                        results.append(False)
+
+                return all(results)
+        finally:
+            if should_free:
+                song.free_stream()
 
         return False
 
