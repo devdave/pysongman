@@ -5,12 +5,15 @@ from .. import USE_PYSIDE
 
 if USE_PYSIDE:
     from PySide2 import QtCore
+    from PySide2.QtCore import Qt
     from PySide2 import QtWidgets
+    from PySide2 import QtGui
 
     from pybass3.pys2_playlist import Pys2Playlist
 
 from ..tables.playlist import PlaylistTableModel
 from ..views.playlist_window import PlaylistWindow
+from .search import SearchController
 
 log = logging.getLogger(__name__)
 
@@ -27,21 +30,41 @@ class Playlist(QtCore.QObject):
             playlist_obj: A PyBass Playlist object
             playlist_tm: The Table Model for Playlist
         """
+        super(Playlist, self).__init__()
+        log.debug("Initialized PlaylistController")
+
         self.playlist = playlist_obj
         self.table_model = PlaylistTableModel(playlist_obj)
         self.view = PlaylistWindow(self.playlist, self.table_model)
+        self.search = SearchController(self.table_model, self.playlist)
 
         self.setup_connections()
         self.setup_menu_connections()
+        
+        
 
     def setup_connections(self):
+        log.debug("Setting up connections")
+
+        self.view.keyPressed.connect(self.on_keypress)
+
         self.view.table.doubleClicked.connect(self.on_row_doubleclicked)
         self.playlist.song_changed.connect(self.on_song_changed)
 
+        self.view.search_requested.connect(lambda : self.search.show())
+
+
     def setup_menu_connections(self):
+        log.debug("Setting up menu connections")
+
         self.view.fm_add_folder.triggered.connect(self.on_menu_add_folder)
         self.view.fm_add_files.triggered.connect(self.on_menu_add_file)
         pass
+
+    def on_keypress(self, event: QtGui.QKeyEvent):
+        log.debug("Key pressed %r", event.key())
+        if event.key() == Qt.Key_J:
+            log.debug("Show Search")
 
 
     def on_menu_add_file(self):
