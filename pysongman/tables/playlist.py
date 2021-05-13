@@ -6,7 +6,9 @@ from .. import USE_PYSIDE
 if USE_PYSIDE:
     from PySide2 import QtCore
 
+
     from pybass3.pys2_playlist import Pys2Playlist
+    from pybass3.pys2_song import Pys2Song
 
     Qt = QtCore.Qt
 
@@ -15,6 +17,8 @@ log = logging.getLogger(__name__)
 
 
 class PlaylistTableModel(QtCore.QAbstractTableModel):
+
+
 
     playlist: Pys2Playlist
 
@@ -43,6 +47,9 @@ class PlaylistTableModel(QtCore.QAbstractTableModel):
                 return "Name"
 
         return None
+
+    def getSong(self, row_number) -> Pys2Song:
+        return self.playlist.get_song_by_row(row_number)
 
     def data(self, index: QtCore.QModelIndex, role: int = ...) -> typing.Any:
 
