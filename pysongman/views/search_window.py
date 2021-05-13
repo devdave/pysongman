@@ -37,13 +37,17 @@ class SearchWindow(QtWidgets.QWidget):
     def setup_shortcuts(self):
 
         down_pressed = QtWidgets.QShortcut(QtGui.QKeySequence(Qt.Key_Enter), self.results)
-        down_pressed.activated.connect(lambda : self.selected.emit())
+        down_pressed.activated.connect(self.shift_focus_to_results)
+
+
+    def shift_focus_to_results(self):
+        self.results.setFocus()
 
 
     def eventFilter(self, watched:QtCore.QObject, event:QtCore.QEvent) -> bool:
         if watched == self.search:
             if event.type() == QtCore.QEvent.KeyPress:
-                if event.key() == Qt.Key_Down:
+                if event.key() in (Qt.Key_Down, Qt.Key_Return, Qt.Key_Enter,):
                     self.key_search_down.emit()
                     self.results.setFocus()
                     return False
