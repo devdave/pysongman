@@ -1,3 +1,5 @@
+import logging
+
 from .. import USE_PYSIDE
 import typing as T
 import pathlib
@@ -5,16 +7,16 @@ import pathlib
 if USE_PYSIDE:
     import PySide2
     from PySide2.QtGui import QPixmap
-    from PySide2 import QtCore
+    from PySide2 import QtCore, QtGui, QtWidgets
     from PySide2.QtCore import Qt
-    from PySide2 import QtWidgets
-    from PySide2 import QtMultimedia
 
     from pybass3.pys2_playlist import Pys2Playlist
 
 from .. import ICON_DIR
 from .. import CSS_DIR
 from ..tables.playlist import PlaylistTableModel
+
+log = logging.getLogger(__name__)
 
 
 class AlignLeftDelegate(QtWidgets.QStyledItemDelegate):
@@ -25,6 +27,11 @@ class AlignLeftDelegate(QtWidgets.QStyledItemDelegate):
 
 class PlaylistWindow(QtWidgets.QMainWindow):
 
+    #Signals
+    keyPressed = QtCore.Signal(QtGui.QKeyEvent)
+    search_requested = QtCore.Signal()
+
+    # UI Elements
     frame: QtWidgets.QFrame
     model: PlaylistTableModel
     body: QtWidgets.QVBoxLayout
@@ -67,7 +74,20 @@ class PlaylistWindow(QtWidgets.QMainWindow):
         self.body = None
         self.table = None
 
+
         self.setup_UI()
+        self.setup_menu()
+        self.setup_shortcuts()
+
+        self.setWindowFlags(self.windowFlags() & Qt.CustomizeWindowHint)
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMinMaxButtonsHint)
+        log.debug("Playlist window initialized")
+
+    def setup_shortcuts(self):
+        self.search_sc = QtWidgets.QShortcut(self)
+        self.search_sc.setKey(QtGui.QKeySequence("alt+j"))
+
+        self.search_sc.activated.connect( lambda : self.search_requested.emit())
 
 
     def setup_UI(self):
@@ -97,7 +117,7 @@ class PlaylistWindow(QtWidgets.QMainWindow):
         self.setMinimumWidth(725)
         self.setMaximumWidth(750)
 
-        self.setup_menu()
+
 
         self.setCentralWidget(self.frame)
 
@@ -158,3 +178,8 @@ class PlaylistWindow(QtWidgets.QMainWindow):
         self.help_about = self.help.addAction("About")
 
 
+    def keyPressEvent(self, event:QtGui.QKeyEvent) -> None:
+        super(PlaylistWindow, self).keyPressEvent(event)
+        self.keyPressed.emit(event)
+
+        event.accept()
