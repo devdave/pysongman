@@ -36,6 +36,8 @@ class SearchController(QtCore.QObject):
         self.view.results.setModel(self.proxy_model)
         self.view.results.setModelColumn(3)
 
+        self.view.results.installEventFilter(self)
+
         self.setup_connections()
 
     def setup_connections(self):
@@ -49,8 +51,6 @@ class SearchController(QtCore.QObject):
     def setup_shortcuts(self):
         pass
 
-
-
     def on_search_double_clicked(self):
         selected = self.view.results.selectionModel().selection().value(0).indexes()[0]
         row = selected.row()
@@ -62,8 +62,6 @@ class SearchController(QtCore.QObject):
         self.view.hide()
         self.proxy_model.setFilterString(None)
         debug = 1
-
-
 
     def on_search_edited(self, text):
         self.proxy_model.setFilterString(text)
@@ -84,15 +82,37 @@ class SearchController(QtCore.QObject):
         else:
             log.debug("Nothing to play")
 
-
-
-
-
     def show(self):
         self.view.show()
+        self.view.search.setFocus()
 
     def hide(self):
         self.view.hide()
 
     def activate(self):
         self.view.activateWindow()
+
+    def do_play_selected_result(self):
+        selected = self.view.results.selectionModel().selection()
+
+        try:
+            pid = selected.indexes()[0]
+            row_num = pid.row()
+            pid = self.proxy_model.index(row_num, 0)
+            data = self.proxy_model.itemData(pid)
+            song_id = data[Qt.DisplayRole]
+            self.pl_obj.play_song_by_id(song_id)
+            self.view.search.setText("")
+            self.view.hide()
+            self.proxy_model.setFilterString(None)
+        except IndexError:
+            log.debug("Index error when trying to find index")
+            pass
+
+
+    def eventFilter(self, watched:QtCore.QObject, event:QtCore.QEvent) -> bool:
+        if watched is self.view.results and event.type() == QtCore.QEvent.KeyPress:
+            if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+                self.do_play_selected_result()
+                
+        return super(SearchController, self).eventFilter(watched, event)
