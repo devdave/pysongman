@@ -126,7 +126,6 @@ class PlaylistWindow(QtWidgets.QMainWindow):
 
 
 
-        self.search_sc.activated.connect( lambda : self.search_requested.emit())
 
 
     def setup_UI(self):
