@@ -36,6 +36,7 @@ class PlayerWindow(QtWidgets.QMainWindow):
     m_play: QtWidgets.QMenu
 
     m_options: QtWidgets.QMenu
+    a_config: QAction
 
     m_help: QtWidgets.QMenu
 
@@ -290,6 +291,7 @@ class PlayerWindow(QtWidgets.QMainWindow):
         self.m_play = self.menuBar().addMenu("&Play")
 
         self.m_options = self.menuBar().addMenu("&Options")
+        self.a_config = self.m_options.addAction("Open &Configuration")
 
         self.m_help = self.menuBar().addMenu("&Help")
 
