@@ -9,7 +9,7 @@ if USE_PYSIDE:
     from PySide2.QtCore import Qt
     from PySide2 import QtGui
 
-
+from ..controllers.media import MediaController
 from ..controllers.player import PlayerControl
 from ..controllers.playlist import Playlist as PlaylistController
 
@@ -27,6 +27,7 @@ class Application(QApplication):
         self.playlist = Pys2Playlist()
         self.player_control = PlayerControl(self.playlist)
         self.playlist_control = PlaylistController(self.playlist)
+        self.media_control = MediaController(self.playlist)
 
         self.setup_connections()
 
@@ -41,7 +42,12 @@ class Application(QApplication):
         log.debug("Application connections setup")
 
     def toggle_medialib(self, toggle):
-        pass
+        log.debug("Toggling medialib")
+        if self.media_control.view.isVisible() is False or self.media_control.view.isHidden() is True:
+            self.media_control.show()
+            self.media_control.view.activateWindow()
+        else:
+            self.media_control.hide()
 
     def toggle_playlist(self, toggle):
         log.debug("Should toggle playlist, %s", toggle)
@@ -70,9 +76,9 @@ class Application(QApplication):
             for element in self.song_path:
                 file_dir = Path(element)
                 if file_dir.is_dir():
-                    QMessageBox.information(self.player_control.view,
-                                            "Loading directory",
-                                            "Loading a directory, this might take a while.")
+                    # QMessageBox.information(self.player_control.view,
+                    #                         "Loading directory",
+                    #                         "Loading a directory, this might take a while.")
 
                     self.playlist.add_directory(file_dir, top=True)
                 elif file_dir.is_file():
