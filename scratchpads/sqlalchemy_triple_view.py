@@ -93,6 +93,7 @@ class MediaLibraryWindow(QtWidgets.QMainWindow):
         for table in [self.artist_table, self.album_table, self.songs_table]:
             table.verticalHeader().hide()
             table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+            table.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
             table.setSortingEnabled(True)
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
