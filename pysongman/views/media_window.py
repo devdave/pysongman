@@ -42,6 +42,10 @@ class MediaWindow(QtWidgets.QMainWindow):
         self.add_menu = QtWidgets.QMenu()
         self.act_add_file = QtWidgets.QAction("Add file(s)")
         self.act_add_dir = QtWidgets.QAction("Add folder")
+
+        self.add_menu.addAction(self.act_add_file)
+        self.add_menu.addAction(self.act_add_dir)
+
         self.add_button.setMenu(self.add_menu)
 
     def setup_ui(self):
