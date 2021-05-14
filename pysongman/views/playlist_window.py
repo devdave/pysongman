@@ -66,6 +66,16 @@ class PlaylistWindow(QtWidgets.QMainWindow):
 
     help_about: QtWidgets.QAction
 
+    tb_add_menu: QtWidgets.QMenu
+    tb_add_files: QtWidgets.QAction
+    tb_add_dir: QtWidgets.QAction
+
+    tb_rem_menu: QtWidgets.QMenu
+    tb_rem_selected: QtWidgets.QAction
+    tb_rem_clear: QtWidgets.QAction
+
+
+
     def __init__(self, playlist: Pys2Playlist, playlist_table_model: PlaylistTableModel ):
         super(PlaylistWindow, self).__init__()
 
@@ -77,15 +87,44 @@ class PlaylistWindow(QtWidgets.QMainWindow):
 
         self.setup_UI()
         self.setup_menu()
+        self.setup_toolbar()
         self.setup_shortcuts()
+
 
         self.setWindowFlags(self.windowFlags() & Qt.CustomizeWindowHint)
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowMinMaxButtonsHint)
         log.debug("Playlist window initialized")
 
     def setup_shortcuts(self):
-        self.search_sc = QtWidgets.QShortcut(self)
-        self.search_sc.setKey(QtGui.QKeySequence("alt+j"))
+        search_sc = QtWidgets.QShortcut(QtGui.QKeySequence("alt+j"), self)
+        search_sc.activated.connect( lambda : self.search_requested.emit())
+
+    def setup_toolbar(self):
+
+        add_button = QtWidgets.QPushButton("Add")
+        rem_button = QtWidgets.QPushButton("Rem")
+
+        toolbar = QtWidgets.QToolBar(self)
+
+        self.addToolBar(Qt.BottomToolBarArea, toolbar)
+
+        toolbar.addWidget(add_button)
+        toolbar.addWidget(rem_button)
+
+        self.tb_add_menu = QtWidgets.QMenu()  # Need to keep a reference ot the menu or else it ceases to exist
+        self.tb_add_files = self.tb_add_menu.addAction("Add Files")
+        self.tb_add_dir = self.tb_add_menu.addAction("Add Folder")
+
+        self.tb_rem_menu = QtWidgets.QMenu()
+        self.tb_rem_selected = self.tb_rem_menu.addMenu("Remove selected")
+        self.tb_rem_clear = self.tb_rem_menu.addMenu("Clear playlist")
+
+        add_button.setMenu(self.tb_add_menu)
+
+
+
+
+
 
         self.search_sc.activated.connect( lambda : self.search_requested.emit())
 
