@@ -22,10 +22,6 @@ class ConfigMasterWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(ConfigMasterWindow, self).__init__()
 
-        self.controllers = {}
-        self.folders = {}
-        self.subviews = {}
-
         self.setup_ui()
 
         log.debug("Config Master Window initialized")
@@ -70,27 +66,3 @@ class ConfigMasterWindow(QtWidgets.QMainWindow):
         self.root_header = QtWidgets.QTreeWidgetItem(["Main Config"])
         self.menu_tree.setHeaderItem(self.root_header)
 
-    def add_controller(self, controller_cls, identifier, label, group_id = None, show = False):
-        log.debug("Adding controller %s(%s) to %s", label, identifier, group_id)
-
-        if group_id is None:
-            root = self.menu_tree
-        elif group_id in self.folders:
-            root = self.folders[group_id]
-        else:
-            raise ValueError(f"{group_id!r} is not a valid folder. options are {self.folders.keys()!r}")
-
-        self.controllers[identifier] = controller_cls()
-
-        self.folders[identifier] = QtWidgets.QTreeWidgetItem(root, [label])
-        self.folders[identifier].setData(2, QtCore.Qt.EditRole, identifier)
-
-        if show is True:
-            self.subviews[identifier] = self.mdi.addSubWindow(self.controllers[identifier].view)
-            self.show_subview(self.subviews[identifier])
-
-    def show_subview(self, sub: QtWidgets.QWidget):
-
-        sub.setWindowFlag(Qt.FramelessWindowHint, True)
-        sub.showMaximized()
-        sub.show()
