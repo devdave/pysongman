@@ -142,6 +142,7 @@ class PlaylistWindow(QtWidgets.QMainWindow):
 
         # self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.table.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
 
         self.table.resizeColumnsToContents()
         self.table.hideColumn(0)
