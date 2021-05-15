@@ -9,25 +9,20 @@ if USE_PYSIDE is True:
 
 class MediaConfigWidget(QtWidgets.QWidget):
 
-    def __init__(self, optional_title=None):
+    def __init__(self, parent_table):
         super(MediaConfigWidget, self).__init__()
-        self.optional_title = optional_title
+        self.parent_table = parent_table
         self.setupUI()
 
     def setupUI(self):
 
-        if self.optional_title is None:
-            self.setWindowTitle("Media configuration")
-        else:
-            self.setWindowTitle(self.optional_title)
+        self.setWindowTitle("Media configuration")
+
 
         layout = QtWidgets.QGridLayout()
         self.setLayout(layout)
 
-        if self.optional_title is None:
-            groupbox = QtWidgets.QGroupBox("Watch folder settings")
-        else:
-            groupbox = QtWidgets.QGroupBox(self.optional_title)
+        groupbox = QtWidgets.QGroupBox("Watch folder settings")
 
         layout.addWidget(groupbox)
 

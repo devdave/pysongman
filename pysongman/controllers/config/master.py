@@ -1,10 +1,11 @@
 import logging
 
-from pysongman import USE_PYSIDE
+import pysongman
 from pysongman.views.config.master import ConfigMasterWindow
+from pysongman.controllers.config.debug import ConfigDebugController
 from .media import ConfigMediaController
 
-if USE_PYSIDE:
+if pysongman.USE_PYSIDE:
     from PySide2 import QtCore, QtWidgets
     from PySide2.QtCore import Qt
 
