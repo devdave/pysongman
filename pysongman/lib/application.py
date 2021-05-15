@@ -108,6 +108,7 @@ class Application(QApplication):
             self.master_config.activate()
 
     def clean_up_master_config(self):
+        self.master_config.view.hide()
         self.master_config = None
 
     def do_close(self, return_code=0):

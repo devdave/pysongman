@@ -13,6 +13,7 @@ log = logging.getLogger(__name__)
 
 class ConfigMasterController(QtCore.QObject):
 
+    closed = QtCore.Signal()
 
     def __init__(self):
         super(ConfigMasterController, self).__init__()
@@ -29,11 +30,13 @@ class ConfigMasterController(QtCore.QObject):
 
     def setup_connections(self):
         self.view.menu_tree.itemClicked.connect(self.on_menu_tree_item_clicked)
-
+        self.view.close_button.clicked.connect(self.on_close)
         log.debug("Connections setup")
 
     def setup_subwindows(self):
         self.add_controller(ConfigMediaController, "local_media", "Local Media config", show=True)
+        if pysongman.App and pysongman.App.debug_enabled is True:
+            self.add_controller(ConfigDebugController, "debug", "Debug data", show=False)
 
         log.debug("Subwindows added")
 
