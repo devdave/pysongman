@@ -23,6 +23,7 @@ class PlayerControl(QObject):
     viewClosed = Signal()
     showPlayList = Signal(bool)
     showMedialib = Signal(bool)
+    showMasterConfig = Signal()
     key_pressed = Signal(QtGui.QKeyEvent)
 
     def __init__(self, playlist: Pys2Playlist):
@@ -67,8 +68,10 @@ class PlayerControl(QObject):
         #View controls
         self.view.playlist_btn.clicked.connect(self.toggle_playlist)
         self.view.medialib_btn.clicked.connect(self.toggle_medialib)
-
         self.view.onClose.connect(self.on_close)
+
+        # Menu controls
+        self.view.a_config.triggered.connect(lambda : self.showMasterConfig.emit())
 
     def show(self):
         log.debug("Showing Player control view(s)")
