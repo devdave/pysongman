@@ -20,7 +20,7 @@ class ParentTableBridge(QtCore.QAbstractTableModel):
     def headerData(self, section:int, orientation: QtCore.Qt.Orientation, role:int=...) -> typing.Any:
         if role == Qt.DisplayRole:
             if section == 0:
-                return None
+                return "ID"
             elif section == 1:
                 return "Path"
 
