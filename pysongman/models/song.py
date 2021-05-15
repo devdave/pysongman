@@ -12,7 +12,7 @@ class Song(Base):
     track = Column(String())
 
     parent_id = Column(Integer(), ForeignKey("ParentDir.id"))
-    parent = relationship("ParentDir", back_populates="songs")
+    parent = relationship("ParentDir", backref="songs")
 
     artist_id = Column(Integer(), ForeignKey("Artist.id"))
     artist = relationship("Artist", backref="songs")
