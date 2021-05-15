@@ -3,6 +3,7 @@ from pathlib import Path
 import logging
 import typing
 
+import pysongman
 from .. import DB_FILE, USE_PYSIDE
 
 if USE_PYSIDE is True:
@@ -43,16 +44,18 @@ class Application(QApplication):
     media_control: MediaController
     master_config: typing.Union[ConfigMasterController, None]
 
-    def __init__(self, here=None, home=None, configured=None):
+    def __init__(self, here=None, home=None, configured_file=None):
         super(Application, self).__init__()
-        log.debug(f"Initialized Application with {here=}, {home=}, {configured=}")
+        log.debug(f"Initialized Application with {here=}, {home=}, {configured_file=}")
 
         self._here = here
         self._home = home
-        self._configured_file = configured
-        self._configured = configured.exists()
+        self._configured_file = home / configured_file
+        self._configured = self._configured_file.exists()
+        self._database_file = self._home / pysongman.DB_FILE
 
-        log.debug("Application is configured/setup %s", self._configured)
+        log.debug("Application is configured/setup %s @ %s", self._configured, self._configured_file)
+        log.debug("Database will be at %s", self._database_file)
 
         self.song_path = list()
         self.nuke_everything = False
@@ -99,6 +102,7 @@ class Application(QApplication):
         if self.master_config is None:
             self.master_config = ConfigMasterController()
             self.master_config.show()
+            self.master_config.closed.connect(self.clean_up_master_config)
             self.master_config.view.onClose.connect(self.clean_up_master_config)
         else:
             self.master_config.activate()
@@ -122,15 +126,15 @@ class Application(QApplication):
             BassStream.DEBUG_BASS_STREAM = True
 
         if self.nuke_everything is True:
-            DB_FILE.unlink(True)
+            self._database_file.unlink(True)
             self._configured_file.unlink(True)
             self._configured = False
 
         if self._configured is False:
-            initialize_db(create=True)
+            initialize_db(create=True, db_location=self._database_file)
             self._configured_file.touch()
         else:
-            initialize_db(create=False)
+            initialize_db(create=False, db_location=self._database_file)
 
         self.playlist_control.show()
         self.player_control.show()
