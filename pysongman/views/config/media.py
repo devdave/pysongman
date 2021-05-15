@@ -36,10 +36,11 @@ class MediaConfigWidget(QtWidgets.QWidget):
         vbox.addWidget(label)
 
         self.table = QtWidgets.QTableView()
-        self.model = ParentTableBridge()
+        self.model = self.parent_table
 
         self.table.setModel(self.model)
         self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.table.verticalHeader().hide()
         self.table.setColumnHidden(0, True)
         self.table.setMaximumHeight(150)
         self.table.setMaximumWidth(300)
