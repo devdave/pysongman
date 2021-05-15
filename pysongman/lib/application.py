@@ -12,6 +12,9 @@ if USE_PYSIDE is True:
     from PySide2.QtCore import Qt
     from PySide2 import QtGui
 
+    from pybass3.pys2_playlist import Pys2Playlist as Playlist
+    from pybass3.pys2_song import Pys2Song as Song
+
 from ..models import initialize_db
 from ..controllers.media import MediaController
 from ..controllers.player import PlayerControl
@@ -38,7 +41,7 @@ class Application(QApplication):
     debug_enabled: bool  # if True enables debugging features across the app
 
     # Application components
-    playlist: Pys2Playlist
+    playlist: Playlist
     player_control: PlayerControl
     player_control: PlaylistController
     media_control: MediaController
@@ -63,7 +66,7 @@ class Application(QApplication):
 
         log.debug("Application is configured %r", self._configured)
 
-        self.playlist = Pys2Playlist()
+        self.playlist = Playlist()
         self.player_control = PlayerControl(self.playlist)
         self.playlist_control = PlaylistController(self.playlist)
         self.media_control = MediaController(self.playlist)
