@@ -7,4 +7,4 @@ from .base import Base
 class ParentDir(Base):
     path = Column(String)
 
-    children = relationship("Song")
+    songs = relationship("Song")
