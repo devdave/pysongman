@@ -19,16 +19,23 @@ from .base import Base
 @dataclass
 class SAConnection:
     e: sqlalchemy.engine
-    q: orm.query
+    s: session
 
-def get_db_url():
+def get_db_url(db_location=False):
+    if db_location is not False:
+        return f"sqlite:///{db_location.as_posix()}"
     return f"sqlite:///{DB_FILE.as_posix()}"
 
-def initialize_db(create=False) -> SAConnection:
+def get_db() -> SAConnection:
+    global SA_ENGINE, SA_FACTORY
+
+    return SAConnection(SA_ENGINE, SA_FACTORY())
+
+def initialize_db(create=False, db_location=False) -> SAConnection:
     global SA_ENGINE, SA_FACTORY
 
     if SA_ENGINE is None:
-        SA_ENGINE = create_engine(get_db_url())
+        SA_ENGINE = create_engine(get_db_url(db_location))
         Base.metadata.bind = SA_ENGINE
 
     if SA_FACTORY is None:
