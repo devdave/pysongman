@@ -77,3 +77,21 @@ class ConfigMasterController(QtCore.QObject):
     def on_menu_tree_item_clicked(self, treeItem: QtWidgets.QTreeWidgetItem):
         label = treeItem.text(0)
         identifier = treeItem.text(2)
+        log.debug("Config menu %s(%s) was requested", label, identifier)
+
+        controller = self.controllers[identifier]
+
+        if identifier not in self.subviews:
+            sub = self.view.mdi.addSubWindow(controller.view)
+            self.subviews[identifier] = sub
+        else:
+            for subview in self.subviews.values():
+                subview.hide()
+
+        sub.setWindowFlag(Qt.FramelessWindowHint, True)
+        sub.showMaximized()
+        sub.show()
+
+
+    def on_close(self):
+        self.closed.emit()
