@@ -1,6 +1,6 @@
 import sqlite3
 
-from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime, func
+from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime, func, Boolean
 from sqlalchemy.orm import relationship
 
 from . import initialize_db
@@ -10,6 +10,20 @@ from .base import Base
 class Song(Base):
     title = Column(String())
     track = Column(String())
+    song_is_valid = Column(Boolean(), default=False)
+
+    # metadata
+    filesize = Column(Float())  # Bytes according to Bass library
+    stat_created = Column(Integer())  # uses Path.stat.st_create
+    stat_modified = Column(Integer())  # uses Path.stat.st_modified
+
+    added_to_library = Column(DateTime(), default=func.now)
+    last_played = Column(DateTime())
+
+    # library metadata
+    play_count = Column(Integer, default=0)
+    last_played = Column(DateTime, default=None)
+
 
     parent_id = Column(Integer(), ForeignKey("ParentDir.id"))
     parent = relationship("ParentDir", backref="songs")
@@ -20,12 +34,8 @@ class Song(Base):
     album_id = Column(Integer(), ForeignKey("Album.id"))
     album = relationship("Album", backref="songs")
 
-    filesize = Column(Float)  # Bytes
 
 
-    #library metadata
-    play_count = Column(Integer, default=0)
-    last_played = Column(DateTime, default=None)
 
 
     @classmethod
