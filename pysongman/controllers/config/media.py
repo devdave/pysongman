@@ -1,6 +1,6 @@
 from pysongman import USE_PYSIDE
 
-from pysongman.views.config.media import ConfigMediaWindow
+from pysongman.views.config.media import MediaConfigWidget
 
 if USE_PYSIDE is True:
     from PySide2 import QtCore
@@ -25,3 +25,13 @@ class ConfigMediaController(QtCore.QObject):
 
     def on_click_remove_folder(self):
         print("Remove Folder", self.optional_title)
+
+
+    def show(self):
+        self.view.show()
+
+    def hide(self):
+        self.view.hide()
+
+    def activate(self):
+        self.view.activateWindow()
