@@ -95,3 +95,4 @@ scratchpads/cef/error.log
 data_scratchpad/pysongman.sqlite3
 .idea/dataSources.xml
 data_scratchpad/pysongman.sqlite3-journal
+temp_home/*
