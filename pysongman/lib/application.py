@@ -169,7 +169,7 @@ class Application(QApplication):
 
 
                     elif file_dir.is_file():
-                        self.playlist.add_song(file_dir)
+                        self.playlist.add_song_by_path(file_dir)
 
             if len(self.playlist) > 0 and self._work_pending <= 0:
                 self.playlist.play()
