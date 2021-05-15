@@ -23,6 +23,9 @@ class ConfigMasterController(QtCore.QObject):
 
         log.debug("Master Config controller initialized")
 
+        self.setup_connections()
+        self.setup_subwindows()
+
     def setup_connections(self):
         self.view.menu_tree.itemClicked.connect(self.on_menu_tree_item_clicked)
 
