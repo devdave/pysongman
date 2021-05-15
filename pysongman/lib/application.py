@@ -5,10 +5,11 @@ import typing
 
 import pysongman
 from .. import DB_FILE, USE_PYSIDE
+from ..lib.song_directory_collector import SongDirectoryCollector
 
 if USE_PYSIDE is True:
-    from pybass3.pys2_playlist import Pys2Playlist
     from PySide2.QtWidgets import QApplication
+    from PySide2 import QtCore
     from PySide2.QtCore import Qt
     from PySide2 import QtGui
 
@@ -34,6 +35,7 @@ class Application(QApplication):
     _home: pathlib.Path
     _configured_file: pathlib.Path
     _configured: bool
+    _pool: QtCore.QThreadPool
 
     # startup arguments
     song_path: list
@@ -56,6 +58,11 @@ class Application(QApplication):
         self._configured_file = home / configured_file
         self._configured = self._configured_file.exists()
         self._database_file = self._home / pysongman.DB_FILE
+        self._pool = QtCore.QThreadPool()
+        self._work_pending = 0
+
+        # I don't want to saturate/thrash the GIL so keep this down to 4 workers
+        self._pool.setMaxThreadCount(4)
 
         log.debug("Application is configured/setup %s @ %s", self._configured, self._configured_file)
         log.debug("Database will be at %s", self._database_file)
@@ -152,12 +159,30 @@ class Application(QApplication):
                 if file_dir.exists():
                     if file_dir.is_dir():
                         # TODO put a Threaded worker to preload up song data
-                        self.playlist.add_directory(file_dir, top=True)
+                        # self.playlist.add_directory(file_dir, top=True)
+                        self._work_pending += 1
+                        worker = SongDirectoryCollector(file_dir, recurse=True)
+                        worker.signals.song_found.connect(self.on_directory_worker_add_song)
+                        worker.signals.work_complete.connect(self.on_directory_worker_finished)
+
+                        self._pool.start(worker)
+
+
                     elif file_dir.is_file():
                         self.playlist.add_song(file_dir)
 
-            if len(self.playlist) > 0:
+            if len(self.playlist) > 0 and self._work_pending <= 0:
                 self.playlist.play()
+
+    def on_directory_worker_finished(self):
+        if len(self.playlist) > 0:
+            self.playlist.play()
+
+    def on_directory_worker_add_song(self, song_path:str, tags:dict, length_seconds:float, length_bytes:int):
+        song = Song(pathlib.Path(song_path), tags=tags, length_seconds=length_seconds, length_bytes=length_bytes)
+
+        self.playlist.add_song(song, add2queue=True)
+
 
     def on_key_pressed(self, event: QtGui.QKeyEvent):
         log.debug("Application is handling keypress %s", event.key())
