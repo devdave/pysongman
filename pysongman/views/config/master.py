@@ -8,7 +8,10 @@ if USE_PYSIDE:
 
 log = logging.getLogger(__name__)
 
+
 class ConfigMasterWindow(QtWidgets.QMainWindow):
+
+    onClose = QtCore.Signal()
 
     left_side: QtWidgets.QVBoxLayout
     body_layout: QtWidgets.QHBoxLayout
@@ -66,3 +69,7 @@ class ConfigMasterWindow(QtWidgets.QMainWindow):
         self.root_header = QtWidgets.QTreeWidgetItem(["Main Config"])
         self.menu_tree.setHeaderItem(self.root_header)
 
+
+    def closeEvent(self, event):
+        self.onClose.emit()
+        event.accept()
