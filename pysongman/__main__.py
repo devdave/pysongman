@@ -32,11 +32,10 @@ def main(song_path = None, nuke_everything = False, debug_flag=False, home=False
     return pysongman.App.exec_()
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument("song_path", nargs="*", default=list(), help="Optional individual songs or whole directories to play on start")
-    parser.add_argument("--nuke_everything", default=False, help="Wipe out the database and reset config files")
+    parser.add_argument("--nuke_everything", action="store_true", default=False, help="Wipe out the database and reset config files")
     parser.add_argument("--debug", dest="debug_flag", action="store_true", default=False, help="Enable extensive debugging tools")
     parser.add_argument("--home", nargs="?", default=False)
     args = parser.parse_args()
