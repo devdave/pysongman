@@ -126,13 +126,6 @@ class PlaylistWindow(QtWidgets.QMainWindow):
 
         add_button.setMenu(self.tb_add_menu)
 
-
-
-
-
-
-
-
     def setup_UI(self):
         self.frame = QtWidgets.QFrame()
 
@@ -155,16 +148,12 @@ class PlaylistWindow(QtWidgets.QMainWindow):
         alignleft = AlignLeftDelegate(self.table)
         self.table.setItemDelegateForColumn(2, alignleft)
 
-
         self.body.addWidget(self.table)
         self.body.setStretch(0, 1)
         self.setMinimumWidth(725)
         self.setMaximumWidth(750)
 
-
-
         self.setCentralWidget(self.frame)
-
 
 
     def setup_menu(self):
