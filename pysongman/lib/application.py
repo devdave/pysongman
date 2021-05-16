@@ -112,8 +112,8 @@ class Application(QApplication):
         if self.master_config is None:
             self.master_config = ConfigMasterController()
             self.master_config.show()
-            self.master_config.closed.connect(self.clean_up_master_config)
-            self.master_config.view.onClose.connect(self.clean_up_master_config)
+            self.master_config.signals.closed.connect(self.clean_up_master_config)
+            self.master_config.view.signals.on_close.connect(self.clean_up_master_config)
         else:
             self.master_config.activate()
 
