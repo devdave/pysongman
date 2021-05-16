@@ -30,4 +30,4 @@ class ConfigDebugController(QtCore.QObject):
         self.view.bass_cpu_usage.setText(str(Bass.GetCPU()))
         self.view.widget_count.setText(str(len(pysongman.App.allWidgets())))
         self.view.window_count.setText(str(len(pysongman.App.topLevelWidgets())))
-        self.view.playlist_size.setText(str(len(pysongman.playlist)))
+        self.view.playlist_size.setText(str(len(pysongman.App.playlist)))
