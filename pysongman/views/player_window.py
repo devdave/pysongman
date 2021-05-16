@@ -20,11 +20,13 @@ from ..lib.qclickable_slider import QClickableSlider
 
 log = logging.getLogger(__name__)
 
+class PlayerWindowSignals(QtCore.QObject):
+    on_close = QtCore.Signal()
+    key_pressed = QtCore.Signal(QtGui.QKeyEvent)
 
 class PlayerWindow(QtWidgets.QMainWindow):
 
-    onClose = QtCore.Signal()
-    keyPressed = QtCore.Signal(QtGui.QKeyEvent)
+    signals: PlayerWindowSignals
 
     m_file: QtWidgets.QMenu
     a_open_playlist: QAction
@@ -74,17 +76,18 @@ class PlayerWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(PlayerWindow, self).__init__()
+        self.signals = PlayerWindowSignals()
         self.icons = self.load_icons()
         self.setup_UI()
         self.load_stylesheet()
 
     def keyPressEvent(self, event):
         super(PlayerWindow, self).keyPressEvent(event)
-        self.keyPressed.emit(event)
+        self.signals.key_pressed.emit(event)
 
 
     def closeEvent(self, event):
-        self.onClose.emit()
+        self.signals.on_close.emit()
         event.accept()
 
 

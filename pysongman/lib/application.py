@@ -83,11 +83,11 @@ class Application(QApplication):
 
     def setup_connections(self):
 
-        self.player_control.viewClosed.connect(self.do_close)
-        self.player_control.showMedialib.connect(self.toggle_medialib)
-        self.player_control.showPlayList.connect(self.toggle_playlist)
-        self.player_control.key_pressed.connect(self.on_key_pressed)
-        self.player_control.showMasterConfig.connect(self.toggle_masterconfig)
+        self.player_control.signals.view_closed.connect(self.do_close)
+        self.player_control.signals.show_medialib.connect(self.toggle_medialib)
+        self.player_control.signals.show_playlist.connect(self.toggle_playlist)
+        self.player_control.signals.key_pressed.connect(self.on_key_pressed)
+        self.player_control.signals.show_config.connect(self.toggle_masterconfig)
 
         log.debug("Application connections setup")
 

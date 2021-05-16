@@ -5,12 +5,14 @@ if USE_PYSIDE:
 
     Qt = QtCore.Qt
 
-
-class SearchWindow(QtWidgets.QWidget):
-
+class SearchWindowSignals(QtCore.QObject):
     key_search_down = QtCore.Signal()
     key_search_up = QtCore.Signal()
     selected = QtCore.Signal()
+
+class SearchWindow(QtWidgets.QWidget):
+
+    signals: SearchWindowSignals()
 
     search_box: QtWidgets.QTextEdit
     choices: QtWidgets.QTableWidget
@@ -18,6 +20,7 @@ class SearchWindow(QtWidgets.QWidget):
 
     def __init__(self):
         super(SearchWindow, self).__init__()
+        self.signals = SearchWindowSignals()
         self.setup_ui()
         self.setup_shortcuts()
 
@@ -48,7 +51,7 @@ class SearchWindow(QtWidgets.QWidget):
         if watched == self.search:
             if event.type() == QtCore.QEvent.KeyPress:
                 if event.key() in (Qt.Key_Down, Qt.Key_Return, Qt.Key_Enter,):
-                    self.key_search_down.emit()
+                    self.signals.key_search_down.emit()
                     self.results.setFocus()
                     return False
 

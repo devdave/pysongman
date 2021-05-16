@@ -11,13 +11,18 @@ if pysongman.USE_PYSIDE:
 
 log = logging.getLogger(__name__)
 
+class ConfigMasterControllerSignals(QtCore.QObject):
+    closed = QtCore.Signal()
+
+
 class ConfigMasterController(QtCore.QObject):
 
-    closed = QtCore.Signal()
+    signals: ConfigMasterControllerSignals
 
     def __init__(self):
         super(ConfigMasterController, self).__init__()
 
+        self.signals = ConfigMasterControllerSignals()
         self.view = ConfigMasterWindow()
         self.controllers = {}
         self.folders = {}
@@ -94,4 +99,4 @@ class ConfigMasterController(QtCore.QObject):
 
 
     def on_close(self):
-        self.closed.emit()
+        self.signals.closed.emit()

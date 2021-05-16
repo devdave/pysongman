@@ -26,8 +26,8 @@ class PlaylistTableModel(QtCore.QAbstractTableModel):
         super(PlaylistTableModel, self).__init__()
         self.playlist = playlist
 
-        self.playlist.song_added.connect(self.on_song_added)
-        self.playlist.songs_added.connect(self.on_songs_added)
+        self.playlist.signals.song_added.connect(self.on_song_added)
+        self.playlist.signals.songs_added.connect(self.on_songs_added)
 
     def rowCount(self, parent: QtCore.QModelIndex = ...) -> int:
         return len(self.playlist)

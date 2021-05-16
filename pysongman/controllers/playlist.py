@@ -46,12 +46,12 @@ class Playlist(QtCore.QObject):
     def setup_connections(self):
         log.debug("Setting up connections")
 
-        self.view.keyPressed.connect(self.on_keypress)
+        self.view.signals.key_presssed.connect(self.on_keypress)
 
         self.view.table.doubleClicked.connect(self.on_row_doubleclicked)
-        self.playlist.song_changed.connect(self.on_song_changed)
+        self.playlist.signals.song_changed.connect(self.on_song_changed)
 
-        self.view.search_requested.connect(lambda : self.search.show())
+        self.view.signals.search_requested.connect(lambda : self.search.show())
 
 
     def setup_menu_connections(self):

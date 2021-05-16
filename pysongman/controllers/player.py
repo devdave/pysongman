@@ -15,21 +15,25 @@ if USE_PYSIDE:
 
 log = logging.getLogger(__name__)
 
+class PlayerControlSignals(QObject):
+    view_closed = Signal()
+    show_playlist = Signal(bool)
+    show_medialib = Signal(bool)
+    show_config = Signal()
+    key_pressed = Signal(QtGui.QKeyEvent)
+
 class PlayerControl(QObject):
 
     playlist: Pys2Playlist
     view: PlayerWindow
-
-    viewClosed = Signal()
-    showPlayList = Signal(bool)
-    showMedialib = Signal(bool)
-    showMasterConfig = Signal()
-    key_pressed = Signal(QtGui.QKeyEvent)
+    signals: PlayerControlSignals
 
     def __init__(self, playlist: Pys2Playlist):
         super(PlayerControl, self).__init__()
+        self.signals = PlayerControlSignals()
         self.playlist = playlist
         self.view = PlayerWindow()
+        self.tracked_keys = [Qt.Key_Z, Qt.Key_X, Qt.Key_C, Qt.Key_V, Qt.Key_B]
 
         #behavior management
         self.progress_slider_pressed = False
@@ -52,12 +56,12 @@ class PlayerControl(QObject):
         self.view.next_btn.clicked.connect(self.on_next)
 
         # Playlist events
-        self.playlist.song_changed.connect(self.on_song_changed)
-        self.playlist.ticked.connect(self.on_playlist_tick)
+        self.playlist.signals.song_changed.connect(self.on_song_changed)
+        self.playlist.signals.ticked.connect(self.on_playlist_tick)
 
         # Playlist behavior
         self.view.random_button.clicked.connect(self.on_random_clicked)
-        self.view.keyPressed.connect(self.on_keypress)
+        self.view.signals.key_pressed.connect(self.on_keypress)
 
         #Song controls
         self.view.progress_bar.sliderPressed.connect(self.on_progress_pressed)
@@ -68,10 +72,10 @@ class PlayerControl(QObject):
         #View controls
         self.view.playlist_btn.clicked.connect(self.toggle_playlist)
         self.view.medialib_btn.clicked.connect(self.toggle_medialib)
-        self.view.onClose.connect(self.on_close)
+        self.view.signals.on_close.connect(self.on_close)
 
         # Menu controls
-        self.view.a_config.triggered.connect(lambda : self.showMasterConfig.emit())
+        self.view.a_config.triggered.connect(lambda : self.signals.show_config.emit())
 
     def show(self):
         log.debug("Showing Player control view(s)")
@@ -181,20 +185,20 @@ class PlayerControl(QObject):
 
     def on_close(self):
         log.debug("Player closed")
-        self.viewClosed.emit()
+        self.signals.view_closed.emit()
+
 
     def toggle_playlist(self):
         log.debug("Please toggle playlist")
-        self.showPlayList.emit(True)
+        self.signals.show_playlist.emit(True)
 
     def toggle_medialib(self):
-        self.showMedialib.emit(True)
+        self.signals.show_medialib.emit(True)
 
     def on_keypress(self, event: QtGui.QKeyEvent):
-        self.tracked_keys = [Qt.Key_Z, Qt.Key_X, Qt.Key_C, Qt.Key_V, Qt.Key_B]
 
         if event.key() in self.tracked_keys:
             log.debug("%s was pressed, emitting", event.key())
-            self.key_pressed.emit(event)
+            self.signals.key_pressed.emit(event)
 
         event.accept()

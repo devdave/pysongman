@@ -8,10 +8,14 @@ if USE_PYSIDE:
 
 log = logging.getLogger(__name__)
 
+class ConfigMasterWindowSignals(QtCore.QObject):
+    on_close = QtCore.Signal()
+
+
 
 class ConfigMasterWindow(QtWidgets.QMainWindow):
 
-    onClose = QtCore.Signal()
+    signals: ConfigMasterWindowSignals
 
     left_side: QtWidgets.QVBoxLayout
     body_layout: QtWidgets.QHBoxLayout
@@ -24,7 +28,7 @@ class ConfigMasterWindow(QtWidgets.QMainWindow):
     
     def __init__(self):
         super(ConfigMasterWindow, self).__init__()
-
+        self.signals = ConfigMasterWindowSignals()
         self.setup_ui()
 
         log.debug("Config Master Window initialized")
@@ -71,5 +75,5 @@ class ConfigMasterWindow(QtWidgets.QMainWindow):
 
 
     def closeEvent(self, event):
-        self.onClose.emit()
+        self.signals.on_close.emit()
         event.accept()

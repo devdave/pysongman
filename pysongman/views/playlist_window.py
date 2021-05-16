@@ -25,11 +25,13 @@ class AlignLeftDelegate(QtWidgets.QStyledItemDelegate):
         option.displayAlignment = Qt.AlignLeft
 
 
+class PlaylistWindowSignals(QtCore.QObject):
+    key_presssed = QtCore.Signal(QtGui.QKeyEvent)
+    search_requested = QtCore.Signal()
+
 class PlaylistWindow(QtWidgets.QMainWindow):
 
-    #Signals
-    keyPressed = QtCore.Signal(QtGui.QKeyEvent)
-    search_requested = QtCore.Signal()
+    signals: PlaylistWindowSignals
 
     # UI Elements
     frame: QtWidgets.QFrame
@@ -79,6 +81,8 @@ class PlaylistWindow(QtWidgets.QMainWindow):
     def __init__(self, playlist: Pys2Playlist, playlist_table_model: PlaylistTableModel ):
         super(PlaylistWindow, self).__init__()
 
+        self.signals = PlaylistWindowSignals()
+
         self.model = playlist_table_model
 
         self.body = None
@@ -98,7 +102,7 @@ class PlaylistWindow(QtWidgets.QMainWindow):
 
     def setup_shortcuts(self):
         search_sc = QtWidgets.QShortcut(QtGui.QKeySequence("alt+j"), self)
-        search_sc.activated.connect( lambda : self.search_requested.emit())
+        search_sc.activated.connect( lambda : self.signals.search_requested.emit())
 
     def setup_toolbar(self):
 
@@ -220,6 +224,6 @@ class PlaylistWindow(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, event:QtGui.QKeyEvent) -> None:
         super(PlaylistWindow, self).keyPressEvent(event)
-        self.keyPressed.emit(event)
+        self.signals.key_presssed.emit(event)
 
         event.accept()
