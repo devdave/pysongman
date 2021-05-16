@@ -51,6 +51,8 @@ class MediaWindow(QtWidgets.QMainWindow):
     def setup_ui(self):
         # our widgets
         self.frame = QtWidgets.QFrame()
+        self.tree_body = QtWidgets.QHBoxLayout()
+
         self.artist_table = QtWidgets.QTableView()
         self.album_table = QtWidgets.QTableView()
         divide = QtWidgets.QSplitter()
@@ -78,7 +80,13 @@ class MediaWindow(QtWidgets.QMainWindow):
         self.body.addWidget(divide)
         self.body.addWidget(self.songs_table)
 
-        self.frame.setLayout(self.body)
+        self.playlists = QtWidgets.QTreeWidget()
+        self.tree_body.addWidget(self.playlists)
+        self.tree_body.addLayout(self.body)
+
+
+
+        self.frame.setLayout(self.tree_body)
 
         self.setCentralWidget(self.frame)
 
