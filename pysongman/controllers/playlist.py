@@ -1,15 +1,17 @@
 import logging
 import pathlib
 
-from .. import USE_PYSIDE
+import pysongman
 
-if USE_PYSIDE:
+
+if pysongman.USE_PYSIDE:
     from PySide2 import QtCore
     from PySide2.QtCore import Qt
     from PySide2 import QtWidgets
     from PySide2 import QtGui
 
     from pybass3.pys2_playlist import Pys2Playlist
+    from pybass3.pys2_song import Pys2Song as Song
 
 from ..tables.playlist import PlaylistTableModel
 from ..views.playlist_window import PlaylistWindow
@@ -40,6 +42,7 @@ class Playlist(QtCore.QObject):
 
         self.setup_connections()
         self.setup_menu_connections()
+        self.setup_toolbar_connections()
         
         
 
@@ -52,6 +55,11 @@ class Playlist(QtCore.QObject):
         self.playlist.signals.song_changed.connect(self.on_song_changed)
 
         self.view.signals.search_requested.connect(lambda : self.search.show())
+
+    def setup_toolbar_connections(self):
+
+        self.view.tb_add_dir.triggered.connect(self.on_menu_add_folder)
+        self.view.tb_add_files.triggered.connect(self.on_menu_add_file)
 
 
     def setup_menu_connections(self):
@@ -81,10 +89,14 @@ class Playlist(QtCore.QObject):
         new_dir = QtWidgets.QFileDialog.getExistingDirectory(self.view, "Select directory to add", music_dir.as_posix())
         log.debug("on_menu_add_filder %s", new_dir)
         if new_dir:
+            worker = pysongman.App.generate_recursing_song_directory_worker(new_dir) # type: SongDirectoryCollector
+            worker.signals.song_found.connect(self.on_directory_worker_add_song)
             self.playlist.add_directory(new_dir, top=True, recurse=False, surpress_emit=False)
 
+    def on_directory_worker_add_song(self, song_path: str, tags: dict, length_seconds: float, length_bytes: int):
+        song = Song(pathlib.Path(song_path), tags=tags, length_seconds=length_seconds, length_bytes=length_bytes)
 
-
+        self.playlist.add_song(song, add2queue=True)
 
     def show(self):
         self.view.show()
