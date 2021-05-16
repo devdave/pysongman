@@ -42,7 +42,8 @@ class SearchFilterProxy(QtCore.QSortFilterProxyModel):
     def filterAcceptsRow(self, source_row:int, source_parent:QtCore.QModelIndex) -> bool:
         model = self.sourceModel()
         song = model.getSong(source_row)
-        should_free = True if song.handle is None else False
+        should_free = True
+        # should_free = True if song.handle is None else False
 
         try:
             if self.filter_string is None:
