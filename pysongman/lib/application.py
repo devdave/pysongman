@@ -161,11 +161,10 @@ class Application(QApplication):
                         # TODO put a Threaded worker to preload up song data
                         # self.playlist.add_directory(file_dir, top=True)
                         self._work_pending += 1
-                        worker = SongDirectoryCollector(file_dir, recurse=True)
+                        worker = self.generate_recursing_song_directory_worker(file_dir)
                         worker.signals.song_found.connect(self.on_directory_worker_add_song)
                         worker.signals.work_complete.connect(self.on_directory_worker_finished)
-
-                        self._pool.start(worker)
+                        self.execute_song_directory_collector(worker)
 
 
                     elif file_dir.is_file():
@@ -173,6 +172,12 @@ class Application(QApplication):
 
             if len(self.playlist) > 0 and self._work_pending <= 0:
                 self.playlist.play()
+
+    def generate_recursing_song_directory_worker(self, file_dir) -> SongDirectoryCollector:
+        return SongDirectoryCollector(file_dir, recurse=True)
+
+    def execute_song_directory_collector(self, collector_worker):
+        return self._pool.start(collector_worker)
 
     def on_directory_worker_finished(self):
         if len(self.playlist) > 0:
