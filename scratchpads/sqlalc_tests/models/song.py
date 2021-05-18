@@ -16,22 +16,25 @@ from .base import Base
 
 class Song(Base):
 
-    rel_path: Path = Column(PathType())
+    rel_path: Path = Column(PathType(), unique=True)
 
     title = Column(String())
-    song_is_valid = Column(Boolean(), default=False)
+    is_valid = Column(Boolean(), default=False)
 
     # metadata
     filesize = Column(Float())  # Bytes according to Bass library
     stat_created = Column(Integer())  # uses Path.stat.st_create
     stat_modified = Column(Integer())  # uses Path.stat.st_modified
+    length_seconds = Column(Float())
+    length_bytes = Column(Integer())
+
 
     added_to_library = Column(DateTime(), server_default=func.now())
     last_played = Column(DateTime(), default=None)
 
     # library metadata
     play_count = Column(Integer, default=0)
-    last_played = Column(DateTime, default=None)
+    
 
 
     parent_id = Column(Integer(), ForeignKey("ParentDir.id"))
@@ -61,20 +64,24 @@ class Song(Base):
             old_record = False
             record = cls()
             record.rel_path = song_path
+            record.filesize = song_path.stat().st_size
+            record.stat_created = song_path.stat().st_ctime
+            record.stat_modified = song_path.stat().st_mtime
+
+            record.parent = parent
+
             song = SongObj(file_path=song_path)
             try:
                 song.touch()
-                record.song_is_valid = True
+                record.is_valid = True
             except BassException:
                 # log.debug("Failed to load %r", song_path)
-                record.song_is_valid = False
+                record.is_valid = False
                 return record, False
             else:
-                record.rel_path = song_path
-                record.filesize = song_path.stat().st_size
-                record.stat_created = song_path.stat().st_ctime
-                record.stat_modified = song_path.stat().st_mtime
-                record.parent = parent
+
+                record.length_bytes = song.duration
+                record.length_seconds = song.duration_bytes
 
                 if song.tags['artist'] is None:
                     artist_name = song_path.name
