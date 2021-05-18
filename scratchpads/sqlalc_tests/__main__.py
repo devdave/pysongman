@@ -36,13 +36,10 @@ def load_directory(song_path: Path, parent: ParentDir):
             else:
                 log.debug("Adding %r to db", record)
                 conn.s.add(record)
-
                 if record.is_valid:
                     created += 1
 
     for file_dir in dirs:
-        load_directory(file_dir, parent)
-
         created += load_directory(file_dir, parent)
 
     return created
@@ -58,30 +55,31 @@ def destroy_main():
     conn = initialize_db(create=True, db_location=db_location)
     return
 
+def load_main(song_dirs: [Path]):
 
     log.debug("SP %s", song_dirs)
+    db_location = Path(__file__).parent / "test.sqlite3"
+    conn = initialize_db(db_location=db_location)
+    created = 0
 
     if len(song_dirs) == 0:
         raise ValueError("Must provide atleast one path")
 
     for song_dir in song_dirs:  # type: Path
         with conn.s.begin() as trx: # type: SessionTransaction
-            parent = ParentDir()
-            parent.path = song_dir.as_posix()
-            conn.s.add(parent)
-            
             parent = ParentDir.GetCreate(song_dir)
             if parent.id is None:
                 conn.s.add(parent)
 
-        load_directory(song_dir, parent)
+        created += load_directory(song_dir, parent)
+
+    log.debug("Created %d new records", created)
 
 
 if __name__ == "__main__":
     setup_logging()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("song_paths", nargs="*", type=Path)
     subparsers = parser.add_subparsers(help="Commands", dest="command")
 
     load_parser = subparsers.add_parser("load", help="load data")
@@ -92,7 +90,8 @@ if __name__ == "__main__":
     summarize_parser = subparsers.add_parser("summarize")
 
     args = parser.parse_args()
-    main(args.song_paths)        load_main(args.song_paths)
+    if args.command == "load":
+        load_main(args.song_paths)
     elif args.command == "destroy":
         destroy_main()
     else:
