@@ -12,6 +12,8 @@ class PathType(types.TypeDecorator):
     def process_bind_param(self, value: typing.Union[str, Path, None], dialect):
         if isinstance(value, Path):
             return value.as_posix()
+        elif isinstance(value, str):
+            return Path(value).as_posix()
 
         return ""
 
