@@ -26,6 +26,7 @@ def load_directory(song_path: Path, parent: ParentDir):
     log.debug("Loading %s", song_path)
     files = (element for element in song_path.iterdir() if element.is_file() and element.suffix in valid_types)
     dirs = (element for element in song_path.iterdir() if element.is_dir())
+    created = 0
 
     with conn.s.begin() as trx: # type: SessionTransaction
         for file in files:
@@ -36,11 +37,15 @@ def load_directory(song_path: Path, parent: ParentDir):
                 log.debug("Adding %r to db", record)
                 conn.s.add(record)
 
+                if record.is_valid:
+                    created += 1
 
     for file_dir in dirs:
         load_directory(file_dir, parent)
 
+        created += load_directory(file_dir, parent)
 
+    return created
 
 
 
