@@ -7,7 +7,7 @@ from . import get_db
 
 class Artist(Base):
 
-    name = Column(String)
+    name = Column(String, unique=True)
     albums = relationship("Album", back_populates="artist")
 
 

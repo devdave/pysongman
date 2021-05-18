@@ -1,5 +1,5 @@
 
-from sqlalchemy import Column, String, ForeignKey, Integer
+from sqlalchemy import Column, String, ForeignKey, Integer, Index
 from sqlalchemy.orm import relationship
 
 from .base import Base
@@ -8,7 +8,11 @@ class Album(Base):
     artist_id = Column(Integer, ForeignKey("Artist.id"))
     artist = relationship("Artist", back_populates="albums")
 
-    name = Column(String())
+    name = Column(String(), index=True)
+
+    __table_args = (Index("artist_album_ux", "artist_id", "name"))
+
+
 
     @classmethod
     def GetCreate(cls, artist, name, session):
