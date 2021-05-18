@@ -28,14 +28,11 @@ class Song(Base):
     length_seconds = Column(Float())
     length_bytes = Column(Integer())
 
-
     added_to_library = Column(DateTime(), server_default=func.now())
     last_played = Column(DateTime(), default=None)
 
     # library metadata
     play_count = Column(Integer, default=0)
-    
-
 
     parent_id = Column(Integer(), ForeignKey("ParentDir.id"))
     parent = relationship("ParentDir", backref="songs")
@@ -50,9 +47,6 @@ class Song(Base):
 
     @classmethod
     def GetCreateByPath(cls, song_path: pathlib.Path, parent) -> (object, bool):
-
-
-
 
         if song_path.exists() is False:
             raise ValueError("Providign path doesn't exist: %s" % song_path)
@@ -90,49 +84,7 @@ class Song(Base):
 
                 record.artist = Artist.GetCreate(artist_name)
 
-
-
-
-
         return record, old_record
-
-
-
-
-    @classmethod
-    def GetByPath(cls, path):
-        """
-            TODO - Should I figure out how to do this with pure SqlAlchemy?
-
-        Args:
-            path: str or pathlib.Path
-
-        Returns:
-
-        """
-
-        SQL = """
-        SELECT 
-            Song.id, ParentDir.path || Song.rel_path as path 
-        FROM Song 
-        LEFT JOIN ParentDir PD on PD.id = Song.parent_dir
-        WHERE
-            path == ?
-        """
-        conn = initialize_db()
-        raw = conn.e.raw_connection()
-        cursor = raw.cursor()
-        try:
-            cursor.execute(SQL, path)
-        except sqlite3.OperationalError:
-            return None
-
-        result = cursor.fetchone()
-        sid = result[0]
-
-        return Song.query.filter(Song.id == sid).first()
-
-
 
     def __repr__(self):
         return f"<Song rel_path={self.rel_path.name}>"
