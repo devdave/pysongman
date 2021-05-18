@@ -6,6 +6,9 @@ if USE_PYSIDE:
     Qt = QtCore.Qt
 
 class SearchWindowSignals(QtCore.QObject):
+    """
+        Signals used by Search window
+    """
     key_search_down = QtCore.Signal()
     key_search_up = QtCore.Signal()
     selected = QtCore.Signal()
@@ -32,7 +35,10 @@ class SearchWindow(QtWidgets.QWidget):
         body.addWidget(self.search)
 
         self.results = QtWidgets.QListView()
+        self.results.setSelectionMode(QtWidgets.QAbstractItemView.SelectRows)
+
         body.addWidget(self.results)
+
 
         self.search.installEventFilter(self)
         self.search.setFocus()
@@ -42,10 +48,8 @@ class SearchWindow(QtWidgets.QWidget):
         down_pressed = QtWidgets.QShortcut(QtGui.QKeySequence(Qt.Key_Enter), self.results)
         down_pressed.activated.connect(self.shift_focus_to_results)
 
-
     def shift_focus_to_results(self):
         self.results.setFocus()
-
 
     def eventFilter(self, watched:QtCore.QObject, event:QtCore.QEvent) -> bool:
         if watched == self.search:
