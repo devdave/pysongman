@@ -50,14 +50,14 @@ def load_directory(song_path: Path, parent: ParentDir):
 
 
 
-
-def main(song_dirs: [Path]):
-    setup_logging()
-
+def destroy_main():
+    log.info("Rebuilding DB")
     db_location = Path(__file__).parent / "test.sqlite3"
     if db_location.exists():
         db_location.unlink()
     conn = initialize_db(create=True, db_location=db_location)
+    return
+
 
     log.debug("SP %s", song_dirs)
 
@@ -78,8 +78,22 @@ def main(song_dirs: [Path]):
 
 
 if __name__ == "__main__":
+    setup_logging()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("song_paths", nargs="*", type=Path)
+    subparsers = parser.add_subparsers(help="Commands", dest="command")
+
+    load_parser = subparsers.add_parser("load", help="load data")
+    load_parser.add_argument("song_paths", nargs="+", type=Path)
+
+    destroy = subparsers.add_parser("destroy", help="Reset the database to blank slate")
+
+    summarize_parser = subparsers.add_parser("summarize")
 
     args = parser.parse_args()
-    main(args.song_paths)
+    main(args.song_paths)        load_main(args.song_paths)
+    elif args.command == "destroy":
+        destroy_main()
+    else:
+        raise ValueError("Unknown command %s" % args.command)
