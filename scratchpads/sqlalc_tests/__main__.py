@@ -65,6 +65,9 @@ def main(song_dirs: [Path]):
             parent.path = song_dir.as_posix()
             conn.s.add(parent)
             
+            parent = ParentDir.GetCreate(song_dir)
+            if parent.id is None:
+                conn.s.add(parent)
 
         load_directory(song_dir, parent)
 
