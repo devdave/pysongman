@@ -20,6 +20,7 @@ class Song(Base):
 
     title = Column(String())
     is_valid = Column(Boolean(), default=False)
+    invalid_reason = Column(String(), default=None)
 
     # metadata
     filesize = Column(Float())  # Bytes according to Bass library
@@ -42,8 +43,6 @@ class Song(Base):
 
     album_id = Column(Integer(), ForeignKey("Album.id"))
     album = relationship("Album", backref="songs")
-
-
 
     @classmethod
     def GetCreateByPath(cls, song_path: pathlib.Path, parent) -> (object, bool):
