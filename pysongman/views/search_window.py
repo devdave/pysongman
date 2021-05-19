@@ -35,16 +35,14 @@ class SearchWindow(QtWidgets.QWidget):
         body.addWidget(self.search)
 
         self.results = QtWidgets.QListView()
-        self.results.setSelectionMode(QtWidgets.QAbstractItemView.SelectRows)
+        self.results.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
 
         body.addWidget(self.results)
-
 
         self.search.installEventFilter(self)
         self.search.setFocus()
 
     def setup_shortcuts(self):
-
         down_pressed = QtWidgets.QShortcut(QtGui.QKeySequence(Qt.Key_Enter), self.results)
         down_pressed.activated.connect(self.shift_focus_to_results)
 
