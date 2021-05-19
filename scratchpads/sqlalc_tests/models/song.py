@@ -16,7 +16,7 @@ from .base import Base
 
 class Song(Base):
 
-    rel_path: Path = Column(PathType(), unique=True)
+    path: Path = Column(PathType(), unique=True)
 
     title = Column(String())
     is_valid = Column(Boolean(), default=False)
