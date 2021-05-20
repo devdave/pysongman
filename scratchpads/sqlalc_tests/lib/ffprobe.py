@@ -72,15 +72,12 @@ class FFProbe:
         """
 
         cmd = f"ffprobe -show_format -show_streams -hide_banner -print_format json \"{self.song_path}\""
-        res = delegator.run(cmd, env=self._env)
-
         # res = delegator.run(cmd, env=self._env)
         res = run(cmd, hide=True, env = self._env)
         if res.return_code != 0:
             print(res.err)
             raise RuntimeError("Failed processing song")
 
-        data = json.loads(res.out) # type: dict
         data = json.loads(res.stdout) # type: dict
         self.all = data
         self.info = AttrDict(data.get("format"))
