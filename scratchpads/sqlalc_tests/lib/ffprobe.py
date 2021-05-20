@@ -49,7 +49,7 @@ class FFProbe:
         self.metadata = AttrDict()
         self.info = AttrDict()
         self.format = AttrDict()
-        self.streams = AttrDict()
+        self.streams = []
 
 
 
