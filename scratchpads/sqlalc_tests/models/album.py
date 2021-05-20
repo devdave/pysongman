@@ -22,8 +22,4 @@ class Album(Base):
             record.artist = artist
             record.name = name
 
-            with session.begin as trx:
-                trx.add(record)
-                trx.commit()
-
         return record
