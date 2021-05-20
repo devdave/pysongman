@@ -15,8 +15,8 @@ class Album(Base):
 
 
     @classmethod
-    def GetCreate(cls, artist, name, session):
-        record = cls.query(cls.artist == artist, cls.name == name).first()
+    def GetCreate(cls, artist, name):
+        record = cls.query.filter(cls.artist == artist, cls.name == name).first()
         if record is None:
             record = cls()
             record.artist = artist
