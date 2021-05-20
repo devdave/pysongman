@@ -22,6 +22,9 @@ class AttrDict(dict):
     def __getattr__(self, name):
         return self.get(name, None)
 
+    def __getitem__(self, item):
+        return self.get(item, None)
+
 
 
 
