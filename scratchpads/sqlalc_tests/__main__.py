@@ -50,8 +50,9 @@ def fix_tags_main():
 
 def clean_missing():
     conn = setup_db()
-    for music in SongModel.query.filter(SongModel.is_valid == False):
+    for music in SongModel.query:
         if music.path.exists() is False:
+            log.debug("Cleaned %s as it is missing", music.path)
             conn.s.delete(music)
 
     conn.s.commit()
