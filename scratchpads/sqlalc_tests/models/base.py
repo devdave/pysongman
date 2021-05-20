@@ -8,9 +8,9 @@ from sqlalchemy import Column, Integer
 @as_declarative()
 class Base:
 
+    id = Column(Integer, primary_key=True)
+    query: Query
+
     @declared_attr
     def __tablename__(self):
         return self.__name__
-
-    id = Column(Integer, primary_key=True)
-    query: Query
