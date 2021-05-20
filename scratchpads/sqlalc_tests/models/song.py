@@ -51,12 +51,12 @@ class Song(Base):
             raise ValueError("Providign path doesn't exist: %s" % song_path)
 
         old_record = True
-        record = cls.query.filter(cls.rel_path == song_path, cls.parent == parent).first()
+        record = cls.query.filter(cls.path == song_path, cls.parent == parent).first()
 
         if record is None:
             old_record = False
             record = cls()
-            record.rel_path = song_path
+            record.path = song_path
             record.filesize = song_path.stat().st_size
             record.stat_created = song_path.stat().st_ctime
             record.stat_modified = song_path.stat().st_mtime
@@ -86,7 +86,7 @@ class Song(Base):
         return record, old_record
 
     def __repr__(self):
-        return f"<Song rel_path={self.rel_path.name}>"
+        return f"<Song path={self.path.name}>"
 
 
 
