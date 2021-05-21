@@ -24,8 +24,7 @@ log = logging.getLogger(__name__)
 
 class Application(QApplication):
 
-    # Known controllers
-    master_config: ConfigMasterController
+    ACCEPTED_SUFFIX = ['.mp3', '.mp4', '.ogg', '.opus', '.wav']
 
     # environment
     _here: pathlib.Path
@@ -171,7 +170,7 @@ class Application(QApplication):
                 self.playlist.play()
 
     def generate_recursing_song_directory_worker(self, file_dir) -> SongDirectoryCollector:
-        return SongDirectoryCollector(file_dir, recurse=True)
+        return SongDirectoryCollector(file_dir, recurse=True, valid_suffix=self.ACCEPTED_SUFFIX)
 
     def execute_song_directory_collector(self, collector_worker):
         return self._pool.start(collector_worker)
