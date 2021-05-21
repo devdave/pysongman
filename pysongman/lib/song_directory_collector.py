@@ -25,6 +25,7 @@ class SongDirectoryCollectorSignals(QtCore.QObject):
     song_found = Signal(song_path, song_tags, song_len_seconds, song_len_bytes)
     work_complete = Signal()
     song_errored = Signal(song_path)
+    songs_found = Signal(list)
 
     def emit_found_song(self, song: Song):
         self.song_found.emit(song.file_path.as_posix(), song.tags, song.duration, song.duration_bytes)
@@ -36,17 +37,23 @@ class SongDirectoryCollector(QtCore.QRunnable):
     starting_dir: pathlib.Path
     recurse: bool
     signals: SongDirectoryCollectorSignals
+    bulk_songs: list
 
     def __init__(self, starting_dir: pathlib.Path, recurse: bool=False):
         super(SongDirectoryCollector, self).__init__()
         self.starting_dir = starting_dir
         self.recurse = recurse
+        self.bulk_songs = []
+
         self.signals = SongDirectoryCollectorSignals()
 
+    def transform_song_to_primitives(self, song: Song):
+        return song.file_path.as_posix(), song.tags, song.duration, song.duration_bytes
 
     @Slot()
     def run(self):
         self._walk_directory_tree(self.starting_dir)
+        self.signals.songs_found.emit(self.bulk_songs)
         self.signals.work_complete.emit()
 
     def _walk_directory_tree(self, work_dir: pathlib.Path):
@@ -62,6 +69,7 @@ class SongDirectoryCollector(QtCore.QRunnable):
                 self.signals.song_errored.emit(file.as_posix())
             else:
                 self.signals.emit_found_song(song)
+                self.bulk_songs.append(self.transform_song_to_primitives(song))
 
         for dir_path in dirs:
             self._walk_directory_tree(dir_path)
