@@ -37,12 +37,14 @@ class SongDirectoryCollector(QtCore.QRunnable):
     starting_dir: pathlib.Path
     recurse: bool
     signals: SongDirectoryCollectorSignals
+    valid_suffix: list
     bulk_songs: list
 
-    def __init__(self, starting_dir: pathlib.Path, recurse: bool=False):
+    def __init__(self, starting_dir: pathlib.Path, recurse: bool=False, valid_suffix:list=None):
         super(SongDirectoryCollector, self).__init__()
         self.starting_dir = starting_dir
         self.recurse = recurse
+        self.valid_suffix = valid_suffix
         self.bulk_songs = []
 
         self.signals = SongDirectoryCollectorSignals()
