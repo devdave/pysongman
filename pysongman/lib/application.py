@@ -8,10 +8,7 @@ from .. import DB_FILE, USE_PYSIDE
 from ..lib.song_directory_collector import SongDirectoryCollector
 
 if USE_PYSIDE is True:
-    from PySide2.QtWidgets import QApplication
-    from PySide2 import QtCore
-    from PySide2.QtCore import Qt
-    from PySide2 import QtGui
+    from .qtd import QApplication, QtCore, Qt, QtGui, Signal, Slot
 
     from pybass3.pys2_playlist import Pys2Playlist as Playlist
     from pybass3.pys2_song import Pys2Song as Song
