@@ -4,8 +4,7 @@ import pathlib
 import pysongman
 
 if pysongman.USE_PYSIDE is True:
-    from PySide2 import QtCore
-    from PySide2.QtCore import Qt
+    from .qtd import QtCore, Qt, Signal, Slot
 
     from pybass3.pys2_song import Pys2Song as Song
 
