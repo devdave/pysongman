@@ -9,9 +9,6 @@ if pysongman.USE_PYSIDE is True:
     from pybass3.pys2_song import Pys2Song as Song
 
 
-    Signal = QtCore.Signal
-    Slot = QtCore.Slot
-
 from pybass3 import BassException
 
 
