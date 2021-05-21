@@ -73,15 +73,19 @@ class Song(Base):
                 return record, False
             else:
 
-                record.length_bytes = song.duration
-                record.length_seconds = song.duration_bytes
+                record.length_seconds = song.duration
+                record.length_bytes = song.duration_bytes
 
-                if song.tags['artist'] is None:
-                    artist_name = song_path.name
-                else:
-                    artist_name = song.tags['artist']
+                artist_name = song_path.name if song.tags['artist'] is None else song.tags['artist']
+                album_name = song_path.parent if song.tags['album'] is None else song.tags['album']
 
+                record.title = song.tags['title']
                 record.artist = Artist.GetCreate(artist_name)
+                record.album = Album.GetCreate(record.artist, album_name)
+
+
+
+
 
         return record, old_record
 
