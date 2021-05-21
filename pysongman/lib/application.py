@@ -87,6 +87,7 @@ class Application(QApplication):
 
         log.debug("Application connections setup")
 
+    @Slot(bool)
     def toggle_medialib(self, toggle):
         log.debug("Toggling medialib %s", toggle)
         if self.media_control.view.isVisible() is False or self.media_control.view.isHidden() is True:
@@ -95,6 +96,7 @@ class Application(QApplication):
         else:
             self.media_control.hide()
 
+    @Slot(bool)
     def toggle_playlist(self, toggle):
         log.debug("Should toggle playlist, %s", toggle)
         if self.playlist_control.view.isHidden():
@@ -104,6 +106,7 @@ class Application(QApplication):
         elif self.playlist_control.view.isVisible() is True:
             self.playlist_control.hide()
 
+    @Slot()
     def toggle_masterconfig(self):
         if self.master_config is None:
             self.master_config = ConfigMasterController()
@@ -117,6 +120,7 @@ class Application(QApplication):
         self.master_config.view.hide()
         self.master_config = None
 
+    @Slot(int)
     def do_close(self, return_code=0):
         log.debug("Closing application")
         self.exit(return_code)
@@ -175,15 +179,18 @@ class Application(QApplication):
     def execute_song_directory_collector(self, collector_worker):
         return self._pool.start(collector_worker)
 
+    @Slot()
     def on_directory_worker_finished(self):
         if len(self.playlist) > 0:
             self.playlist.play()
 
+    @Slot(str, dict, float, int)
     def on_directory_worker_add_song(self, song_path:str, tags:dict, length_seconds:float, length_bytes:int):
         song = Song(pathlib.Path(song_path), tags=tags, length_seconds=length_seconds, length_bytes=length_bytes)
 
         self.playlist.add_song(song, add2queue=True)
 
+    @Slot(list)
 
     def on_key_pressed(self, event: QtGui.QKeyEvent):
         log.debug("Application is handling keypress %s", event.key())
