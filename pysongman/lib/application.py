@@ -162,7 +162,8 @@ class Application(QApplication):
                         # self.playlist.add_directory(file_dir, top=True)
                         self._work_pending += 1
                         worker = self.generate_recursing_song_directory_worker(file_dir)
-                        worker.signals.song_found.connect(self.on_directory_worker_add_song)
+                        # worker.signals.song_found.connect(self.on_directory_worker_add_song)
+                        worker.signals.songs_found.connect(self.on_directory_worker_add_songs)
                         worker.signals.work_complete.connect(self.on_directory_worker_finished)
                         self.execute_song_directory_collector(worker)
 
@@ -191,7 +192,12 @@ class Application(QApplication):
         self.playlist.add_song(song, add2queue=True)
 
     @Slot(list)
+    def on_directory_worker_add_songs(self, songs_list:typing.List[typing.Tuple[str, dict, float, int]]):
+        for song_prim in songs_list:
+            self.on_directory_worker_add_song(*song_prim)
 
+
+    @Slot(QtGui.QKeyEvent)
     def on_key_pressed(self, event: QtGui.QKeyEvent):
         log.debug("Application is handling keypress %s", event.key())
         if event.key() == Qt.Key_Z:
@@ -204,3 +210,5 @@ class Application(QApplication):
             self.playlist.stop()
         elif event.key() == Qt.Key_B:
             self.playlist.next()
+
+
