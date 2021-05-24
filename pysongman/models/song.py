@@ -60,7 +60,7 @@ class Song(Base):
     def GetCreateByPath(cls, song_path: pathlib.Path, parent) -> (object, bool):
 
         if song_path.exists() is False:
-            raise ValueError("Providign path doesn't exist: %s" % song_path)
+            raise ValueError("Providing path doesn't exist: %s" % song_path)
 
         old_record = True
         record = cls.query.filter(cls.path == song_path, cls.parent == parent).first()
