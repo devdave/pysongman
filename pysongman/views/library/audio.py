@@ -7,7 +7,7 @@ from pysongman.lib.qtd.QtWidgets import QPushButton
 from pysongman.lib.qtd.QtWidgets import QFrame
 
 
-class MediaWindow(QtWidgets.QMainWindow):
+class MediaWindow(QtWidgets.QWidget):
 
     search_label: QLabel
     search_input: QLineEdit
@@ -72,7 +72,12 @@ class MediaWindow(QtWidgets.QMainWindow):
 
         a_a_songs_split = QtWidgets.QSplitter(Qt.Vertical)
         a_a_songs_split.addWidget(artist_album_split)
-        
+        a_a_songs_split.addWidget(self.songs_table)
+
+        self.body.addWidget(a_a_songs_split)
+
+        self.setLayout(self.body)
+
 
 
 
