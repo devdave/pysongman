@@ -3,7 +3,7 @@ from pathlib import Path
 import sqlite3
 
 from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime, func, Boolean
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Query
 
 from pybass3 import Song as SongObj, BassException
 
@@ -44,6 +44,8 @@ class Song(Base):
     album_id = Column(Integer(), ForeignKey("Album.id"))
     album = relationship("Album", backref="songs")
 
+    # type hint helper
+    query: Query
     @classmethod
     def GetCreateByPath(cls, song_path: pathlib.Path, parent) -> (object, bool):
 
