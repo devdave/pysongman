@@ -19,7 +19,7 @@ from .base import Base
 @dataclass
 class SAConnection:
     e: sqlalchemy.engine
-    s: session
+    s: Session
 
 def get_db_url(db_location=False):
     if db_location is not False:
