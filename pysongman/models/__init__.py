@@ -11,7 +11,7 @@ import sqlalchemy
 from sqlalchemy import create_engine, engine
 from sqlalchemy.ext import declarative
 from sqlalchemy import orm
-from sqlalchemy.orm import scoped_session, sessionmaker, session, query
+from sqlalchemy.orm import scoped_session, sessionmaker, session, query, Session
 
 from .. import HOME, APP_NAME, DB_FILE
 from .base import Base
