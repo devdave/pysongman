@@ -141,6 +141,7 @@ class PlayerControl(QObject):
         log.debug("Song was changed")
         current_song_label = f"{self.playlist.current.title}({self.playlist.current.duration_time})"
         self.view.current_song.setText(current_song_label)
+        self.view.current_song.setToolTip(current_song_label)
         self.view.progress_bar.setRange(0, self.playlist.current.duration_bytes)
         self.view.progress_bar.setValue(self.playlist.current.position_bytes)
 
