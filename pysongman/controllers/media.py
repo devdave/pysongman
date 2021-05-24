@@ -1,11 +1,9 @@
 from .. import USE_PYSIDE
 
 
-if USE_PYSIDE is True:
-    from PySide2 import QtCore, QtWidgets
-    from PySide2.QtCore import Qt
+from ..lib.qtd import QtCore, Signal
 
-    from pybass3.pys2_playlist import Pys2Playlist
+from pybass3.pys2_playlist import Pys2Playlist
 
 from ..views.media_window import MediaWindow
 
