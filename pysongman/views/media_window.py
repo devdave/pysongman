@@ -1,23 +1,29 @@
 
-import PySide2
-from PySide2 import QtCore
-from PySide2.QtCore import Qt
-from PySide2 import QtWidgets
+from ..lib.qtd import QtCore, Qt, QtWidgets
 
 
 class MediaWindow(QtWidgets.QMainWindow):
+
+    tree_body: QtWidgets.QHBoxLayout
+    playlists: QtWidgets.QTreeWidget
 
     artist_table: QtWidgets.QTableView
     album_table: QtWidgets.QTableView
     songs_table: QtWidgets.QTableView
 
     toolbar: QtWidgets.QToolBar
-    add_button: QtWidgets.QPushButton
+
+    library_button: QtWidgets.QPushButton
+    library_menu: QtWidgets.QMenu
+    act_lib_remove_missing: QtWidgets.QAction
+    act_lib_config: QtWidgets.QAction
+
     nuke_button: QtWidgets.QPushButton
+
+    add_button: QtWidgets.QPushButton
     add_menu: QtWidgets.QMenu
     act_add_file: QtWidgets.QAction
     act_add_dir: QtWidgets.QAction
-
 
     def __init__(self):
         super(MediaWindow, self).__init__()
@@ -31,13 +37,24 @@ class MediaWindow(QtWidgets.QMainWindow):
     def setup_toolbar(self):
         self.toolbar = QtWidgets.QToolBar()
 
+        self.library_button = QtWidgets.QPushButton("Library")
         self.add_button = QtWidgets.QPushButton("Add...")
         self.nuke_button = QtWidgets.QPushButton("Nuke")
 
         self.addToolBar(Qt.BottomToolBarArea, self.toolbar)
 
+        self.toolbar.addWidget(self.library_button)
         self.toolbar.addWidget(self.add_button)
         self.toolbar.addWidget(self.nuke_button)
+
+        self.library_menu = QtWidgets.QMenu()
+        self.act_lib_remove_missing = QtWidgets.QAction("Remove missing files from Library...")
+        self.library_menu.addAction(self.act_lib_remove_missing)
+
+        self.act_lib_config = QtWidgets.QAction("Configuration")
+        self.library_menu.addAction(self.act_lib_config)
+
+        self.library_button.setMenu(self.library_menu)
 
         self.add_menu = QtWidgets.QMenu()
         self.act_add_file = QtWidgets.QAction("Add file(s)")
@@ -83,8 +100,6 @@ class MediaWindow(QtWidgets.QMainWindow):
         self.playlists = QtWidgets.QTreeWidget()
         self.tree_body.addWidget(self.playlists)
         self.tree_body.addLayout(self.body)
-
-
 
         self.frame.setLayout(self.tree_body)
 
