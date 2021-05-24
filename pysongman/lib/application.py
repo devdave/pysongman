@@ -4,14 +4,11 @@ import logging
 import typing
 
 import pysongman
-from .. import DB_FILE, USE_PYSIDE
+from .. import DB_FILE
 from ..lib.song_directory_collector import SongDirectoryCollector
 
-if USE_PYSIDE is True:
-    from .qtd import QApplication, QtCore, Qt, QtGui, Signal, Slot
 
-    from pybass3.pys2_playlist import Pys2Playlist as Playlist
-    from pybass3.pys2_song import Pys2Song as Song
+from .qtd import QApplication, QtCore, Qt, QtGui, Signal, Slot
 
 from ..models import initialize_db
 from ..controllers.media import MediaController
