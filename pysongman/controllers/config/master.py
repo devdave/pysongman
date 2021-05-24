@@ -1,7 +1,7 @@
 import logging
 
 import pysongman
-from pysongman.views.config.master import ConfigMasterWindow
+from pysongman.views.config_window import ConfigWindow
 from pysongman.controllers.config.debug import ConfigDebugController
 from .media import ConfigMediaController
 
@@ -10,6 +10,7 @@ if pysongman.USE_PYSIDE:
     from PySide2.QtCore import Qt
 
 log = logging.getLogger(__name__)
+
 
 class ConfigMasterControllerSignals(QtCore.QObject):
     closed = QtCore.Signal()
@@ -23,7 +24,7 @@ class ConfigMasterController(QtCore.QObject):
         super(ConfigMasterController, self).__init__()
 
         self.signals = ConfigMasterControllerSignals()
-        self.view = ConfigMasterWindow()
+        self.view = ConfigWindow()
         self.controllers = {}
         self.folders = {}
         self.subviews = {}
