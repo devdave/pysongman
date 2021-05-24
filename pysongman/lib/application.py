@@ -10,7 +10,14 @@ from ..lib.song_directory_collector import SongDirectoryCollector
 
 from .qtd import QApplication, QtCore, Qt, QtGui, Signal, Slot
 
+from pybass3.pys2_playlist import Pys2Playlist as Playlist
+from pybass3.pys2_song import Pys2Song as Song
+
 from ..models import initialize_db
+from ..models.album import Album as AlbumModel
+from ..models.artist import Artist as ArtistModel
+from ..models.song import Song as SongModel
+
 from ..controllers.media import MediaController
 from ..controllers.player import PlayerControl
 from ..controllers.playlist import Playlist as PlaylistController
@@ -37,6 +44,7 @@ class Application(QApplication):
 
     # Application components
     playlist: Playlist
+    playlist_control: PlaylistController
     player_control: PlayerControl
     player_control: PlaylistController
     media_control: MediaController
@@ -125,8 +133,6 @@ class Application(QApplication):
         self.media_control = MediaController(self.playlist)
         self.master_config = None
 
-        self.setup_connections()
-
     def setup_connections(self):
 
         self.player_control.signals.view_closed.connect(self.do_close)
@@ -142,6 +148,7 @@ class Application(QApplication):
         log.debug("Toggling medialib %s", toggle)
         if self.media_control.view.isVisible() is False or self.media_control.view.isHidden() is True:
             self.media_control.show()
+            self.media_control.signals.show_config.connect(self.toggle_masterconfig)
             self.media_control.view.activateWindow()
         else:
             self.media_control.hide()
@@ -213,4 +220,7 @@ class Application(QApplication):
         elif event.key() == Qt.Key_B:
             self.playlist.next()
 
+
+    def on_medialibrary_rescan_request(self):
+        pass
 
