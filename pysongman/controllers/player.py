@@ -4,16 +4,13 @@ from pathlib import Path
 
 from .. import USE_PYSIDE
 from ..views.player_window import PlayerWindow
+from ..lib.qtd import QObject, Signal, QtWidgets, QtGui, Qt
 
+from pybass3.pys2_playlist import Pys2Playlist
 
-if USE_PYSIDE:
-    from pybass3.pys2_playlist import Pys2Playlist
-
-    from PySide2.QtCore import QObject, Signal
-    from PySide2 import QtWidgets, QtGui
-    from PySide2.QtCore import Qt
 
 log = logging.getLogger(__name__)
+
 
 class PlayerControlSignals(QObject):
     view_closed = Signal()
@@ -21,6 +18,7 @@ class PlayerControlSignals(QObject):
     show_medialib = Signal(bool)
     show_config = Signal()
     key_pressed = Signal(QtGui.QKeyEvent)
+
 
 class PlayerControl(QObject):
 

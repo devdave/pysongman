@@ -3,17 +3,15 @@
 
 """
 
-from .. import USE_PYSIDE
 import typing
 import logging
 
-if USE_PYSIDE is True:
-    from PySide2 import QtCore
-    from PySide2.QtCore import Qt
+from ..lib.qtd import QtCore, Qt
 
 from pybass3.pys2_playlist import Pys2Playlist
 
 log = logging.getLogger(__name__)
+
 
 class QueueTableModel(QtCore.QAbstractTableModel):
 

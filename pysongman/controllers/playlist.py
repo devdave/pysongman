@@ -3,21 +3,16 @@ import pathlib
 
 import pysongman
 
+from pybass3.pys2_playlist import Pys2Playlist
+from pybass3.pys2_song import Pys2Song as Song
 
-if pysongman.USE_PYSIDE:
-    from PySide2 import QtCore
-    from PySide2.QtCore import Qt
-    from PySide2 import QtWidgets
-    from PySide2 import QtGui
-
-    from pybass3.pys2_playlist import Pys2Playlist
-    from pybass3.pys2_song import Pys2Song as Song
-
+from ..lib.qtd import QtCore, Qt, QtWidgets, QtGui
 from ..tables.playlist import PlaylistTableModel
 from ..views.playlist_window import PlaylistWindow
 from .search import SearchController
 
 log = logging.getLogger(__name__)
+
 
 class Playlist(QtCore.QObject):
 

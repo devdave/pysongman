@@ -1,10 +1,9 @@
-from pysongman import USE_PYSIDE
+
 
 import logging
 
-if USE_PYSIDE:
-    from PySide2 import QtWidgets, QtCore
-    from PySide2.QtCore import Qt
+from ..lib.qtd import QtWidgets, QtCore, Qt
+
 
 log = logging.getLogger(__name__)
 

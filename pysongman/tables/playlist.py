@@ -1,17 +1,11 @@
 import logging
 import typing
 
-from .. import USE_PYSIDE
 
-if USE_PYSIDE:
-    from PySide2 import QtCore
+from ..lib.qtd import QtCore, Qt
 
-
-    from pybass3.pys2_playlist import Pys2Playlist
-    from pybass3.pys2_song import Pys2Song
-
-    Qt = QtCore.Qt
-
+from pybass3.pys2_playlist import Pys2Playlist
+from pybass3.pys2_song import Pys2Song
 
 log = logging.getLogger(__name__)
 

@@ -2,12 +2,9 @@ from .. import USE_PYSIDE
 
 import logging
 
+from ..lib.qtd import QtCore, QtGui, Qt
 
-if USE_PYSIDE is True:
-    from PySide2 import QtCore, QtGui
-    from PySide2.QtCore import Qt
-
-    from pybass3.pys2_playlist import Pys2Playlist
+from pybass3.pys2_playlist import Pys2Playlist
 
 from ..views.search_window import SearchWindow
 from ..lib.search_proxy import SearchFilterProxy

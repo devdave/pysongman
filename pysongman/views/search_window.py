@@ -1,9 +1,8 @@
 from .. import USE_PYSIDE
 
-if USE_PYSIDE:
-    from PySide2 import QtCore, QtWidgets, QtGui
 
-    Qt = QtCore.Qt
+from ..lib.qtd import QtCore, QtWidgets, QtGui, Qt
+
 
 class SearchWindowSignals(QtCore.QObject):
     """
@@ -12,6 +11,7 @@ class SearchWindowSignals(QtCore.QObject):
     key_search_down = QtCore.Signal()
     key_search_up = QtCore.Signal()
     selected = QtCore.Signal()
+
 
 class SearchWindow(QtWidgets.QWidget):
 

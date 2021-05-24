@@ -1,9 +1,6 @@
-from pysongman import USE_PYSIDE
 
-if USE_PYSIDE is True:
-    from PySide2 import QtCore, QtWidgets
-    from PySide2.QtWidgets import QLabel
-    from PySide2.QtCore import Qt
+
+from pysongman.lib.qtd import QtCore, QtWidgets, QLabel, Qt
 
 
 class ConfigDebugWindow(QtWidgets.QWidget):

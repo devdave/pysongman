@@ -1,12 +1,10 @@
 import typing
 
-from pysongman import USE_PYSIDE
+
 from pysongman.models.parent_dir import ParentDir
 
 
-if USE_PYSIDE is True:
-    from PySide2 import QtCore, QtWidgets
-    from PySide2.QtCore import Qt
+from ..lib.qtd import QtCore, QtWidgets, Qt
 
 
 class ParentTableBridge(QtCore.QAbstractTableModel):

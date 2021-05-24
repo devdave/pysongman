@@ -1,16 +1,12 @@
 import logging
 
-from .. import USE_PYSIDE
+
 import typing as T
 import pathlib
 
-if USE_PYSIDE:
-    import PySide2
-    from PySide2.QtGui import QPixmap
-    from PySide2 import QtCore, QtGui, QtWidgets
-    from PySide2.QtCore import Qt
+from ..lib.qtd import QtCore, QtGui, QtWidgets, Qt
 
-    from pybass3.pys2_playlist import Pys2Playlist
+from pybass3.pys2_playlist import Pys2Playlist
 
 from .. import ICON_DIR
 from .. import CSS_DIR
@@ -20,7 +16,7 @@ log = logging.getLogger(__name__)
 
 
 class AlignLeftDelegate(QtWidgets.QStyledItemDelegate):
-    def initStyleOption(self, option:PySide2.QtWidgets.QStyleOptionViewItem, index:PySide2.QtCore.QModelIndex) -> None:
+    def initStyleOption(self, option: QtWidgets.QStyleOptionViewItem, index: QtCore.QModelIndex) -> None:
         super(AlignLeftDelegate, self).initStyleOption(option, index)
         option.displayAlignment = Qt.AlignLeft
 

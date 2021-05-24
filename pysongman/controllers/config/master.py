@@ -5,9 +5,8 @@ from pysongman.views.config_window import ConfigWindow
 from pysongman.controllers.config.debug import ConfigDebugController
 from .media import ConfigMediaController
 
-if pysongman.USE_PYSIDE:
-    from PySide2 import QtCore, QtWidgets
-    from PySide2.QtCore import Qt
+from pysongman.lib.qtd import QtCore, QtWidgets, Qt
+
 
 log = logging.getLogger(__name__)
 

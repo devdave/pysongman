@@ -6,9 +6,7 @@ from pysongman.views.config.debug import ConfigDebugWindow
 from pybass3.bass_stream import BassStream
 from pybass3.bass_module import Bass
 
-if pysongman.USE_PYSIDE is True:
-    from PySide2 import QtCore, QtWidgets
-    from PySide2.QtCore import Qt
+from pysongman.lib.qtd import QtCore, QtWidgets, Qt
 
 
 class ConfigDebugController(QtCore.QObject):

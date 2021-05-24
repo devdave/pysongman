@@ -1,18 +1,17 @@
 import logging
 import pathlib
 
-from pysongman import USE_PYSIDE
 from pysongman.models import get_db
 from pysongman.models.parent_dir import ParentDir as ParentDirModel
 from pysongman.tables.parent_dir import ParentTableBridge
 
 from pysongman.views.config.media import MediaConfigWidget
 
-if USE_PYSIDE is True:
-    from PySide2 import QtCore
-    from PySide2.QtWidgets import QFileDialog
+from pysongman.lib.qtd import QtCore, QtWidgets, QFileDialog
+
 
 log = logging.getLogger(__name__)
+
 
 class ConfigMediaController(QtCore.QObject):
     def __init__(self, optional_title=None):

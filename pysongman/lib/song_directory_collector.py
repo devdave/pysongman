@@ -3,10 +3,9 @@ import pathlib
 
 import pysongman
 
-if pysongman.USE_PYSIDE is True:
-    from .qtd import QtCore, Qt, Signal, Slot
 
-    from pybass3.pys2_song import Pys2Song as Song
+from .qtd import QtCore, Qt, Signal, Slot
+from pybass3.pys2_song import Pys2Song as Song
 
 
 from pybass3 import BassException
