@@ -67,6 +67,59 @@ class Application(QApplication):
         log.debug("Application is configured %r", self._configured)
 
         self.playlist = Playlist()
+
+    def configure(self, song_path: list = None, nuke_everything: bool = False, debug_flag: bool = False):
+        log.debug("Running startup")
+
+        self.song_path = song_path
+        self.nuke_everything = nuke_everything
+        self.debug_enabled = debug_flag
+
+        if debug_flag is True:
+            from pybass3.bass_stream import BassStream
+            BassStream.DEBUG_BASS_STREAM = True
+
+        if self.nuke_everything is True:
+            self._database_file.unlink(True)
+            self._configured_file.unlink(True)
+            self._configured = False
+
+        if self._configured is False:
+            initialize_db(create=True, db_location=self._database_file)
+            self._configured_file.touch()
+        else:
+            initialize_db(create=False, db_location=self._database_file)
+
+        self.create_controllers()
+        self.setup_connections()
+
+        self.playlist_control.show()
+        self.player_control.show()
+
+        if self.song_path:
+            if isinstance(self.song_path, list) is False:
+                raise ValueError(f"Expected song_path to be a list but got {type(self.song_path)}{song_path=} instead")
+
+            for element in self.song_path:
+                file_dir = Path(element)
+                if file_dir.exists():
+                    if file_dir.is_dir():
+                        # self.playlist.add_directory(file_dir, top=True)
+                        self._work_pending += 1
+                        worker = self.generate_recursing_song_directory_worker(file_dir)
+                        # worker.signals.song_found.connect(self.on_directory_worker_add_song)
+                        worker.signals.songs_found.connect(self.on_directory_worker_add_songs)
+                        worker.signals.work_complete.connect(self.on_directory_worker_finished)
+                        self.execute_song_directory_collector(worker)
+
+
+                    elif file_dir.is_file():
+                        self.playlist.add_song_by_path(file_dir)
+
+            if len(self.playlist) > 0 and self._work_pending <= 0:
+                self.playlist.play()
+
+    def create_controllers(self):
         self.player_control = PlayerControl(self.playlist)
         self.playlist_control = PlaylistController(self.playlist)
         self.media_control = MediaController(self.playlist)
@@ -122,54 +175,6 @@ class Application(QApplication):
         log.debug("Closing application")
         self.exit(return_code)
 
-    def configure(self, song_path: list = None, nuke_everything: bool = False, debug_flag: bool = False):
-        log.debug("Running startup")
-
-        self.song_path = song_path
-        self.nuke_everything = nuke_everything
-        self.debug_enabled = debug_flag
-
-        if debug_flag is True:
-            from pybass3.bass_stream import BassStream
-            BassStream.DEBUG_BASS_STREAM = True
-
-        if self.nuke_everything is True:
-            self._database_file.unlink(True)
-            self._configured_file.unlink(True)
-            self._configured = False
-
-        if self._configured is False:
-            initialize_db(create=True, db_location=self._database_file)
-            self._configured_file.touch()
-        else:
-            initialize_db(create=False, db_location=self._database_file)
-
-        self.playlist_control.show()
-        self.player_control.show()
-
-        if self.song_path:
-            if isinstance(self.song_path, list) is False:
-                raise ValueError(f"Expected song_path to be a list but got {type(self.song_path)}{song_path=} instead")
-
-            for element in self.song_path:
-                file_dir = Path(element)
-                if file_dir.exists():
-                    if file_dir.is_dir():
-                        # TODO put a Threaded worker to preload up song data
-                        # self.playlist.add_directory(file_dir, top=True)
-                        self._work_pending += 1
-                        worker = self.generate_recursing_song_directory_worker(file_dir)
-                        # worker.signals.song_found.connect(self.on_directory_worker_add_song)
-                        worker.signals.songs_found.connect(self.on_directory_worker_add_songs)
-                        worker.signals.work_complete.connect(self.on_directory_worker_finished)
-                        self.execute_song_directory_collector(worker)
-
-
-                    elif file_dir.is_file():
-                        self.playlist.add_song_by_path(file_dir)
-
-            if len(self.playlist) > 0 and self._work_pending <= 0:
-                self.playlist.play()
 
     def generate_recursing_song_directory_worker(self, file_dir) -> SongDirectoryCollector:
         return SongDirectoryCollector(file_dir, recurse=True, valid_suffix=self.ACCEPTED_SUFFIX)
