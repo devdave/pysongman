@@ -1,10 +1,10 @@
 from pysongman.lib.qtd import QtWidgets, Qt
-from pysongman.lib.qtd.QtWidgets import QHBoxLayout
-from pysongman.lib.qtd.QtWidgets import QVBoxLayout
-from pysongman.lib.qtd.QtWidgets import QLabel
-from pysongman.lib.qtd.QtWidgets import QLineEdit
-from pysongman.lib.qtd.QtWidgets import QPushButton
-from pysongman.lib.qtd.QtWidgets import QFrame
+from pysongman.lib.qtd import QHBoxLayout
+from pysongman.lib.qtd import QVBoxLayout
+from pysongman.lib.qtd import QLabel
+from pysongman.lib.qtd import QLineEdit
+from pysongman.lib.qtd import QPushButton
+from pysongman.lib.qtd import QFrame
 
 
 class MediaWindow(QtWidgets.QWidget):
