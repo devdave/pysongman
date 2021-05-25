@@ -7,7 +7,7 @@ from pysongman.lib.qtd import QPushButton
 from pysongman.lib.qtd import QFrame
 
 
-class MediaWindow(QtWidgets.QWidget):
+class AudioWindow(QtWidgets.QWidget):
 
     search_label: QLabel
     search_input: QLineEdit
@@ -18,7 +18,7 @@ class MediaWindow(QtWidgets.QWidget):
     songs_table: QtWidgets.QTableView
 
     def __init__(self):
-        super(MediaWindow, self).__init__()
+        super(AudioWindow, self).__init__()
 
         self.top = None
         self.body = None
@@ -40,7 +40,7 @@ class MediaWindow(QtWidgets.QWidget):
         """
 
         self.frame = QFrame()
-        self.body = QVBoxLayout
+        self.body = QVBoxLayout()
 
         search_line = QHBoxLayout()
         search_label = QLabel("Search: ")
@@ -66,7 +66,7 @@ class MediaWindow(QtWidgets.QWidget):
             table.setSortingEnabled(True)
             table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
-        artist_album_split = QtWidgets.QSplitter(Qt.Horizontal, self.body)
+        artist_album_split = QtWidgets.QSplitter(Qt.Horizontal)
         artist_album_split.addWidget(self.artist_table)
         artist_album_split.addWidget(self.album_table)
 
