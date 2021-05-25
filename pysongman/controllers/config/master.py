@@ -93,6 +93,8 @@ class ConfigMasterController(QtCore.QObject):
             for subview in self.subviews.values():
                 subview.hide()
 
+            sub = self.subviews[identifier]
+
         sub.setWindowFlag(Qt.FramelessWindowHint, True)
         sub.showMaximized()
         sub.show()
