@@ -1,15 +1,16 @@
 
-from sqlalchemy.ext.declarative import as_declarative
+from sqlalchemy.ext.declarative import as_declarative, DeclarativeMeta
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import query, Query
-from sqlalchemy import Column, Integer
+from sqlalchemy import Column, Integer, MetaData
 
 
 @as_declarative()
 class Base:
 
     id = Column(Integer, primary_key=True)
-    query: Query
+    query: Query = None
+    metadata: MetaData = None
 
     @declared_attr
     def __tablename__(self):
