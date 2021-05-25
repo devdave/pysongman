@@ -1,5 +1,9 @@
-import appdirs
+"""
+    Common/global application values
+"""
 from pathlib import Path
+import appdirs
+
 
 HERE = Path(__file__).parent
 __version__ = "0.0.5"
