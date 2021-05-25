@@ -1,8 +1,4 @@
 
-SA_ENGINE = None
-SA_FACTORY = None
-
-
 
 from pathlib import Path
 from dataclasses import dataclass
@@ -11,10 +7,13 @@ import sqlalchemy
 from sqlalchemy import create_engine, engine
 from sqlalchemy.ext import declarative
 from sqlalchemy import orm
-from sqlalchemy.orm import scoped_session, sessionmaker, session, query, Session
+from sqlalchemy.orm import scoped_session, sessionmaker, query, Session
 
 from .. import HOME, APP_NAME, DB_FILE
 from .base import Base
+
+SA_ENGINE: sqlalchemy.engine = None
+SA_FACTORY: scoped_session = None
 
 @dataclass
 class SAConnection:
@@ -52,8 +51,6 @@ def initialize_db(create=False, db_location=False) -> SAConnection:
         from .parent_dir import ParentDir
 
         Base.metadata.create_all(SA_ENGINE)
-
-
 
     return SAConnection(SA_ENGINE, session)
 
