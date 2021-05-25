@@ -97,3 +97,4 @@ data_scratchpad/pysongman.sqlite3
 data_scratchpad/pysongman.sqlite3-journal
 temp_home/*
 scratchpads/sqlalc_tests/test.sqlite3
+.idea/pylint.xml
