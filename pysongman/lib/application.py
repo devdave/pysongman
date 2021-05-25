@@ -130,7 +130,7 @@ class Application(QApplication):
     def create_controllers(self):
         self.player_control = PlayerControl(self.playlist)
         self.playlist_control = PlaylistController(self.playlist)
-        self.media_control = MediaController(self.playlist)
+        self.media_control = MediaController()
         self.master_config = None
 
     def setup_connections(self):
@@ -148,7 +148,6 @@ class Application(QApplication):
         log.debug("Toggling medialib %s", toggle)
         if self.media_control.view.isVisible() is False or self.media_control.view.isHidden() is True:
             self.media_control.show()
-            self.media_control.signals.show_config.connect(self.toggle_masterconfig)
             self.media_control.view.activateWindow()
         else:
             self.media_control.hide()
