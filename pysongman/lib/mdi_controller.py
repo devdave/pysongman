@@ -28,7 +28,7 @@ class MDIController(QtCore.QObject):
         self.folders = {}
         self.subviews = {}
 
-        log.debug("%s Config controller initialized", self.__class__.__name__)
+        log.debug("MDI %s controller initialized", self.__class__.__name__)
 
         self.setup_connections()
         self.setup_subwindows()
