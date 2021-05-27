@@ -12,9 +12,9 @@ class MediaConfigWidget(QtWidgets.QWidget):
     def __init__(self, parent_table):
         super(MediaConfigWidget, self).__init__()
         self.parent_table = parent_table
-        self.setupUI()
+        self.setup_ui()
 
-    def setupUI(self):
+    def setup_ui(self):
 
         self.setWindowTitle("Media configuration")
 
