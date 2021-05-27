@@ -1,6 +1,7 @@
 import logging
 import pathlib
 
+from pysongman import App
 from pysongman.models import get_db
 from pysongman.models.parent_dir import ParentDir as ParentDirModel
 from pysongman.tables.parent_dir import ParentTableBridge
@@ -13,9 +14,9 @@ from pysongman.lib.qtd import QtCore, QtWidgets, QFileDialog
 log = logging.getLogger(__name__)
 
 
-class ConfigMediaController(QtCore.QObject):
+class MediaConfigController(QtCore.QObject):
     def __init__(self):
-        super(ConfigMediaController, self).__init__()
+        super(MediaConfigController, self).__init__()
 
         self.table_model = ParentTableBridge()
         self.view = MediaConfigWidget(self.table_model)
@@ -25,6 +26,7 @@ class ConfigMediaController(QtCore.QObject):
         self.view.add_folder.clicked.connect(self.on_click_add_folder)
         self.view.edit_folder.clicked.connect(self.on_click_edit_folder)
         self.view.remove_folder.clicked.connect(self.on_click_remove_folder)
+
 
 
     def on_click_add_folder(self):

@@ -3,7 +3,7 @@ import logging
 import pysongman
 from pysongman.views.config_window import ConfigWindow
 from pysongman.controllers.config.debug import ConfigDebugController
-from .media import ConfigMediaController
+from .media import MediaConfigController
 
 from pysongman.lib.qtd import QtCore, QtWidgets, Qt
 
@@ -39,7 +39,7 @@ class ConfigMasterController(QtCore.QObject):
         log.debug("Connections setup")
 
     def setup_subwindows(self):
-        self.add_controller(ConfigMediaController, "local_media", "Local Media config", show=True)
+        self.add_controller(MediaConfigController, "local_media", "Local Media config", show=True)
         if pysongman.App and pysongman.App.debug_enabled is True:
             self.add_controller(ConfigDebugController, "debug", "Debug data", show=False)
 
