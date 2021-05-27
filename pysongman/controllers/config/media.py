@@ -14,10 +14,9 @@ log = logging.getLogger(__name__)
 
 
 class ConfigMediaController(QtCore.QObject):
-    def __init__(self, optional_title=None):
+    def __init__(self):
         super(ConfigMediaController, self).__init__()
 
-        self.optional_title = optional_title
         self.table_model = ParentTableBridge()
         self.view = MediaConfigWidget(self.table_model)
         self.make_connections()
@@ -26,7 +25,7 @@ class ConfigMediaController(QtCore.QObject):
         self.view.add_folder.clicked.connect(self.on_click_add_folder)
         self.view.edit_folder.clicked.connect(self.on_click_edit_folder)
         self.view.remove_folder.clicked.connect(self.on_click_remove_folder)
-        pass
+
 
     def on_click_add_folder(self):
         user_dir = pathlib.Path.home()
