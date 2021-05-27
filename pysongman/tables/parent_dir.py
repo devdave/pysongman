@@ -28,4 +28,4 @@ class ParentTableBridge(QtCore.QAbstractTableModel):
             if index.column() == 0:
                 return record.id
             else:
-                return record.path
+                return str(record.path)
