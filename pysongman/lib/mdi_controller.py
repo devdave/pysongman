@@ -35,7 +35,7 @@ class MDIController(QtCore.QObject):
 
     def setup_connections(self):
         self.view.menu_tree.itemClicked.connect(self.on_menu_tree_item_clicked)
-        self.view.close_button.clicked.connect(self.on_close)
+        self.view.menu_button.clicked.connect(self.on_close)
         log.debug("Connections setup")
 
 
