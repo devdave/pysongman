@@ -53,7 +53,6 @@ class AudioWindow(QtWidgets.QWidget):
 
         self.body.addLayout(search_line)
 
-
         self.artist_table = QtWidgets.QTableView()
         self.album_table = QtWidgets.QTableView()
         self.songs_table = QtWidgets.QTableView()
