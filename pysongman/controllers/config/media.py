@@ -19,9 +19,9 @@ class ConfigMediaController(QtCore.QObject):
 
         self.table_model = ParentTableBridge()
         self.view = MediaConfigWidget(self.table_model)
-        self.make_connections()
+        self.setup_connections()
 
-    def make_connections(self):
+    def setup_connections(self):
         self.view.add_folder.clicked.connect(self.on_click_add_folder)
         self.view.edit_folder.clicked.connect(self.on_click_edit_folder)
         self.view.remove_folder.clicked.connect(self.on_click_remove_folder)
