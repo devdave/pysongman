@@ -13,6 +13,8 @@ class AudioLibraryController(QObject):
         super(AudioLibraryController, self).__init__()
         self.view = AudioWindow()
 
+        self.setup_models()
+
 
     def setup_models(self):
         self.artist_table = ArtistTable(
