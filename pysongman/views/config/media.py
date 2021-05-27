@@ -18,7 +18,6 @@ class MediaConfigWidget(QtWidgets.QWidget):
 
         self.setWindowTitle("Media configuration")
 
-
         layout = QtWidgets.QGridLayout()
         self.setLayout(layout)
 
@@ -58,4 +57,15 @@ class MediaConfigWidget(QtWidgets.QWidget):
         action_layout.addWidget(self.remove_folder)
 
         vbox.addLayout(action_layout)
+
+        self.scan_media = QtWidgets.QPushButton("Scan folders")
+        self.scan_status = QtWidgets.QLabel()
+
+        scan_layout = QtWidgets.QHBoxLayout()
+        scan_layout.addWidget(self.scan_media)
+        scan_layout.addWidget(self.scan_status)
+
+        vbox.addLayout(scan_layout)
+
         vbox.addStretch()
+
