@@ -3,14 +3,14 @@ import pathlib
 
 import pysongman
 
+from ..models import get_db
+from ..models.song import Song as SongModel
 
 from .qtd import QtCore, Qt, Signal, Slot
 from pybass3.pys2_song import Pys2Song as Song
 
 
 from pybass3 import BassException
-
-
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +27,11 @@ class SongDirectoryCollectorSignals(QtCore.QObject):
     songs_found = Signal(list)
 
     def emit_found_song(self, song: Song):
-        self.song_found.emit(song.file_path.as_posix(), song.tags, song.duration, song.duration_bytes)
+        try:
+            self.song_found.emit(song.file_path.as_posix(), song.tags, song.duration, song.duration_bytes)
+        except OverflowError:
+            log.exception("Overflow on %s", song.file_path)
+
 
 
 
@@ -53,19 +57,30 @@ class SongDirectoryCollector(QtCore.QRunnable):
 
     @Slot()
     def run(self):
-        self._walk_directory_tree(self.starting_dir)
+        conn = get_db()
+        self._walk_directory_tree(self.starting_dir, conn)
         self.signals.songs_found.emit(self.bulk_songs)
         self.signals.work_complete.emit()
 
-    def _walk_directory_tree(self, work_dir: pathlib.Path):
+    def _walk_directory_tree(self, work_dir: pathlib.Path, conn):
 
         files = (element for element in work_dir.iterdir() if element.is_file())
         dirs = (element for element in work_dir.iterdir() if element.is_dir())
 
         for file in files:
+
             try:
-                song = Song(file)
-                song.touch()
+                record = SongModel.GetByPath(file) # type: SongModel
+                if record:
+                    song = Song(file, tags=dict(
+                        title=record.title,
+                        album=record.album.name,
+                        artist=record.artist.name,
+                    ), length_seconds=record.length_seconds, length_bytes=record.length_bytes)
+                else:
+                    song = Song(file)
+                    song.touch()
+
             except BassException:
                 self.signals.song_errored.emit(file.as_posix())
             else:
@@ -73,5 +88,5 @@ class SongDirectoryCollector(QtCore.QRunnable):
                 self.bulk_songs.append(self.transform_song_to_primitives(song))
 
         for dir_path in dirs:
-            self._walk_directory_tree(dir_path)
+            self._walk_directory_tree(dir_path, conn)
 
