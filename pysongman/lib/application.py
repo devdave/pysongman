@@ -115,7 +115,7 @@ class Application(QApplication):
                     if file_dir.is_dir():
                         # self.playlist.add_directory(file_dir, top=True)
                         self._work_pending += 1
-                        worker = self.generate_recursing_song_directory_worker(file_dir)
+                        worker = self.generate_song_directory_worker(file_dir)
                         # worker.signals.song_found.connect(self.on_directory_worker_add_song)
                         worker.signals.songs_found.connect(self.on_directory_worker_add_songs)
                         worker.signals.work_complete.connect(self.on_directory_worker_finished)
@@ -185,11 +185,11 @@ class Application(QApplication):
     def generate_media_scanner_worker(self) -> MedialibScanner:
         return MedialibScanner(valid_suffixes=self.ACCEPTED_SUFFIX)
 
-    def generate_recursing_song_directory_worker(self, file_dir) -> SongDirectoryCollector:
     def execute_media_scanner(self, scanner: MedialibScanner):
         log.debug("Starting media library scanner worker")
         return self._pool.start(scanner)
 
+    def generate_song_directory_worker(self, file_dir) -> SongDirectoryCollector:
         return SongDirectoryCollector(file_dir, recurse=True, valid_suffix=self.ACCEPTED_SUFFIX)
 
     def execute_song_directory_collector(self, collector_worker):
