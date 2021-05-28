@@ -140,9 +140,9 @@ class PlaylistWindow(QtWidgets.QMainWindow):
         self.table.resizeColumnsToContents()
         self.table.hideColumn(0)
         self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setDefaultAlignment(Qt.AlignLeft)
 
-        alignleft = AlignLeftDelegate(self.table)
-        self.table.setItemDelegateForColumn(2, alignleft)
+        self.table.setItemDelegateForColumn(2, AlignLeftDelegate(self.table))
 
         self.body.addWidget(self.table)
         self.body.setStretch(0, 1)
