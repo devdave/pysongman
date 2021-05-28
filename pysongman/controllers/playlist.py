@@ -68,7 +68,12 @@ class Playlist(QtCore.QObject):
         log.debug("Key pressed %r", event.key())
         if event.key() == Qt.Key_J:
             log.debug("Show Search")
+        elif event.key() in [Qt.Key_Enter, Qt.Key_Return]:
+            self.play_selected_record()
 
+    def play_selected_record(self):
+        sel_idx = self.view.table.selectionModel().selectedIndexes()[0]
+        self.playlist.play_song_by_index(sel_idx.row())
 
     def on_menu_add_file(self):
         music_dir = pathlib.Path.home() / "music"
