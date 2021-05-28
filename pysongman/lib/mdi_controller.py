@@ -81,6 +81,8 @@ class MDIController(QtCore.QObject):
 
         controller = self.controllers[identifier]
 
+        controller.reload()
+
         if identifier not in self.subviews:
             sub = self.view.mdi.addSubWindow(controller.view)
             self.subviews[identifier] = sub
