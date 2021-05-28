@@ -27,9 +27,13 @@ class MediaConfigController(QtCore.QObject):
         self.view.edit_folder.clicked.connect(self.on_click_edit_folder)
         self.view.remove_folder.clicked.connect(self.on_click_remove_folder)
 
+    def setup_connections(self):
+        self.view.add_folder.clicked.connect(self.do_click_add_folder)
+        self.view.edit_folder.clicked.connect(self.do_click_edit_folder)
+        self.view.remove_folder.clicked.connect(self.do_click_remove_folder)
 
 
-    def on_click_add_folder(self):
+    def do_click_add_folder(self):
         user_dir = pathlib.Path.home()
         log.debug("Add Folder")
         result = QFileDialog.getExistingDirectory(self.view, "Select music directory", user_dir.as_posix())
@@ -48,10 +52,10 @@ class MediaConfigController(QtCore.QObject):
 
 
 
-    def on_click_edit_folder(self):
+    def do_click_edit_folder(self):
         log.debug("Edit Folder")
 
-    def on_click_remove_folder(self):
+    def do_click_remove_folder(self):
         row_si = self.view.table.selectionModel().selectedIndexes()[0]
         row_num = self.view.table.selectionModel().selectedIndexes()[0].row()
         if row_num:
@@ -62,6 +66,7 @@ class MediaConfigController(QtCore.QObject):
             self.view.table.model().beginResetModel()
             self.view.table.model().endResetModel()
 
+    def do_scan_request(self):
 
     def show(self):
         self.view.show()
