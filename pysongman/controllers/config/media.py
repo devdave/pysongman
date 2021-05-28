@@ -1,14 +1,14 @@
 import logging
 import pathlib
 
-from pysongman import App
+import pysongman
 from pysongman.models import get_db
 from pysongman.models.parent_dir import ParentDir as ParentDirModel
 from pysongman.tables.parent_dir import ParentTableBridge
 
 from pysongman.views.config.media import MediaConfigWidget
 
-from pysongman.lib.qtd import QtCore, QtWidgets, QFileDialog
+from pysongman.lib.qtd import QtCore, QtWidgets, QFileDialog, Signal, Slot
 
 
 log = logging.getLogger(__name__)
@@ -22,16 +22,14 @@ class MediaConfigController(QtCore.QObject):
         self.view = MediaConfigWidget(self.table_model)
         self.setup_connections()
 
-    def setup_connections(self):
-        self.view.add_folder.clicked.connect(self.on_click_add_folder)
-        self.view.edit_folder.clicked.connect(self.on_click_edit_folder)
-        self.view.remove_folder.clicked.connect(self.on_click_remove_folder)
+        self.scan_in_progress = False
 
     def setup_connections(self):
         self.view.add_folder.clicked.connect(self.do_click_add_folder)
         self.view.edit_folder.clicked.connect(self.do_click_edit_folder)
         self.view.remove_folder.clicked.connect(self.do_click_remove_folder)
 
+        self.view.scan_media.clicked.connect(self.do_scan_request)
 
     def do_click_add_folder(self):
         user_dir = pathlib.Path.home()
@@ -48,10 +46,6 @@ class MediaConfigController(QtCore.QObject):
             self.view.table.model().beginResetModel()
             self.view.table.model().endResetModel()
 
-
-
-
-
     def do_click_edit_folder(self):
         log.debug("Edit Folder")
 
@@ -67,6 +61,21 @@ class MediaConfigController(QtCore.QObject):
             self.view.table.model().endResetModel()
 
     def do_scan_request(self):
+        if self.scan_in_progress is True:
+            QtWidgets.QMessageBox.information(self.view, "Scan in progress", "Background is already running")
+
+        self.scan_in_progress = True
+
+        scanner = pysongman.App.generate_media_scanner_worker() # type: MediaLibScanner
+        # Setup signal connects here
+        scanner.signals.completed.connect(self.on_media_scan_complete)
+        scanner.signals.file_processed.connect(lambda fpath: self.view.scan_status.setText(fpath))
+
+        pysongman.App.execute_media_scanner(scanner)
+
+    @Slot()
+    def on_media_scan_complete(self):
+        self.scan_in_progress = False
 
     def show(self):
         self.view.show()
