@@ -20,8 +20,8 @@ class AudioLibraryController(QObject):
         self.artist_table = ArtistTable(
             {
                 "name": dict(fetcher=lambda r: r.name),
-                "Albums": dict(fetcher=lambda r: r.albums.count()),
-                "Songs": dict(fetcher=lambda r: len(r.artists))
+                "Albums": dict(fetcher=lambda r: len(r.albums)),
+                "Songs": dict(fetcher=lambda r: len(r.songs))
 
             }
         )
@@ -34,3 +34,11 @@ class AudioLibraryController(QObject):
 
         self.view.artist_table.setModel(self.artist_table)
         self.view.album_table.setModel(self.album_table)
+
+    def reload(self):
+        self.artist_table.beginResetModel()
+        self.artist_table.endResetModel()
+
+        self.album_table.beginResetModel()
+        self.album_table.endResetModel()
+
