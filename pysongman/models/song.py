@@ -57,7 +57,7 @@ class Song(Base):
 
 
     @classmethod
-    def GetCreateByPath(cls, song_path: pathlib.Path, parent) -> (object, bool):
+    def GetCreateByPath(cls, song_path: pathlib.Path, parent) -> "Song":
 
         if song_path.exists() is False:
             raise ValueError("Providing path doesn't exist: %s" % song_path)
@@ -82,14 +82,14 @@ class Song(Base):
             except BassException:
                 # log.debug("Failed to load %r", song_path)
                 record.is_valid = False
-                return record, False
+                return record
             else:
 
                 record.length_seconds = song.duration
                 record.length_bytes = song.duration_bytes
 
                 artist_name = song_path.name if song.tags['artist'] is None else song.tags['artist']
-                album_name = song_path.parent if song.tags['album'] is None else song.tags['album']
+                album_name = song_path.parent.name if song.tags['album'] is None else song.tags['album']
 
                 record.title = song.tags['title']
                 record.artist = Artist.GetCreate(artist_name)
@@ -99,7 +99,7 @@ class Song(Base):
 
 
 
-        return record, old_record
+        return record
 
     def __repr__(self):
         return f"<Song path={self.path.name}>"
