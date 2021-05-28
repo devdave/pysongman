@@ -6,6 +6,7 @@ import typing
 import pysongman
 from .. import DB_FILE
 from ..lib.song_directory_collector import SongDirectoryCollector
+from ..lib.medialib_scanner import MedialibScanner
 
 
 from .qtd import QApplication, QtCore, Qt, QtGui, Signal, Slot
@@ -181,8 +182,14 @@ class Application(QApplication):
         log.debug("Closing application")
         self.exit(return_code)
 
+    def generate_media_scanner_worker(self) -> MedialibScanner:
+        return MedialibScanner(valid_suffixes=self.ACCEPTED_SUFFIX)
 
     def generate_recursing_song_directory_worker(self, file_dir) -> SongDirectoryCollector:
+    def execute_media_scanner(self, scanner: MedialibScanner):
+        log.debug("Starting media library scanner worker")
+        return self._pool.start(scanner)
+
         return SongDirectoryCollector(file_dir, recurse=True, valid_suffix=self.ACCEPTED_SUFFIX)
 
     def execute_song_directory_collector(self, collector_worker):
