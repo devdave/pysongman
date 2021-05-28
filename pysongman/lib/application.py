@@ -178,7 +178,7 @@ class Application(QApplication):
         self.master_config = None
 
     @Slot(int)
-    def do_close(self, return_code=0):
+    def do_close(self, return_code: int = 0):
         log.debug("Closing application")
         self.exit(return_code)
 
