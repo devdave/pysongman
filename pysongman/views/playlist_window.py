@@ -93,7 +93,7 @@ class PlaylistWindow(QtWidgets.QMainWindow):
 
         self.setWindowFlags(self.windowFlags() & Qt.CustomizeWindowHint)
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowMinMaxButtonsHint)
-        self.setWindowOpacity(0.85)
+        self.setWindowOpacity(0.90)
         log.debug("Playlist window initialized")
 
     def setup_shortcuts(self):
