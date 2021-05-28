@@ -78,6 +78,9 @@ class AudioWindow(QtWidgets.QWidget):
         self.setLayout(self.body)
 
 
-
+    def show(self) -> None:
+        super(AudioWindow, self).show()
+        self.album_table.model().beginResetModel()
+        self.artist_table.model().beginResetModel()
 
 
