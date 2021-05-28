@@ -48,12 +48,12 @@ class Song(Base):
     query: Query
 
     @classmethod
-    def GetByPath(cls, song_path: pathlib.Path, parent):
+    def GetByPath(cls, song_path: pathlib.Path):
 
         if song_path.exists() is False:
             raise ValueError("Providing path doesn't exist: %s" % song_path)
 
-        return cls.query.filter(cls.path == song_path, cls.parent == parent).first()
+        return cls.query.filter(cls.path == song_path).first()
 
 
     @classmethod
