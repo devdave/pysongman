@@ -1,4 +1,5 @@
 from pathlib import Path
+import logging
 
 from .qtd import QtCore, Signal, Slot
 
@@ -10,8 +11,12 @@ from ..models.artist import Artist
 from ..models.album import Album
 from ..models.song import Song
 
+log = logging.getLogger(__name__)
+
+
 class MediaLibScannerSignals(QtCore.QObject):
     completed = Signal()
+    file_processed = Signal(str)
     batch_added = Signal()
 
 
@@ -22,40 +27,42 @@ class MedialibScanner(QtCore.QRunnable):
 
     signals: MediaLibScannerSignals
 
-    def __init__(self, parent_dir: Path):
+    def __init__(self, valid_suffixes=None):
         super(MedialibScanner, self).__init__()
-        self.parent = ParentDir.GetCreate(parent_dir)
+        log.debug("Created new Media Library scanner")
+        self.valid_suffixes = valid_suffixes or self.VALID_SUFFIXES
         self.signals = MediaLibScannerSignals()
 
 
     @Slot()
     def run(self) -> None:
-
+        log.debug("Running")
         conn = get_db()
-        if self.parent.id is None:
-            conn.s.add(self.parent)
-            conn.s.commit()
+        for parent in ParentDir.query.all():  # type: ParentDir
+            log.info("Processing: id=`%d`(%s)", parent.id, parent.path.as_posix())
+            self.scan_directory_tree(parent.path, parent, conn)
 
-        self.scan_directory_tree(self.parent.path)
+        log.debug("Media scanner finished")
         self.signals.completed.emit()
 
-    def scan_directory_tree(self, working_path: Path):
-        conn = get_db()
+        del conn
+
+    def scan_directory_tree(self, working_path: Path, parent, conn, recurse: bool = True):
+        log.debug("Scanning %s", working_path)
         added_records = 0
         files = (file for file in working_path.iterdir() if file.is_file() and file.suffix in self.VALID_SUFFIXES)
         dirs = (subdir for subdir in working_path.iterdir() if subdir.is_dir() and subdir.name.startswith(".") is False)
 
         for file in files:
-            record = Song.GetCreateByPath(file)
+            record = Song.GetCreateByPath(file, parent)
             conn.s.add(record)
-            added_records += 1
 
-        if added_records > 0:
-            conn.s.commit()
-            self.signals.batch_added.emit()
+            self.signals.file_processed.emit(file.as_posix())
 
-        conn.s.close()
+        conn.s.commit()
+        self.signals.batch_added.emit()
 
-        for subdir in dirs:
-            self.scan_directory_tree(subdir)
+        if recurse is True:
+            for subdir in dirs:
+                self.scan_directory_tree(subdir, parent, conn, recurse=recurse)
 
