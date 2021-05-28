@@ -26,11 +26,14 @@ class BaseTable(QtCore.QAbstractTableModel):
         return len(self.column_names) + 1
 
     def rowCount(self, parent:QtCore.QModelIndex=...) -> int:
-        return self.model.query.count()
+        return self._get_query().count()
 
     def data(self, index:QtCore.QModelIndex, role:int=...) -> typing.Any:
         adj_col = index.column()-1
         if role == Qt.DisplayRole:
-            record = self.model.query.offset(index.row()).first()
+            record = self._get_query().offset(index.row()).first()
             if record:
                 return record.id if index.column() == 0 else self.fetchers[adj_col](record)
+
+    def _get_query(self):
+        raise NotImplementedError("Missing _get_query method for subclass %s" % self.__class__.__name__)
