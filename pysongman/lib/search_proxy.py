@@ -47,7 +47,7 @@ class SearchFilterProxy(QtCore.QSortFilterProxyModel):
 
         try:
             if self.filter_string is None:
-                return True
+                return False
 
             elif self.filter_string:
                 results = []
