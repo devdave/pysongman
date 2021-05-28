@@ -89,7 +89,7 @@ class Playlist(QtCore.QObject):
         new_dir = QtWidgets.QFileDialog.getExistingDirectory(self.view, "Select directory to add", music_dir.as_posix())
         log.debug("on_menu_add_filder %s", new_dir)
         if new_dir:
-            worker = pysongman.App.generate_recursing_song_directory_worker(new_dir) # type: SongDirectoryCollector
+            worker = pysongman.App.generate_song_directory_worker(new_dir) # type: SongDirectoryCollector
             worker.signals.song_found.connect(self.on_directory_worker_add_song)
             self.playlist.add_directory(new_dir, top=True, recurse=False, surpress_emit=False)
 
