@@ -61,7 +61,8 @@ class SearchController(QtCore.QObject):
         debug = 1
 
     def on_search_edited(self, text):
-        self.proxy_model.setFilterString(text)
+        if len(text) >= 3:
+            self.proxy_model.setFilterString(text)
 
     def on_search_returned(self):
         log.debug("Play first entry if it exists")
