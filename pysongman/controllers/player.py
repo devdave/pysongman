@@ -4,7 +4,7 @@ from pathlib import Path
 
 from .. import USE_PYSIDE
 from ..views.player_window import PlayerWindow
-from ..lib.qtd import QObject, Signal, QtWidgets, QtGui, Qt
+from ..lib.qtd import QObject, Signal, QtWidgets, QtGui, Qt, Slot
 
 from pybass3.pys2_playlist import Pys2Playlist
 
@@ -93,7 +93,7 @@ class PlayerControl(QObject):
 
         if dialog.exec_():
             paths = dialog.selectedFiles()
-            log.debug("User add request %s", paths)
+            log.debug("User add file request %s", paths)
 
             for song_path in paths:
                 song = self.playlist.add_song(Path(song_path))
@@ -120,21 +120,27 @@ class PlayerControl(QObject):
                 mb.exec_()
 
 
+    @Slot()
     def on_previous(self):
         self.playlist.previous()
 
+    @Slot()
     def on_play(self):
         self.playlist.play()
 
+    @Slot()
     def on_pause(self):
         self.playlist.pause()
 
+    @Slot()
     def on_stop(self):
         self.playlist.stop()
 
+    @Slot()
     def on_next(self):
         self.playlist.next()
 
+    @Slot()
     def on_song_changed(self, song_id):
         log.debug("Song was changed")
         current_song_label = f"{self.playlist.current.title}({self.playlist.current.duration_time})"
@@ -143,7 +149,7 @@ class PlayerControl(QObject):
         self.view.progress_bar.setRange(0, self.playlist.current.duration_bytes)
         self.view.progress_bar.setValue(self.playlist.current.position_bytes)
 
-
+    @Slot()
     def on_playlist_tick(self):
         if self.playlist.current is not None:
             self.view.time_display.setText(self.playlist.current.position_time)
@@ -151,6 +157,7 @@ class PlayerControl(QObject):
         else:
             log.error("Playlist ticked but current is None, that shouldn't be happening")
 
+    @Slot()
     def on_random_clicked(self, is_toggled):
         log.debug("Random toggled %s", is_toggled)
 
@@ -159,21 +166,25 @@ class PlayerControl(QObject):
         else:
             self.playlist.set_sequential(restart_and_play=False)
 
-
+    @Slot()
     def on_progress_pressed(self):
         self.progress_slider_pressed = True
 
+    @Slot()
     def on_progress_released(self):
         self.progress_slider_pressed = False
 
+    @Slot()
     def on_progress_changed_unsafe(self):
         if self.playlist.current is not None:
             self.playlist.current.move2position_bytes(self.view.progress_bar.value())
 
+    @Slot()
     def on_progress_clicked(self, value):
         if self.playlist.current is not None:
             self.playlist.current.move2position_bytes(value)
 
+    @Slot()
     def on_progress_slider_value_changed(self):
         """
             To prevent a recursive nightmare, only move position if the user is doing it.
@@ -182,6 +193,7 @@ class PlayerControl(QObject):
         if self.progress_slider_pressed is True and self.playlist.current is not None:
             self.playlist.current.move2position_bytes(self.view.progress_bar.value())
 
+    @Slot()
     def on_close(self):
         log.debug("Player closed")
         self.signals.view_closed.emit()
@@ -194,6 +206,7 @@ class PlayerControl(QObject):
     def toggle_medialib(self):
         self.signals.show_medialib.emit(True)
 
+    @Slot()
     def on_keypress(self, event: QtGui.QKeyEvent):
 
         if event.key() in self.tracked_keys:
