@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Query
 
-from ..lib.qtd import QtCore
 from ..models.album import Album as AlbumModel
 from .base import BaseTable
+
 
 class AlbumTable(BaseTable):
 
