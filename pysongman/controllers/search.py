@@ -68,6 +68,7 @@ class SearchController(QtCore.QObject):
         log.debug("Play first entry if it exists")
         if self.proxy_model.rowCount() > 0:
             pid = self.proxy_model.index(0,0)
+            test = self.proxy_model.index(0,0).data(Qt.DisplayRole)
             data = self.proxy_model.itemData(pid)
             song_id = data[0]
             log.debug("Play SID %s", song_id)
