@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 song_path = str
 song_tags = dict
 song_len_seconds = float
-song_len_bytes = int
+song_len_bytes = float
 
 
 class SongDirectoryCollectorSignals(QtCore.QObject):
@@ -27,6 +27,9 @@ class SongDirectoryCollectorSignals(QtCore.QObject):
     songs_found = Signal(list)
 
     def emit_found_song(self, song: Song):
+        if song.duration >= 17241847040 or song.duration_bytes >= 17241847040:
+            debug = 1
+
         try:
             self.song_found.emit(song.file_path.as_posix(), song.tags, song.duration, song.duration_bytes)
         except OverflowError:
