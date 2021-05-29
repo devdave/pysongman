@@ -37,3 +37,4 @@ class BaseTable(QtCore.QAbstractTableModel):
 
     def _get_query(self):
         raise NotImplementedError("Missing _get_query method for subclass %s" % self.__class__.__name__)
+
