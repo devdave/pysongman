@@ -40,17 +40,19 @@ class SongDirectoryCollectorSignals(QtCore.QObject):
 
 class SongDirectoryCollector(QtCore.QRunnable):
 
+    VALID_SUFFIX = [".mp3", ".mp4", ".wav", ".ogg", ".opus"]
+
     starting_dir: pathlib.Path
     recurse: bool
     signals: SongDirectoryCollectorSignals
     valid_suffix: list
     bulk_songs: list
 
-    def __init__(self, starting_dir: pathlib.Path, recurse: bool=False, valid_suffix:list=None):
+    def __init__(self, starting_dir: pathlib.Path, recurse: bool = False, valid_suffix: list = None):
         super(SongDirectoryCollector, self).__init__()
         self.starting_dir = starting_dir
         self.recurse = recurse
-        self.valid_suffix = valid_suffix
+        self.valid_suffix = valid_suffix or self.VALID_SUFFIX
         self.bulk_songs = []
 
         self.signals = SongDirectoryCollectorSignals()
@@ -67,7 +69,7 @@ class SongDirectoryCollector(QtCore.QRunnable):
 
     def _walk_directory_tree(self, work_dir: pathlib.Path, conn):
 
-        files = (element for element in work_dir.iterdir() if element.is_file())
+        files = (element for element in work_dir.iterdir() if element.is_file() and element.suffix in self.valid_suffix)
         dirs = (element for element in work_dir.iterdir() if element.is_dir())
 
         for file in files:
