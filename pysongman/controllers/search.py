@@ -17,6 +17,7 @@ class SearchController(QtCore.QObject):
 
     def __init__(self, playlist_table, playlist_obj):
         super(SearchController, self).__init__()
+
         self.pl_table = playlist_table
         self.pl_obj = playlist_obj
 
@@ -27,6 +28,7 @@ class SearchController(QtCore.QObject):
 
         self.view.results.setModel(self.proxy_model)
         self.setup()
+        log.debug("Search controller started")
 
     def setup(self):
 
@@ -49,6 +51,7 @@ class SearchController(QtCore.QObject):
         pass
 
     def on_search_double_clicked(self):
+        log.debug("Processing search double clicked")
         selected = self.view.results.selectionModel().selection().value(0).indexes()[0]
         row = selected.row()
         pid = self.proxy_model.index(row, 0)
@@ -62,6 +65,7 @@ class SearchController(QtCore.QObject):
 
     def on_search_edited(self, text):
         if len(text) >= 3:
+            log.debug("Processing search input edited %r", text)
             self.proxy_model.setFilterString(text)
 
     def on_search_returned(self):
@@ -92,6 +96,7 @@ class SearchController(QtCore.QObject):
         self.view.activateWindow()
 
     def do_play_selected_result(self):
+        log.debug("Play selected result")
         selected = self.view.results.selectionModel().selection()
 
         try:
@@ -101,9 +106,9 @@ class SearchController(QtCore.QObject):
             data = self.proxy_model.itemData(pid)
             song_id = data[Qt.DisplayRole]
             self.pl_obj.play_song_by_id(song_id)
-            self.view.search.setText("")
+            # self.view.search.setText("")
             self.view.hide()
-            self.proxy_model.setFilterString(None)
+            # self.proxy_model.setFilterString(None)
         except IndexError:
             log.debug("Index error when trying to find index")
             pass
@@ -112,6 +117,7 @@ class SearchController(QtCore.QObject):
     def eventFilter(self, watched:QtCore.QObject, event:QtCore.QEvent) -> bool:
         if watched is self.view.results and event.type() == QtCore.QEvent.KeyPress:
             if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+                log.debug("Event filter triggered on return/enter")
                 self.do_play_selected_result()
                 
         return super(SearchController, self).eventFilter(watched, event)
