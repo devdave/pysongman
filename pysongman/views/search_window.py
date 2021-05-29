@@ -1,8 +1,8 @@
-from .. import USE_PYSIDE
-
+import logging
 
 from ..lib.qtd import QtCore, QtWidgets, QtGui, Qt
 
+log = logging.getLogger(__name__)
 
 class SearchWindowSignals(QtCore.QObject):
     """
@@ -47,17 +47,17 @@ class SearchWindow(QtWidgets.QWidget):
         down_pressed.activated.connect(self.shift_focus_to_results)
 
     def shift_focus_to_results(self):
+        log.debug("Shifting focus to results")
         self.results.setFocus()
 
     def eventFilter(self, watched:QtCore.QObject, event:QtCore.QEvent) -> bool:
         if watched == self.search:
             if event.type() == QtCore.QEvent.KeyPress:
                 if event.key() in (Qt.Key_Down, Qt.Key_Return, Qt.Key_Enter,):
+                    log.debug("Key down/returned")
                     self.signals.key_search_down.emit()
                     self.results.setFocus()
                     return False
 
-                
         return super(SearchWindow, self).eventFilter(watched, event)
-        
-        
+
