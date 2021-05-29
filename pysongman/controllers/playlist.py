@@ -91,7 +91,7 @@ class Playlist(QtCore.QObject):
         if new_dir:
             worker = pysongman.App.generate_song_directory_worker(new_dir) # type: SongDirectoryCollector
             worker.signals.song_found.connect(self.on_directory_worker_add_song)
-            self.playlist.add_directory(new_dir, top=True, recurse=False, surpress_emit=False)
+            self.playlist.add_directory(new_dir, top=True, recurse=False, suppress_emit=False)
 
     def on_directory_worker_add_song(self, song_path: str, tags: dict, length_seconds: float, length_bytes: int):
         song = Song(pathlib.Path(song_path), tags=tags, length_seconds=length_seconds, length_bytes=length_bytes)
