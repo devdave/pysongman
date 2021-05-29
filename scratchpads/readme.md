@@ -60,6 +60,7 @@ https://stackoverflow.com/questions/19001933/qt-hide-column-in-qtableview
 https://stackoverflow.com/questions/46505130/creating-a-marquee-effect-in-pyside
 https://stackoverflow.com/questions/35333236/how-to-round-qwidget-corners
 https://stackoverflow.com/questions/15561608/detecting-enter-on-a-qlineedit-or-qpushbutton
+https://stackoverflow.com/questions/20930764/how-to-add-a-right-click-menu-to-each-cell-of-qtableview-in-pyqt
 
 Web blogs/forums
 ================
