@@ -1,11 +1,6 @@
 import logging
 
-from .. import USE_PYSIDE
-
-
-if USE_PYSIDE is True:
-    from PySide2 import QtCore
-    from PySide2.QtCore import Qt
+from pysongman.lib.qtd import QtCore, Qt
 
 from ..tables.playlist import PlaylistTableModel
 
