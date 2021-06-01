@@ -4,9 +4,8 @@
 """
 import logging
 
-import PySide2
-from PySide2 import QtWidgets
-from PySide2 import QtCore
+
+from pysongman.lib.qtd import QtCore, Qt, QtWidgets,QtGui
 
 log = logging.getLogger(__name__)
 
