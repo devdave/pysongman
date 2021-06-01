@@ -6,6 +6,7 @@ from ..tables.playlist import PlaylistTableModel
 
 log = logging.getLogger(__name__)
 
+
 class SearchFilterProxy(QtCore.QSortFilterProxyModel):
 
     filter_string: QtCore.QRegExp
@@ -37,8 +38,8 @@ class SearchFilterProxy(QtCore.QSortFilterProxyModel):
     def filterAcceptsRow(self, source_row:int, source_parent:QtCore.QModelIndex) -> bool:
         model = self.sourceModel()
         song = model.getSong(source_row)
-        should_free = True
-        # should_free = True if song.handle is None else False
+
+        should_free = True if song.handle is None else False
 
         try:
             if self.filter_string is None:
