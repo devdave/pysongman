@@ -13,7 +13,7 @@ class QClickableSlider(QtWidgets.QSlider):
 
     progress_changed = QtCore.Signal(int)
 
-    def mousePressEvent(self, ev:PySide2.QtGui.QMouseEvent) -> None:
+    def mousePressEvent(self, ev:QtGui.QMouseEvent) -> None:
         super(QClickableSlider, self).mousePressEvent(ev)
         if ev.button() == QtCore.Qt.LeftButton:
             ev.accept()
