@@ -27,9 +27,6 @@ class SongDirectoryCollectorSignals(QtCore.QObject):
     songs_found = Signal(list)
 
     def emit_found_song(self, song: Song):
-        if song.duration >= 17241847040 or song.duration_bytes >= 17241847040:
-            debug = 1
-
         try:
             self.song_found.emit(song.file_path.as_posix(), song.tags, song.duration, song.duration_bytes)
         except OverflowError:
@@ -89,9 +86,22 @@ class SongDirectoryCollector(QtCore.QRunnable):
             except BassException:
                 self.signals.song_errored.emit(file.as_posix())
             else:
+
+                if song.duration >= 17241847040 or song.duration_bytes >= 17241847040:
+                    song = self.fix_invalid_song(song)
+
                 self.signals.emit_found_song(song)
                 self.bulk_songs.append(self.transform_song_to_primitives(song))
 
         for dir_path in dirs:
             self._walk_directory_tree(dir_path, conn)
 
+
+    def fix_invalid_song(self, song: Song):
+
+        song._length_bytes = None
+        song.touch()
+        if song.duration >= 17241847040 or song.duration_bytes >= 17241847040:
+            log.error("Song %s is still overflowing in duration time and bytes", song.file_path.name)
+
+        return song
