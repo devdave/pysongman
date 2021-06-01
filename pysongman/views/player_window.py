@@ -6,13 +6,8 @@ import logging
 import typing as T
 import pathlib
 
-import PySide2
-from PySide2.QtGui import QPixmap
-from PySide2 import QtCore
-from PySide2.QtCore import Qt
-from PySide2 import QtWidgets
-from PySide2.QtWidgets import QAction, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
-from PySide2 import QtGui
+from pysongman.lib.qtd import QtCore, Qt, QtWidgets, QtGui
+from pysongman.lib.qtd import QPixmap, QAction, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
 
 from .. import ICON_DIR
 from .. import CSS_DIR
@@ -298,9 +293,7 @@ class PlayerWindow(QtWidgets.QMainWindow):
 
         self.m_help = self.menuBar().addMenu("&Help")
 
-
         return
-
 
     def load_stylesheet(self, filepath: T.Union[str, pathlib.Path] = None) -> None:
         """
@@ -323,6 +316,6 @@ class PlayerWindow(QtWidgets.QMainWindow):
         else:
             self.mute_btn.setIcon(self.icons['volume-up'])
 
-    def focusInEvent(self, event:PySide2.QtGui.QFocusEvent) -> None:
+    def focusInEvent(self, event: QtGui.QFocusEvent) -> None:
         super(PlayerWindow, self).focusInEvent(event)
         logging.debug("Got focus")

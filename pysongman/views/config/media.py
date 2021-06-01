@@ -1,9 +1,7 @@
-from pysongman import USE_PYSIDE
+
 from pysongman.tables.parent_dir import ParentTableBridge
 
-if USE_PYSIDE is True:
-    from PySide2 import QtWidgets, QtCore
-    from PySide2.QtCore import Qt
+from pysongman.lib.qtd import QtCore, Qt, QtWidgets,QtGui
 
 
 
