@@ -4,6 +4,7 @@ import sqlite3
 
 from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime, func, Boolean
 from sqlalchemy.orm import relationship, Query
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from pybass3 import Song as SongObj, BassException
 
@@ -28,6 +29,13 @@ class Song(Base):
     stat_modified = Column(Integer())  # uses Path.stat.st_modified
     length_seconds = Column(Float())
     length_bytes = Column(Integer())
+
+    @hybrid_property
+    def time(self):
+        seconds = int(self.length_seconds % 60)
+        minutes = int(self.length_seconds // 60)
+        return f"{minutes}:{seconds:02}"
+
 
     added_to_library = Column(DateTime(), server_default=func.now())
     last_played = Column(DateTime(), default=None)

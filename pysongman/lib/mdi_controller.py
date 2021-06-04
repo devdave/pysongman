@@ -39,8 +39,7 @@ class MDIController(QtCore.QObject):
         log.debug("Connections setup")
 
 
-
-    def add_controller(self, controller_cls, identifier, label, group_id = None, show = False):
+    def add_controller(self, controller_obj, identifier, label, group_id = None, show = False):
         log.debug("Adding controller %s(%s) to %s", label, identifier, group_id)
 
         if group_id is None:
@@ -50,7 +49,7 @@ class MDIController(QtCore.QObject):
         else:
             raise ValueError(f"{group_id!r} is not a valid folder. options are {self.folders.keys()!r}")
 
-        self.controllers[identifier] = controller_cls()
+        self.controllers[identifier] = controller_obj
 
         self.folders[identifier] = QtWidgets.QTreeWidgetItem(root, [label])
         self.folders[identifier].setData(2, QtCore.Qt.EditRole, identifier)

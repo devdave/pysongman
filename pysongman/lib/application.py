@@ -77,7 +77,7 @@ class Application(QApplication):
 
         self.playlist = Playlist()
 
-    def configure(self, song_path: list = None, nuke_everything: bool = False, debug_flag: bool = False):
+    def configure(self, song_path: list = None, nuke_everything: bool = False, debug_flag: bool = False, run=True):
         log.debug("Running startup")
 
         self.song_path = song_path
@@ -99,34 +99,33 @@ class Application(QApplication):
         else:
             initialize_db(create=False, db_location=self._database_file)
 
-        self.create_controllers()
-        self.setup_connections()
+        if run is True:
+            self.create_controllers()
+            self.setup_connections()
 
-        self.playlist_control.show()
-        self.player_control.show()
+            self.playlist_control.show()
+            self.player_control.show()
 
-        if self.song_path:
-            if isinstance(self.song_path, list) is False:
-                raise ValueError(f"Expected song_path to be a list but got {type(self.song_path)}{song_path=} instead")
+            if self.song_path:
+                if isinstance(self.song_path, list) is False:
+                    raise ValueError(f"Expected song_path to be a list but got {type(self.song_path)}{song_path=} instead")
 
-            for element in self.song_path:
-                file_dir = Path(element)
-                if file_dir.exists():
-                    if file_dir.is_dir():
-                        # self.playlist.add_directory(file_dir, top=True)
-                        self._work_pending += 1
-                        worker = self.generate_song_directory_worker(file_dir)
-                        # worker.signals.song_found.connect(self.on_directory_worker_add_song)
-                        worker.signals.songs_found.connect(self.on_directory_worker_add_songs)
-                        worker.signals.work_complete.connect(self.on_directory_worker_finished)
-                        self.execute_song_directory_collector(worker)
+                for element in self.song_path:
+                    file_dir = Path(element)
+                    if file_dir.exists():
+                        if file_dir.is_dir():
+                            # self.playlist.add_directory(file_dir, top=True)
+                            self._work_pending += 1
+                            worker = self.generate_song_directory_worker(file_dir)
+                            # worker.signals.song_found.connect(self.on_directory_worker_add_song)
+                            worker.signals.songs_found.connect(self.on_directory_worker_add_songs)
+                            worker.signals.work_complete.connect(self.on_directory_worker_finished)
+                            self.execute_song_directory_collector(worker)
 
 
-                    elif file_dir.is_file():
-                        self.playlist.add_song_by_path(file_dir)
+                        elif file_dir.is_file():
+                            self.playlist.add_song_by_path(file_dir)
 
-            if len(self.playlist) > 0 and self._work_pending <= 0:
-                self.playlist.play()
 
     def create_controllers(self):
         self.player_control = PlayerControl(self.playlist)
@@ -197,6 +196,7 @@ class Application(QApplication):
 
     @Slot()
     def on_directory_worker_finished(self):
+        self._work_pending -= 1
         if len(self.playlist) > 0:
             self.playlist.play()
 

@@ -55,8 +55,8 @@ class SearchController(QtCore.QObject):
         selected = self.view.results.selectionModel().selection().value(0).indexes()[0]
         row = selected.row()
         pid = self.proxy_model.index(row, 0)
-        data = self.proxy_model.itemData(pid)
-        song_id = data[Qt.DisplayRole]
+        song_id = self.proxy_model.index(row, 0).data(Qt.DisplayRole)
+
         self.pl_obj.play_song_by_id(song_id)
         self.view.search.setText("")
         self.view.hide()

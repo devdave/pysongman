@@ -42,7 +42,7 @@ class PlaylistTableModel(QtCore.QAbstractTableModel):
 
         return None
 
-    def getSong(self, row_number) -> Pys2Song:
+    def getSong(self, row_number: int) -> Pys2Song:
         return self.playlist.get_song_by_row(row_number)
 
     def data(self, index: QtCore.QModelIndex, role: int = ...) -> typing.Any:

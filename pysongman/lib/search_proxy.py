@@ -36,8 +36,7 @@ class SearchFilterProxy(QtCore.QSortFilterProxyModel):
         self.invalidateFilter()
 
     def filterAcceptsRow(self, source_row:int, source_parent:QtCore.QModelIndex) -> bool:
-        model = self.sourceModel()
-        song = model.getSong(source_row)
+        song = self.sourceModel().getSong(source_row)
 
         should_free = True if song.handle is None else False
 

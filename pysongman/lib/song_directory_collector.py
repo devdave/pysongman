@@ -86,8 +86,7 @@ class SongDirectoryCollector(QtCore.QRunnable):
             except BassException:
                 self.signals.song_errored.emit(file.as_posix())
             else:
-
-                if song.duration >= 17241847040 or song.duration_bytes >= 17241847040:
+                if song.duration > 9000 or song.duration_bytes >= 17200000000:
                     song = self.fix_invalid_song(song)
 
                 self.signals.emit_found_song(song)
@@ -103,5 +102,12 @@ class SongDirectoryCollector(QtCore.QRunnable):
         song.touch()
         if song.duration >= 17241847040 or song.duration_bytes >= 17241847040:
             log.error("Song %s is still overflowing in duration time and bytes", song.file_path.name)
+
+        if song.duration > 9000 or song.duration_bytes >= 17200000000:
+            import mutagen
+            meta = mutagen.File(song.file_path)
+            song._length_bytes = song.file_path.stat().st_size
+            song._length_seconds = meta.info.length
+
 
         return song

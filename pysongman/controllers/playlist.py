@@ -20,7 +20,7 @@ class Playlist(QtCore.QObject):
     table_model: PlaylistTableModel
     view: PlaylistWindow
 
-    def __init__(self, playlist_obj):
+    def __init__(self, playlist_obj: Pys2Playlist):
         """
 
         Args:
@@ -47,7 +47,9 @@ class Playlist(QtCore.QObject):
         self.view.signals.key_presssed.connect(self.on_keypress)
 
         self.view.table.doubleClicked.connect(self.on_row_doubleclicked)
+
         self.playlist.signals.song_changed.connect(self.on_song_changed)
+        self.playlist.signals.playlist_cleared.connect(self.on_playlist_cleared)
 
         self.view.signals.search_requested.connect(lambda : self.search.show())
 
@@ -114,3 +116,8 @@ class Playlist(QtCore.QObject):
         song_index = self.playlist.get_indexof_song_by_id(song_id)
         self.view.table.selectRow(song_index)
         self.view.table.resizeColumnsToContents()
+
+
+    def on_playlist_cleared(self):
+        self.table_model.beginResetModel()
+        self.table_model.endResetModel()
