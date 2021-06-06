@@ -52,7 +52,7 @@ class Application(QApplication):
     master_config: typing.Union[ConfigMasterController, None]
 
     def __init__(self, here=None, home=None, configured_file=None):
-        super(Application, self).__init__()
+        super(Application, self).__init__([])
         log.debug(f"Initialized Application with {here=}, {home=}, {configured_file=}")
 
         self._here = here
