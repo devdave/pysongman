@@ -8,6 +8,7 @@ import pathlib
 
 from pysongman.lib.qtd import QtCore, Qt, QtWidgets, QtGui
 from pysongman.lib.qtd import QPixmap, QAction, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+from pysongman.lib.qtd import QIcon
 
 from .. import ICON_DIR
 from .. import CSS_DIR
@@ -91,7 +92,8 @@ class PlayerWindow(QtWidgets.QMainWindow):
         ico_files = [file for file in ICON_DIR.iterdir() if file.is_file() and file.name.endswith(".png")]
         for ifile in ico_files:  # type: pathlib.Path
             name, _ = ifile.name.split(".", 1)
-            icons[name] = QPixmap(str(ifile.absolute()))
+            pmap = QPixmap(str(ifile.absolute()))
+            icons[name] = QIcon(pmap)
 
         self.icons = icons
         return icons
