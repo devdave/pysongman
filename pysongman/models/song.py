@@ -6,7 +6,8 @@ from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime, fun
 from sqlalchemy.orm import relationship, Query
 from sqlalchemy.ext.hybrid import hybrid_property
 
-from pybass3 import Song as SongObj, BassException
+from pybass3 import BassException
+from pybass3.pys2_song import Pys2Song as SongObj
 
 from . import initialize_db
 from .artist import Artist
