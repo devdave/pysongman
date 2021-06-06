@@ -110,6 +110,21 @@ class Song(Base):
 
         return record
 
+    @classmethod
+    def GetSongObj(cls, record_id):
+        record = cls.query.filter(cls.id == record_id).one()  # Type: Song
+
+        return SongObj(
+            file_path=record.path,
+            length_seconds=record.length_seconds,
+            length_bytes=record.length_bytes,
+            tags=dict(
+                artist=record.artist.name,
+                album=record.album.name,
+                title=record.title)
+        )
+
+
     def __repr__(self):
         return f"<Song path={self.path.name}>"
 
