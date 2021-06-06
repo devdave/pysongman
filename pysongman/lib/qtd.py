@@ -1,13 +1,12 @@
-try:
-    from PySide2.QtWidgets import QApplication, QFileDialog, QLabel, QHBoxLayout, QVBoxLayout
-    from PySide2.QtWidgets import QLabel, QPushButton, QLineEdit, QFrame, QMenu, QAction
-    from PySide2.QtWidgets import QAction, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
-    from PySide2 import QtCore
-    from PySide2.QtCore import Qt, Signal, Slot, QObject, QSortFilterProxyModel
-    from PySide2 import QtGui, QtWidgets
-    import PySide2
-    from PySide2.QtGui import QPixmap
 
+import os
+os.environ['QT_API'] = "pyside2"
 
-except ImportError:
-    raise NotImplementedError("Missing PyQT5")
+import qtpy
+from qtpy.QtWidgets import QApplication, QFileDialog, QLabel, QHBoxLayout, QVBoxLayout
+from qtpy.QtWidgets import QLabel, QPushButton, QLineEdit, QFrame, QMenu, QAction
+from qtpy.QtWidgets import QAction, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+from qtpy import QtCore
+from qtpy.QtCore import Qt, Signal, Slot, QObject, QSortFilterProxyModel
+from qtpy import QtGui, QtWidgets
+from qtpy.QtGui import QPixmap, QIcon
