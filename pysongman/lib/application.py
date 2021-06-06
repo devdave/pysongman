@@ -141,6 +141,8 @@ class Application(QApplication):
         self.player_control.signals.key_pressed.connect(self.on_key_pressed)
         self.player_control.signals.show_config.connect(self.toggle_masterconfig)
 
+        self.media_control.signals.new_playlist.connect(self.on_new_db_playlist)
+
         log.debug("Application connections setup")
 
     @Slot(bool)
@@ -229,4 +231,27 @@ class Application(QApplication):
 
     def on_medialibrary_rescan_request(self):
         pass
+
+    @Slot(list)
+    def on_new_db_playlist(self, song_ids):
+
+        def batch_ids(iterable, size=100):
+            l = len(iterable)
+            for index in range(0, l, size):
+                yield iterable[index:min(index+size, l)]
+
+        log.debug("I got %d new songs", len(song_ids))
+        self.playlist.clear()
+        for fetch_ids in batch_ids(song_ids):
+            for record in SongModel.query.filter(SongModel.id.in_(fetch_ids)): # type: SongModel
+                song = Song(record.path,
+                            tags=dict(title=record.title, album=record.album.name, artist=record.artist.name),
+                            length_bytes=record.length_bytes, length_seconds=record.length_seconds
+                )
+                self.playlist.add_song(song, add2queue=True, supress_emit=True)
+
+        self.playlist_control.table_model.beginResetModel()
+        self.playlist_control.table_model.endResetModel()
+
+        self.playlist.play()
 
