@@ -50,8 +50,10 @@ class SearchFilterProxy(QtCore.QSortFilterProxyModel):
 
                     if test.indexIn(song.title) != -1:
                         results.append(True)
+                        break
                     elif test.indexIn(song.file_path.as_posix()) != -1:
                         results.append(True)
+                        break
                     else:
                         results.append(False)
 

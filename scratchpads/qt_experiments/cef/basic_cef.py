@@ -70,11 +70,6 @@ def main():
     check_versions()
     sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
     settings = {}
-    if MAC:
-        # Issue #442 requires enabling message pump on Mac
-        # in Qt example. Calling cef.DoMessageLoopWork in a timer
-        # doesn't work anymore.
-        settings["external_message_pump"] = True
 
     cef.Initialize(settings)
     app = CefApplication(sys.argv)
@@ -94,14 +89,7 @@ def check_versions():
     print("[qt.py] CEF Python {ver}".format(ver=cef.__version__))
     print("[qt.py] Python {ver} {arch}".format(
             ver=platform.python_version(), arch=platform.architecture()[0]))
-    if PYQT4 or PYQT5:
-        print("[qt.py] PyQt {v1} (qt {v2})".format(
-              v1=PYQT_VERSION_STR, v2=qVersion()))
-    elif PYSIDE:
-        print("[qt.py] PySide {v1} (qt {v2})".format(
-              v1=PySide.__version__, v2=QtCore.__version__))
-    elif PYSIDE2:
-        print("[qt.py] PySide2 {v1} (qt {v2})".format(
+    print("[qt.py] PySide2 {v1} (qt {v2})".format(
               v1=PySide2.__version__, v2=QtCore.__version__))
     # CEF Python version requirement
     assert cef.__version__ >= "55.4", "CEF Python v55.4+ required to run this"
@@ -116,14 +104,7 @@ class MainWindow(QMainWindow):
             self.setAttribute(Qt.WA_DeleteOnClose, True)
         self.cef_widget = None
         self.navigation_bar = None
-        if PYQT4:
-            self.setWindowTitle("PyQt4 example")
-        elif PYQT5:
-            self.setWindowTitle("PyQt5 example")
-        elif PYSIDE:
-            self.setWindowTitle("PySide example")
-        elif PYSIDE2:
-            self.setWindowTitle("PySide2 example")
+        self.setWindowTitle("PySide2 example")
         self.setFocusPolicy(Qt.StrongFocus)
         self.setupLayout()
 
@@ -145,11 +126,7 @@ class MainWindow(QMainWindow):
         frame.setLayout(layout)
         self.setCentralWidget(frame)
 
-        if (PYSIDE2 or PYQT5) and WINDOWS:
-            # On Windows with PyQt5 main window must be shown first
-            # before CEF browser is embedded, otherwise window is
-            # not resized and application hangs during resize.
-            self.show()
+        self.show()
 
         # Browser can be embedded only after layout was set up
         self.cef_widget.embedBrowser()

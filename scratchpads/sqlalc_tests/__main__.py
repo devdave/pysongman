@@ -10,11 +10,13 @@ from pybass3 import Song as BassSong
 from pybass3 import BassException
 from pybass3.bass_tags import BassTags
 
-from .models import initialize_db, get_db, SAConnection
-from .models.song import Song as SongModel
-from .models.artist import Artist
-from .models.album import Album
-from .models.parent_dir import ParentDir
+from pysongman.models import initialize_db, get_db, SAConnection
+# from .models import initialize_db, get_db, SAConnection
+
+from pysongman.models.song import Song as SongModel
+from pysongman.models.artist import Artist
+from pysongman.models.album import Album
+from pysongman.models.parent_dir import ParentDir
 
 from .lib.ffprobe import FFProbe
 from .lib.ffmpeg_repair import FFMpegRepair

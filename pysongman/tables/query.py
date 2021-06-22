@@ -60,7 +60,10 @@ class QueryTable(QtCore.QAbstractTableModel):
 
     def headerData(self, section:int, orientation: QtCore.Qt.Orientation, role:int=...) -> typing.Any:
         if role == Qt.DisplayRole:
-            return "RID" if section == 0 else self.column_names[section-1]
+            try:
+                return "RID" if section == 0 else self.column_names[section-1]
+            except IndexError:
+                debug = 1
 
     def columnCount(self, parent:QtCore.QModelIndex=...) -> int:
         return len(self.column_names) + 1

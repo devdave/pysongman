@@ -6,6 +6,8 @@ from pybass3.pys2_playlist import Pys2Playlist
 from ..lib.mdi_controller import MDIController
 from ..views.media_window import MediaWindow
 from ..controllers.library.audio import AudioLibraryController
+from ..controllers.library.most_played import MostPlayedLibraryController
+from ..controllers.library.never_played import NeverPlayedLibraryController
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +29,16 @@ class MediaController(MDIController):
         audio_controller = AudioLibraryController()
         audio_controller.signals.new_playlist.connect(self.handle_new_playlist)
 
+        most_played = MostPlayedLibraryController()
+        most_played.signals.new_playlist.connect(self.handle_new_playlist)
+
+        never_played = NeverPlayedLibraryController()
+        never_played.signals.new_playlist.connect(self.handle_new_playlist)
+
         self.add_controller(audio_controller, "local_media", "Audio", show=True)
+        self.add_controller(most_played, "most_played", "Most Played")
+        self.add_controller(never_played, "never_played", "Never Played")
+
         log.debug("Subwindow(s) added")
 
 

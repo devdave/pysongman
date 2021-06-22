@@ -4,9 +4,9 @@ import logging
 import typing
 
 import pysongman
-from .. import DB_FILE
-from ..lib.song_directory_collector import SongDirectoryCollector
-from ..lib.medialib_scanner import MedialibScanner
+from .song_directory_collector import SongDirectoryCollector
+from .medialib_scanner import MedialibScanner
+from .media_monitor import MediaMonitor
 
 
 from .qtd import QApplication, QtCore, Qt, QtGui, Signal, Slot
@@ -45,6 +45,7 @@ class Application(QApplication):
 
     # Application components
     playlist: Playlist
+    monitor: MediaMonitor
     playlist_control: PlaylistController
     player_control: PlayerControl
     player_control: PlaylistController
@@ -76,6 +77,7 @@ class Application(QApplication):
         log.debug("Application is configured %r", self._configured)
 
         self.playlist = Playlist()
+        self.monitor = MediaMonitor(self.playlist)
 
     def configure(self, song_path: list = None, nuke_everything: bool = False, debug_flag: bool = False, run=True):
         log.debug("Running startup")
