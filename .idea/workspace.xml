@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="903f08a6-4acb-4359-b385-f3b1838a7117" name="Changes" comment="working framework" />
+    <list default="true" id="903f08a6-4acb-4359-b385-f3b1838a7117" name="Changes" comment="Copied over utilities" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,7 +60,7 @@
     "Python.transformer.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/lived/Documents/projects/PySongMan/PySongMan/lib",
+    "last_opened_file_path": "C:/Users/lived/Documents/projects/PySongMan/ui/src/lib",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.stylelint": "true",
     "node.js.detected.package.tslint": "true",
@@ -83,6 +83,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\lived\Documents\projects\PySongMan\ui\src\lib" />
       <recent name="C:\Users\lived\Documents\projects\PySongMan\PySongMan\lib" />
       <recent name="C:\Users\lived\Documents\projects\PySongMan\tests" />
       <recent name="C:\Users\lived\Documents\projects\PySongMan\tests\fixtures" />
@@ -178,7 +179,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1714753067341</updated>
-      <workItem from="1714753068406" duration="23567000" />
+      <workItem from="1714753068406" duration="23655000" />
     </task>
     <task id="LOCAL-00001" summary="Build out infrastructure">
       <option name="closed" value="true" />
@@ -260,7 +261,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715019504580</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Copied over utilities">
+      <option name="closed" value="true" />
+      <created>1715019722326</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1715019722326</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,7 +301,8 @@
     <MESSAGE value="ignore fall positives" />
     <MESSAGE value="models stub" />
     <MESSAGE value="working framework" />
-    <option name="LAST_COMMIT_MESSAGE" value="working framework" />
+    <MESSAGE value="Copied over utilities" />
+    <option name="LAST_COMMIT_MESSAGE" value="Copied over utilities" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
