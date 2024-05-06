@@ -4,16 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="903f08a6-4acb-4359-b385-f3b1838a7117" name="Changes" comment="add entry stub">
-      <change afterPath="$PROJECT_DIR$/PySongMan/lib/api.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PySongMan/lib/app_types.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PySongMan/lib/application.py" afterDir="false" />
+    <list default="true" id="903f08a6-4acb-4359-b385-f3b1838a7117" name="Changes" comment="ignore fall positives">
       <change afterPath="$PROJECT_DIR$/PySongMan/lib/models.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/PySongMan/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/PySongMan.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PySongMan.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +154,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1714753067341</updated>
-      <workItem from="1714753068406" duration="19945000" />
+      <workItem from="1714753068406" duration="20196000" />
     </task>
     <task id="LOCAL-00001" summary="Build out infrastructure">
       <option name="closed" value="true" />
@@ -195,7 +188,39 @@
       <option name="project" value="LOCAL" />
       <updated>1714998815874</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="stubs for application and api">
+      <option name="closed" value="true" />
+      <created>1715016079485</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1715016079485</updated>
+    </task>
+    <task id="LOCAL-00006" summary="enable black on-save">
+      <option name="closed" value="true" />
+      <created>1715016143756</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1715016143756</updated>
+    </task>
+    <task id="LOCAL-00007" summary="don't process/index fixtures">
+      <option name="closed" value="true" />
+      <created>1715016172230</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1715016172230</updated>
+    </task>
+    <task id="LOCAL-00008" summary="ignore fall positives">
+      <option name="closed" value="true" />
+      <created>1715016188734</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1715016188734</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,7 +246,11 @@
     <MESSAGE value="configure max line length for pylint" />
     <MESSAGE value="Stubs" />
     <MESSAGE value="add entry stub" />
-    <option name="LAST_COMMIT_MESSAGE" value="add entry stub" />
+    <MESSAGE value="stubs for application and api" />
+    <MESSAGE value="enable black on-save" />
+    <MESSAGE value="don't process/index fixtures" />
+    <MESSAGE value="ignore fall positives" />
+    <option name="LAST_COMMIT_MESSAGE" value="ignore fall positives" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
