@@ -18,6 +18,8 @@ class Logger:
 
     def __init__(self, app: App):
         self.__app = app
+        LOG.debug("Logger initialized")
+        print(__name__)
 
     def info(self, message):
         """
@@ -58,3 +60,6 @@ class API:
         self.__app = app
 
         self.logger = Logger(app)
+
+    def test(self):
+        print("test")

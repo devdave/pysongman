@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="903f08a6-4acb-4359-b385-f3b1838a7117" name="Changes" comment="ignore fall positives">
-      <change afterPath="$PROJECT_DIR$/PySongMan/lib/models.py" afterDir="false" />
+    <list default="true" id="903f08a6-4acb-4359-b385-f3b1838a7117" name="Changes" comment="models stub">
       <change afterPath="$PROJECT_DIR$/PySongMan/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PySongMan/lib/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/PySongMan/lib/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PySongMan/lib/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/PySongMan/lib/application.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +60,8 @@
     "Python tests.Python tests in test_dotted_api.py.executor": "Run",
     "Python tests.Python tests.executor": "Run",
     "Python tests.pytest in bin.executor": "Run",
+    "Python.api.executor": "Run",
+    "Python.main.executor": "Run",
     "Python.transformer.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
@@ -92,7 +96,30 @@
       <recent name="C:\Users\lived\Documents\projects\PySongMan\PySongMan" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest in bin">
+  <component name="RunManager" selected="Python.main">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PySongMan" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/PySongMan" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/PySongMan/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Python tests in test_dotted_api.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="PySongMan" />
       <option name="ENV_FILES" value="" />
@@ -129,11 +156,13 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.main" />
       <item itemvalue="Python tests.pytest in bin" />
       <item itemvalue="Python tests.Python tests in test_dotted_api.py" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python tests.Python tests in test_dotted_api.py" />
       </list>
     </recent_temporary>
@@ -154,7 +183,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1714753067341</updated>
-      <workItem from="1714753068406" duration="20196000" />
+      <workItem from="1714753068406" duration="23262000" />
     </task>
     <task id="LOCAL-00001" summary="Build out infrastructure">
       <option name="closed" value="true" />
@@ -220,7 +249,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715016188734</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="models stub">
+      <option name="closed" value="true" />
+      <created>1715016222495</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1715016222495</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -250,7 +287,8 @@
     <MESSAGE value="enable black on-save" />
     <MESSAGE value="don't process/index fixtures" />
     <MESSAGE value="ignore fall positives" />
-    <option name="LAST_COMMIT_MESSAGE" value="ignore fall positives" />
+    <MESSAGE value="models stub" />
+    <option name="LAST_COMMIT_MESSAGE" value="models stub" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -269,8 +307,10 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/PySongMan$main.coverage" NAME="main Coverage Results" MODIFIED="1715019318579" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PySongMan" />
     <SUITE FILE_PATH="coverage/PySongMan$.coverage" NAME=" Coverage Results" MODIFIED="1714997691199" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/PySongMan$transformer.coverage" NAME="transformer Coverage Results" MODIFIED="1714994498198" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PySongMan/lib" />
     <SUITE FILE_PATH="coverage/PySongMan$pytest_in_bin.coverage" NAME="pytest in bin Coverage Results" MODIFIED="1715000687480" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/PySongMan$api.coverage" NAME="api Coverage Results" MODIFIED="1715019311337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PySongMan/lib" />
   </component>
 </project>
