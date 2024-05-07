@@ -82,6 +82,15 @@ export default APIBridge
 
 """
 
+INTERFACE_TEMPLATE = """
+{%- for name, def in bodies|items() %}export interface {{name}}{% if def.parent %} extends {{def.parent}}{% endif %} {
+{% for field_name, field_type in def.elements|items() %}
+    {{field_name}}: {{field_type}}
+{%- endfor %}
+}
+{% endfor %}
+""".strip()
+
 
 class FuncArg(T.NamedTuple):
     """
@@ -117,6 +126,13 @@ class ChildClass:
     methods: T.Dict[str, FuncDef] = dataclasses.field(default_factory=dict)
 
 
+@dataclasses.dataclass
+class TypedDictionary:
+    name: str
+    elements: T.Dict[str, str]
+    parent: str | None = None
+
+
 def python2ts_types(typename: str | None) -> str:
     """
     Given a python type name, return its typescript equivalent.
@@ -144,6 +160,45 @@ def python2ts_types(typename: str | None) -> str:
             target = typename
 
     return target
+
+
+def is_typed_dict(element: ast.ClassDef, bodies=None):
+    if isinstance(element, ast.ClassDef):
+        if len(element.bases) >= 1:
+            for basecls in element.bases:
+                if bodies is not None and isinstance(basecls, ast.Name):
+                    if basecls.id in bodies:
+                        return True
+
+                if isinstance(basecls, ast.Attribute):
+                    if basecls.attr == "TypedDict":
+                        return True
+                    if bodies is not None and basecls.attr in bodies:
+                        return True
+
+    return False
+
+
+def process_types_source(
+    src_file: pathlib.Path,
+    dest_file: pathlib.Path = None,
+):
+    mod = ast.parse(src_file.read_text(), filename=src_file.name, mode="exec")
+
+    interface_bodies = {}
+    for element in mod.body:
+        if isinstance(element, ast.ClassDef) and is_typed_dict(
+            element, interface_bodies
+        ):
+            interface_bodies[element.name] = process_typeddict(
+                element, interface_bodies
+            )
+
+    interfaces = transform_types(interface_bodies)
+    if dest_file is not None:
+        dest_file.write_text(interfaces)
+
+    return interfaces
 
 
 def process_source(
@@ -254,7 +309,7 @@ def process_function_subscript_annotation(arg):
     func_type = "any"
 
     if hasattr(arg.annotation.value, "id") and arg.annotation.value.id == "list":
-        func_type = f"{arg.annotation.slice.id}[]"
+        func_type = f"{python2ts_types(arg.annotation.slice.id)}[]"
 
     elif (
         isinstance(arg.annotation.value, ast.Attribute)
@@ -319,33 +374,23 @@ def process_function(func_elm: ast.FunctionDef) -> FuncDef:
 
         func_type = "any"
 
-        if isinstance(arg.annotation, ast.Name):
-            func_type = python2ts_types(arg.annotation.id)
-
-        elif isinstance(arg.annotation, ast.Subscript):
-            # fuck it
-            func_type = process_function_subscript_annotation(arg)
-
-        elif isinstance(arg.annotation, ast.BinOp):
-            if hasattr(arg.annotation.left, "id"):
-                left = python2ts_types(arg.annotation.left.id)
-            else:
-                left = python2ts_types(arg.annotation.left.attr)
-
-            right = python2ts_types(arg.annotation.right.value)
-            func_type = f"{left} | {right}"
-        elif arg.annotation is not None and hasattr(arg.annotation, "id"):
-            func_type = python2ts_types(arg.annotation.id)
-
-        elif isinstance(arg.annotation, ast.Attribute) and arg.annotation.attr in [
-            "date",
-            "datetime",
-        ]:
-            func_type = python2ts_types(arg.annotation.attr)
-        elif arg.annotation is None:
-            func_type = "any"
-        else:
-            raise TypeError(f"Unable to process {func_elm} with {func_type}")
+        match arg.annotation:
+            case ast.Name():
+                func_type = python2ts_types(arg.annotation.id)
+            case ast.Subscript():
+                func_type = process_function_subscript_annotation(arg)
+            case ast.BinOp():
+                func_type = process_binop(arg.annotation)
+            case element if element is not None and hasattr(element, "id"):
+                func_type = python2ts_types(element.id)
+            case element if isinstance(
+                element, ast.Attribute
+            ) and element.annotation.attr in ["date", "datetime"]:
+                func_type = python2ts_types(arg.annotation.attr)
+            case element if element is None:
+                func_type = "any"
+            case _:
+                raise TypeError(f"Unable to process {func_elm} with {func_type}")
 
         arg_map[arg.arg] = f"{arg.arg}:{func_type}"
         if arg.arg in mapped_defaults and mapped_defaults[arg.arg] in (None, "None"):
@@ -489,6 +534,61 @@ def process_child_class(child_cls: ast.ClassDef) -> ClassDigest:
             child.methods,
         )
     )
+
+
+def find_name(element: ast.Name) -> str:
+    if hasattr(element, "id"):
+        return element.id
+    if hasattr(element, "attr"):
+        return element.attr
+
+    raise ValueError(f"I don't know how to handle {element}")
+
+
+def process_binop(bin_st: ast.BinOp) -> str:
+
+    left = python2ts_types(find_name(bin_st.value.left))
+    right = python2ts_types(find_name(bin_st.value.right))
+    return f"{left} | {right}"
+
+
+def process_typeddict(target_cls: ast.ClassDef, bases=None) -> TypedDictionary:
+
+    if is_typed_dict(target_cls, bases) is False:
+        raise ValueError(f"{target_cls.name} is not a TypedDict")
+
+    # Is something besides TypedDict as base[0]
+    parent = (
+        target_cls.bases[0].id if isinstance(target_cls.bases[0], ast.Name) else False
+    )
+
+    fields = {}
+    for element in target_cls.body:
+        if isinstance(element, ast.AnnAssign):
+            name = element.target.id
+            element_type = (
+                element.annotation.id
+                if hasattr(element.annotation, "id")
+                else element.annotation.value.id
+            )
+            field_type = python2ts_types(element_type)
+            fields[name] = field_type
+
+    return TypedDictionary(target_cls.name, fields, parent)
+
+
+def transform_types(bodies: dict[str, TypedDictionary]) -> str:
+    """
+    Transforms a dictionary of typed dict fields into interfaces
+
+    :param bodies:
+    :return:
+    """
+
+    template = jinja2.Template(INTERFACE_TEMPLATE, newline_sequence="\n")
+    return template.render(
+        bodies=bodies,
+    ).replace("\r\n", "\n")
 
 
 def transform(
