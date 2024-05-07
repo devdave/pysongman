@@ -1,11 +1,43 @@
 import '@mantine/core/styles.css';
-import { MantineProvider } from '@mantine/core';
-import { Router } from './Router';
-import { theme } from './theme';
+import { LoadingOverlay, MantineProvider, Text } from '@mantine/core';
+import { Router } from '@src/Router';
+import { theme } from '@src/theme';
+
+import Boundary, { PYWEBVIEWREADY } from '@src/lib/boundary'
+import { Switchboard } from '@src/lib/switchboard';
+import { useEffect, useMemo, useState } from 'react';
+import APIBridge from '@src/lib/api';
+
+const boundary = new Boundary()
+const switchboard = new Switchboard()
 
 export default function App() {
+    const [isReady, setIsReady] = useState(false)
+
+    const api = useMemo(() => new APIBridge(boundary), [])
+
+    useEffect(() => {
+        console.log('Connected')
+        if (window.pywebview !== undefined && window.pywebview.api !== undefined) {
+            setIsReady(true)
+        } else {
+            window.addEventListener(PYWEBVIEWREADY, () => setIsReady(true), { once: true })
+        }
+    }, [isReady, setIsReady])
+
+    api.logger.debug('UI is ready').then()
+
+    if (!isReady) {
+        return (
+            <MantineProvider forceColorScheme='dark' theme={theme}>
+              <LoadingOverlay visible />
+                <Text>Waiting on API</Text>
+            </MantineProvider>
+        )
+    }
+
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider forceColorScheme='dark' theme={theme}>
       <Router />
     </MantineProvider>
   );
