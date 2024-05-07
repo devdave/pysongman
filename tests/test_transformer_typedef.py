@@ -21,5 +21,3 @@ def test_basic_idea():
     assert isinstance(binop.right, ast.Name)
     assert binop.right.id == "int"
     assert binop.left.id == "str"
-
-    debug = 1

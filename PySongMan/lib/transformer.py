@@ -8,6 +8,7 @@ The transformed product is a helper class for use with PyWebview and the js_api 
 import ast
 import pathlib
 import typing as T
+import warnings
 from itertools import zip_longest
 import dataclasses
 
@@ -298,7 +299,7 @@ def sanitize_defaults(def_type):
     return def_type
 
 
-def process_function_subscript_annotation(arg):
+def process_function_subscript_annotation(arg: ast.Subscript):
     """
     Handle functions with list arguments
 
@@ -316,10 +317,23 @@ def process_function_subscript_annotation(arg):
         and arg.annotation.value.attr == "Optional"
     ):
         func_type = f"{python2ts_types(arg.annotation.slice.id)} | undefined"
+
     elif (
         isinstance(arg.annotation.value, ast.Name) and arg.annotation.value.id == "list"
     ):
         func_type = f"{python2ts_types(arg.annotation.slice.id)}[]"
+
+    elif (
+        isinstance(arg.annotation.value, ast.Name) and arg.annotation.value.id == "dict"
+    ):
+        if len(arg.annotation.slice.dims) == 2:
+            key_type = python2ts_types(arg.annotation.slice.dims[0].id)
+            value_type = python2ts_types(arg.annotation.slice.dims[1].id)
+            func_type = f"{{[key:{key_type}]: {value_type}}}"
+        else:
+            raise ValueError(
+                f"Unexpected element count for dict subscript - {arg.annotation} - {len(arg.annotation.slice.dims)}"
+            )
 
     return func_type
 
@@ -387,10 +401,17 @@ def process_function(func_elm: ast.FunctionDef) -> FuncDef:
                 element, ast.Attribute
             ) and element.annotation.attr in ["date", "datetime"]:
                 func_type = python2ts_types(arg.annotation.attr)
-            case element if element is None:
-                func_type = "any"
+            # case element if element is None:
+            #     func_type = "any"
+            case None:
+                warnings.warn(
+                    f"{func_elm.name=} has an argument {arg.arg} missing an annotation",
+                    SyntaxWarning,
+                )
             case _:
-                raise TypeError(f"Unable to process {func_elm} with {func_type}")
+                raise TypeError(
+                    f"Unable to process {func_elm=} with {arg.annotation=} {vars(arg)}"
+                )
 
         arg_map[arg.arg] = f"{arg.arg}:{func_type}"
         if arg.arg in mapped_defaults and mapped_defaults[arg.arg] in (None, "None"):
@@ -547,8 +568,51 @@ def find_name(element: ast.Name) -> str:
 
 def process_binop(bin_st: ast.BinOp) -> str:
 
-    left = python2ts_types(find_name(bin_st.value.left))
-    right = python2ts_types(find_name(bin_st.value.right))
+    match bin_st:
+        case element if hasattr(element, "value"):
+            left = python2ts_types(find_name(element.value.left))
+            right = python2ts_types(find_name(element.value.right))
+
+        case element if hasattr(element, "left") and hasattr(element, "right"):
+            left = python2ts_types(find_name(element.left))
+
+            match element.right:
+                case element if isinstance(
+                    element, ast.Constant
+                ) and element.value is None:
+                    right = "undefined"
+
+                case element if isinstance(element, ast.Name):
+                    right = python2ts_types(find_name(element))
+
+                case _:
+                    raise ValueError(
+                        f"I don't know how to handle this {element.right}, {vars(element.right)}"
+                    )
+        case _:
+            raise ValueError(
+                f"I don't know how to handle this {bin_st}, {vars(bin_st)}"
+            )
+
+    # if hasattr(bin_st, "value"):
+    #     left = python2ts_types(find_name(bin_st.value.left))
+    #     right = python2ts_types(find_name(bin_st.value.right))
+    #
+    # elif hasattr(bin_st, "left") and hasattr(bin_st, "right"):
+    #     # assuming `arg: type|None`
+    #     left = python2ts_types(find_name(bin_st.left))
+    #     if isinstance(bin_st.right, ast.Constant) and bin_st.right.value is None:
+    #         right = "undefined"
+    #     elif isinstance(bin_st.right, ast.Name):
+    #         right = python2ts_types(find_name(bin_st.right))
+    #     else:
+    #         raise ValueError(
+    #             f"I don't know how to handle this {bin_st}, {vars(bin_st)}"
+    #         )
+    #
+    # else:
+    #     raise ValueError(f"I don't know how to handle this {bin_st}, {vars(bin_st)}")
+
     return f"{left} | {right}"
 
 
