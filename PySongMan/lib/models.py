@@ -13,6 +13,7 @@ from sqlalchemy import (
     func,
     delete,
     true,
+    ForeignKey,
 )
 
 from sqlalchemy.orm import (
@@ -23,6 +24,7 @@ from sqlalchemy.orm import (
     declared_attr,
     scoped_session,
     sessionmaker,
+    relationship,
 )
 
 from .app_types import Identifier
@@ -49,7 +51,7 @@ def db_with(db_url="sqlite:///pysongman.sqlite3", echo=False, create=False):
     engine.dispose()
 
 
-def connect(db_path: pathlib.Path, echo=False, create=True):
+def connect(db_path: pathlib.Path | str, echo=False, create=True):
     """
 
     :param db_path:
@@ -57,9 +59,7 @@ def connect(db_path: pathlib.Path, echo=False, create=True):
     :param create: Try to create schema if it doesn't exist
     :return:
     """
-    engine = create_engine(
-        f"sqlite:///{db_path}", echo=echo, pool_size=10, max_overflow=20
-    )
+    engine = create_engine(db_path, echo=echo, pool_size=10, max_overflow=20)
     if create:
         Base.metadata.create_all(engine, checkfirst=True)
 
@@ -167,3 +167,20 @@ class Base(DeclarativeBase):
         for safe_key in getattr(self, "SAFE_KEYS", []):
             if safe_key in changeset:
                 setattr(self, safe_key, changeset[safe_key])
+
+
+class Song(Base):
+    name: Mapped[str]
+    artist: Mapped[str]
+
+    path: Mapped[str]
+
+    library_id: Mapped[str] = mapped_column(ForeignKey("Library.id"))
+    library: Mapped["Library"] = relationship("Library", back_populates="songs")
+
+
+class Library(Base):
+    name: Mapped[str]
+    path: Mapped[str]
+
+    songs: Mapped[list[Song]] = relationship("Song", back_populates="library")
