@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="903f08a6-4acb-4359-b385-f3b1838a7117" name="Changes" comment="refactoring transformer&#10;&#10;add support for converting TypeDict classes to interfaces&#10;&#10;In progress adding support for type alias/typedefs">
+    <list default="true" id="903f08a6-4acb-4359-b385-f3b1838a7117" name="Changes" comment="add coverage reports">
+      <change afterPath="$PROJECT_DIR$/scripts/fast_probe.pyx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/import_test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/mp_import.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PySongMan/lib/transformer.py" beforeDir="false" afterPath="$PROJECT_DIR$/PySongMan/lib/transformer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PySongMan/__main__" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/async_import.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PySongMan/lib/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/PySongMan/lib/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_transformer_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_transformer_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_transformer_typedef.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_transformer_typedef.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +79,8 @@
     "Python tests.Python tests.executor": "Run",
     "Python tests.pytest in bin.executor": "Run",
     "Python.api.executor": "Run",
+    "Python.async_import.executor": "Run",
+    "Python.import_test.executor": "Run",
     "Python.main.executor": "Run",
     "Python.transformer.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -115,87 +123,7 @@
       <recent name="C:\Users\lived\Documents\projects\PySongMan\PySongMan" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest in bin">
-    <configuration name="Python tests for test_transformer_functions.test_dict_arg" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="PySongMan" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_transformer_functions.test_dict_arg&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for test_transformer_functions.test_list_arg" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="PySongMan" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_transformer_functions.test_list_arg&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for test_transformer_functions.test_optional_arg" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="PySongMan" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_transformer_functions.test_optional_arg&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for test_transformer_functions.test_optional_mixed_type_arg" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="PySongMan" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_transformer_functions.test_optional_mixed_type_arg&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for test_transformer_functions.test_str_arg" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="PySongMan" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_transformer_functions.test_str_arg&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager">
     <configuration name="pytest in bin" type="tests" factoryName="py.test" nameIsGenerated="true">
       <module name="PySongMan" />
       <option name="ENV_FILES" value="" />
@@ -215,23 +143,6 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
-    <list>
-      <item itemvalue="Python tests.pytest in bin" />
-      <item itemvalue="Python tests.Python tests for test_transformer_functions.test_dict_arg" />
-      <item itemvalue="Python tests.Python tests for test_transformer_functions.test_list_arg" />
-      <item itemvalue="Python tests.Python tests for test_transformer_functions.test_optional_arg" />
-      <item itemvalue="Python tests.Python tests for test_transformer_functions.test_optional_mixed_type_arg" />
-      <item itemvalue="Python tests.Python tests for test_transformer_functions.test_str_arg" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Python tests.Python tests for test_transformer_functions.test_optional_mixed_type_arg" />
-        <item itemvalue="Python tests.Python tests for test_transformer_functions.test_optional_arg" />
-        <item itemvalue="Python tests.Python tests for test_transformer_functions.test_dict_arg" />
-        <item itemvalue="Python tests.Python tests for test_transformer_functions.test_list_arg" />
-        <item itemvalue="Python tests.Python tests for test_transformer_functions.test_str_arg" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -251,7 +162,7 @@
       <updated>1714753067341</updated>
       <workItem from="1714753068406" duration="25489000" />
       <workItem from="1715022944974" duration="9940000" />
-      <workItem from="1715091886315" duration="9580000" />
+      <workItem from="1715091886315" duration="30623000" />
     </task>
     <task id="LOCAL-00001" summary="Build out infrastructure">
       <option name="closed" value="true" />
@@ -381,7 +292,23 @@
       <option name="project" value="LOCAL" />
       <updated>1715095258343</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="add additional tests and refactorings.&#10;&#10;get rid of if elif else chain in process binop">
+      <option name="closed" value="true" />
+      <created>1715124772685</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1715124772685</updated>
+    </task>
+    <task id="LOCAL-00018" summary="add coverage reports">
+      <option name="closed" value="true" />
+      <created>1715125092543</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1715125092543</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -419,7 +346,9 @@
     <MESSAGE value="cleanup" />
     <MESSAGE value="stubbed code" />
     <MESSAGE value="refactoring transformer&#10;&#10;add support for converting TypeDict classes to interfaces&#10;&#10;In progress adding support for type alias/typedefs" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactoring transformer&#10;&#10;add support for converting TypeDict classes to interfaces&#10;&#10;In progress adding support for type alias/typedefs" />
+    <MESSAGE value="add additional tests and refactorings.&#10;&#10;get rid of if elif else chain in process binop" />
+    <MESSAGE value="add coverage reports" />
+    <option name="LAST_COMMIT_MESSAGE" value="add coverage reports" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -441,7 +370,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/tests/test_transformer_functions.py</url>
-          <line>27</line>
+          <line>20</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -459,9 +388,11 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PySongMan$main.coverage" NAME="main Coverage Results" MODIFIED="1715023488626" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PySongMan" />
-    <SUITE FILE_PATH="coverage/PySongMan$.coverage" NAME=" Coverage Results" MODIFIED="1715123876153" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/PySongMan$.coverage" NAME=" Coverage Results" MODIFIED="1715264221338" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/PySongMan$transformer.coverage" NAME="transformer Coverage Results" MODIFIED="1715041728018" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PySongMan/lib" />
+    <SUITE FILE_PATH="coverage/PySongMan$import_test.coverage" NAME="import_test Coverage Results" MODIFIED="1715143189302" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
     <SUITE FILE_PATH="coverage/PySongMan$api.coverage" NAME="api Coverage Results" MODIFIED="1715019311337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PySongMan/lib" />
     <SUITE FILE_PATH="coverage/PySongMan$pytest_in_bin.coverage" NAME="pytest in bin Coverage Results" MODIFIED="1715124693240" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/PySongMan$async_import.coverage" NAME="async_import Coverage Results" MODIFIED="1715218134725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
   </component>
 </project>
