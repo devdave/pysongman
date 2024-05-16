@@ -169,18 +169,57 @@ class Base(DeclarativeBase):
                 setattr(self, safe_key, changeset[safe_key])
 
 
+class Tag(Base):
+    name: Mapped[str] = mapped_column(index=True)
+    value: Mapped[str] = mapped_column(index=True)
+
+    songs: Mapped[list["Song"]] = relationship(
+        secondary="Song_Tag", back_populates="tags"
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "name",
+            "value",
+            sqlite_on_conflict="REPLACE",
+            name="unique_name_value",
+        ),
+    )
+
+
+Song_Tag = Table(
+    "Song_Tag",
+    Base.metadata,
+    Column("song_id", ForeignKey("Song.id"), primary_key=True),
+    Column(
+        "tag_id",
+        ForeignKey("Tag.id"),
+        primary_key=True,
+    ),
+)
+
+
 class Song(Base):
     name: Mapped[str]
-    artist: Mapped[str]
+    artist: Mapped[str] = mapped_column(index=True)
+    size: Mapped[int] = mapped_column(index=True)
+    length_seconds: Mapped[int]
 
-    path: Mapped[str]
+    file_name: Mapped[str]
+    path: Mapped[str] = mapped_column(index=True, unique=True)
 
-    library_id: Mapped[str] = mapped_column(ForeignKey("Library.id"))
+    codec: Mapped[str]
+    format: Mapped[str]
+
+    tags: Mapped[list[Tag]] = relationship(secondary=Song_Tag, back_populates="songs")
+
+    library_id: Mapped[str] = mapped_column(ForeignKey("Library.id"), index=True)
     library: Mapped["Library"] = relationship("Library", back_populates="songs")
+
+    __table_args__ = (UniqueConstraint("path", "name", name="unique_song"),)
 
 
 class Library(Base):
-    name: Mapped[str]
-    path: Mapped[str]
+    path: Mapped[str] = mapped_column(index=True, unique=True)
 
     songs: Mapped[list[Song]] = relationship("Song", back_populates="library")
