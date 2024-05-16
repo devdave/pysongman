@@ -12,6 +12,7 @@ flask = "^3.0.3"
 typed-argument-parser = "^1.10.0"
 orjson = "^3.10.3"
 cython = "^3.0.10"
+aiosqlite = "^0.20.0"
 
 
 [tool.poetry.group.dev.dependencies]
