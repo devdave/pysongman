@@ -15,6 +15,8 @@ from sqlalchemy import (
     true,
     ForeignKey,
 )
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import async_scoped_session
 
 from sqlalchemy.orm import (
     Session,
@@ -31,6 +33,27 @@ from .app_types import Identifier
 
 
 log = logging.getLogger(__name__)
+
+
+@contextlib.asynccontextmanager
+async def async_db(db_url="sqlite:///pysongman.sqlite3", echo=False, create=False):
+    engine = create_async_engine(db_url, echo=echo)
+
+    if create is True:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
+            await conn.run_sync(Base.metadata.create_all)
+
+    maker = async_scoped_session(
+        async_sessionmaker(bind=engine, expire_on_commit=False), asyncio.current_task
+    )
+
+    session = maker()
+    try:
+        yield session
+    finally:
+        await session.close()
+        await engine.dispose()
 
 
 @contextlib.contextmanager
