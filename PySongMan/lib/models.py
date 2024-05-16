@@ -1,3 +1,4 @@
+import asyncio
 import contextlib
 import datetime as DT
 import enum
@@ -12,8 +13,10 @@ from sqlalchemy import (
     create_engine,
     func,
     delete,
-    true,
     ForeignKey,
+    UniqueConstraint,
+    Table,
+    Column,
 )
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.ext.asyncio import async_scoped_session
@@ -82,7 +85,9 @@ def connect(db_path: pathlib.Path | str, echo=False, create=True):
     :param create: Try to create schema if it doesn't exist
     :return:
     """
-    engine = create_engine(db_path, echo=echo, pool_size=10, max_overflow=20)
+    engine = create_engine(
+        db_path, echo=echo, pool_size=10, max_overflow=20, connect_args={"timeout": 15}
+    )
     if create:
         Base.metadata.create_all(engine, checkfirst=True)
 
