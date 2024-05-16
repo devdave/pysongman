@@ -9,7 +9,7 @@ import orjson
 from PySongMan.lib.models import Song, Library, db_with
 
 
-async def ffprobe(path):
+async def affprobe(path):
     cleaned = str(path).replace("\\", "/")
     cmd = " ".join(
         [
@@ -45,7 +45,7 @@ async def worker(name, queue):
     uow = await queue.get()
     while uow is not None:
         p = pathlib.Path(uow)
-        result = await ffprobe(p)
+        result = await affprobe(p)
         # print(p.name)
         queue.task_done()
 
