@@ -2,3 +2,7 @@
 /pysongman.sqlite3
 __pycache__
 .idea/workspace.xml
+.idea/dataSources/*.xml
+.idea/dataSources.local.xml
+.idea/dataSources.xml
+.idea/dataSources/**
