@@ -2,9 +2,12 @@
 The bridge API between the python application and the TS/react frontend
 """
 
+import contextlib
 import logging
 
+from .app_types import SongType
 from .application import App
+from . import models
 
 LOG = logging.getLogger(__name__)
 
@@ -21,7 +24,7 @@ class Logger:
         LOG.debug("Logger initialized")
         print(__name__)
 
-    def info(self, message):
+    def info(self, message: str):
         """
         Info logger
         :param message:
@@ -29,7 +32,7 @@ class Logger:
         """
         LOG.info(message)
 
-    def debug(self, message):
+    def debug(self, message: str):
         """
         Debug logger
 
@@ -38,7 +41,7 @@ class Logger:
         """
         LOG.debug(message)
 
-    def error(self, message):
+    def error(self, message: str):
         """
         Error logger
 
@@ -48,6 +51,30 @@ class Logger:
         LOG.error(message)
 
 
+class Songs:
+
+    __app: App
+
+    def __init__(self, app: App):
+        self.__app = app
+
+    def list(self, page: int, limit: int = 100) -> list[SongType]:
+        with self.__app.get_db() as session:
+            return [
+                song.to_dict() for song in models.Song.GetPage(session, page, limit)
+            ]
+
+    def get(self, song_id: int) -> SongType:
+        with self.__app.get_db() as session:
+            return models.Song.GetById(session, song_id).to_dict()
+
+    def play(self, song_id: int) -> SongType:
+        pass
+
+    def stop(self):
+        pass
+
+
 class API:
     """
     The actual API bridge
@@ -55,11 +82,10 @@ class API:
 
     __app: App
     logger: Logger
+    songs: Songs
 
     def __init__(self, app):
         self.__app = app
 
         self.logger = Logger(app)
-
-    def test(self):
-        print("test")
+        self.songs = Songs(app)

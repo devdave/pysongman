@@ -32,7 +32,7 @@ from sqlalchemy.orm import (
     relationship,
 )
 
-from .app_types import Identifier
+from .app_types import Identifier, SongType, TagType
 
 
 log = logging.getLogger(__name__)
@@ -94,6 +94,13 @@ def connect(db_path: pathlib.Path | str, echo=False, create=True):
     session_factory = sessionmaker(bind=engine)
 
     return engine, scoped_session(session_factory)
+
+
+def get_scoped_session(db_path: pathlib.Path | str, echo=False, create=False):
+
+    engine, scoped = connect(db_path, echo=echo, create=create)
+
+    return scoped()
 
 
 class Base(DeclarativeBase):
@@ -205,6 +212,9 @@ class Tag(Base):
         secondary="Song_Tag", back_populates="tags"
     )
 
+    def to_dict(self):
+        return TagType(id=self.id, name=self.name, value=self.value)
+
     __table_args__ = (
         UniqueConstraint(
             "name",
@@ -245,6 +255,21 @@ class Song(Base):
     library: Mapped["Library"] = relationship("Library", back_populates="songs")
 
     __table_args__ = (UniqueConstraint("path", "name", name="unique_song"),)
+
+    def to_dict(self):
+        return SongType(
+            id=self.id,
+            name=self.name,
+            artist=self.artist,
+            size=self.size,
+            length_seconds=self.length_seconds,
+            tags=[tag.to_dict() for tag in self.tags],
+        )
+
+    @classmethod
+    def GetPage(cls, session: Session, page: int, limit: int = 100):
+        stmt = select(cls).limit(limit).offset(max(page, 1) * limit)
+        return session.execute(stmt).scalars().all()
 
 
 class Library(Base):

@@ -18,7 +18,7 @@ from werkzeug import wsgi
 import tap
 import webview  # type: ignore
 
-
+from PySongMan.lib.models import get_scoped_session
 from lib.api import API
 from lib.application import App
 
@@ -35,8 +35,8 @@ class Arguments(tap.Tap):
     PySongMan Python & ReactJS Music player
     """
 
-    debug: bool = True
-    port: str = "8080"
+    debug: bool = False
+    port: str = "9000"
 
 
 def setup_logging(level=logging.DEBUG):
@@ -130,8 +130,15 @@ def transform_api(dest: pathlib.Path):
     from lib import transformer
 
     dest.touch(exist_ok=True)
+
+    app_types_str = transformer.process_types_source(
+        HERE / "lib/app_types.py", UI_DIR / "src/lib/app_types.ts"
+    )
+
     transformer.process_source(
-        (HERE / "lib/api.py"), dest, (UI_DIR / "src/lib/api_header.ts.html")
+        (HERE / "lib/api.py"),
+        dest,
+        header=app_types_str,
     )
 
 
@@ -148,7 +155,9 @@ def main():
 
     setup_logging()
 
-    app = App(port=args.port)
+    app = App(
+        port=args.port, get_session=get_scoped_session("sqlite:///pysongman.sqlite3")
+    )
     api = API(app=app)
 
     if args.debug:
