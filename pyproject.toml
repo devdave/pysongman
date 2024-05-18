@@ -35,5 +35,6 @@ build-backend = "poetry.core.masonry.api"
 max-line-length=120
 disable = [
     'invalid-name',
-    'not-callable'
+    'not-callable',
+    'unsubscriptable-object',
 ]
