@@ -184,9 +184,13 @@ def process_types_source(
     src_file: pathlib.Path,
     dest_file: pathlib.Path = None,
 ):
-    mod = ast.parse(src_file.read_text(), filename=src_file.name, mode="exec")
+    if isinstance(src_file, pathlib.Path):
+        mod = ast.parse(src_file.read_text(), filename=src_file.name, mode="exec")
+    else:
+        mod = ast.parse(src_file, filename="app_types.py", mode="exec")
 
     interface_bodies = {}
+    typedefs = []
     for element in mod.body:
         if isinstance(element, ast.ClassDef) and is_typed_dict(
             element, interface_bodies
@@ -195,17 +199,27 @@ def process_types_source(
                 element, interface_bodies
             )
 
-    interfaces = transform_types(interface_bodies)
-    if dest_file is not None:
-        dest_file.write_text(interfaces)
+        elif isinstance(element, ast.Assign):
+            typedefs.append(process_type_assignment(element))
 
-    return interfaces
+    typedef_body = "\n".join(typedefs)
+
+    interfaces = transform_types(interface_bodies)
+
+    body = f"{typedef_body}\n{interfaces}\n".strip() + "\n"
+
+    body.replace("\r\n", "\n")
+
+    if dest_file is not None:
+        dest_file.write_text(body)
+
+    return body
 
 
 def process_source(
     src_file: pathlib.Path | str,
     dest: pathlib.Path | None = None,
-    header: pathlib.Path | None = None,
+    header: pathlib.Path | str | None = None,
     product_template: str = TEMPLATE_BODY,
 ) -> str:
     """
@@ -239,8 +253,11 @@ def process_source(
 
     product = "\n\n\n\n".join(body)
 
-    if header is not None and header.is_file():
-        product = header.read_text() + product
+    if header is not None:
+        if isinstance(header, pathlib.Path) and header.is_file():
+            product = header.read_text() + product
+        else:
+            product = header + "\n" + product
 
     if dest is not None:
         dest.write_text(product, newline="\n")
@@ -405,7 +422,7 @@ def process_function(func_elm: ast.FunctionDef) -> FuncDef:
             #     func_type = "any"
             case None:
                 warnings.warn(
-                    f"{func_elm.name=} has an argument {arg.arg} missing an annotation",
+                    f"{func_elm.name=} has an argument `{arg.arg}` missing an annotation",
                     SyntaxWarning,
                 )
             case _:
@@ -630,13 +647,20 @@ def process_typeddict(target_cls: ast.ClassDef, bases=None) -> TypedDictionary:
     for element in target_cls.body:
         if isinstance(element, ast.AnnAssign):
             name = element.target.id
-            element_type = (
-                element.annotation.id
-                if hasattr(element.annotation, "id")
-                else element.annotation.value.id
-            )
-            field_type = python2ts_types(element_type)
-            fields[name] = field_type
+
+            if (
+                isinstance(element.annotation, ast.Subscript)
+                and element.annotation.value.id == "list"
+            ):
+                fields[name] = f"{element.annotation.slice.id}[]"
+            else:
+                element_type = (
+                    element.annotation.id
+                    if hasattr(element.annotation, "id")
+                    else element.annotation.value.id
+                )
+                field_type = python2ts_types(element_type)
+                fields[name] = field_type
 
     return TypedDictionary(target_cls.name, fields, parent)
 
@@ -674,6 +698,20 @@ def transform(
     return template.render(
         cls_name=cls_name, functions=functions, child_classes=child_classes
     ).replace("\r\n", "\n")
+
+
+def process_type_assignment(element: ast.Assign) -> str:
+    name = element.targets[0].id
+
+    if isinstance(element.value, ast.BinOp):
+        body = process_binop(element.value)
+
+    else:
+        raise ValueError(
+            f"I don't know how to handle this {element}-{type(element.value)}"
+        )
+
+    return f"export type {name} = {body}"
 
 
 class MainArgs(tap.Tap):
