@@ -155,9 +155,7 @@ def main():
 
     setup_logging()
 
-    app = App(
-        port=args.port, get_session=get_scoped_session("sqlite:///pysongman.sqlite3")
-    )
+    app = App(port=args.port, db_path="sqlite:///pysongman.sqlite3")
     api = API(app=app)
 
     if args.debug:
