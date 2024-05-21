@@ -49,14 +49,25 @@ class Boundary {
         return retval
     }
 
+    private search(obj: remoteMethods, path: string) {
+        const search = path.split('.')
+
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0, len = search.length; i < len; i++) {
+            // eslint-disable-next-line no-param-reassign
+            obj = obj[search[i]];
+        }
+        return obj;
+    }
+
     private async _remote(remoteName: string, ...args: unknown[]): Promise<unknown> {
         this.connect()
 
-        if (!(remoteName in this.backendHooks)) {
+        if (!(this.search(this.backendHooks, remoteName))) {
             throw Error(`Missing ${remoteName} from backend hooks.`)
         }
 
-        const func = this.backendHooks[remoteName]
+        const func = this.search(this.backendHooks, remoteName)
         return func.apply(this, args)
     }
 
