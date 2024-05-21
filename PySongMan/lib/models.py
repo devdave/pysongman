@@ -76,6 +76,9 @@ def db_with(db_url="sqlite:///pysongman.sqlite3", echo=False, create=False):
     engine.dispose()
 
 
+SA_ENGINE = None
+
+
 def connect(db_path: pathlib.Path | str, echo=False, create=True):
     """
 
@@ -84,11 +87,22 @@ def connect(db_path: pathlib.Path | str, echo=False, create=True):
     :param create: Try to create schema if it doesn't exist
     :return:
     """
-    engine = create_engine(
-        db_path, echo=echo, pool_size=10, max_overflow=20, connect_args={"timeout": 15}
-    )
-    if create:
-        Base.metadata.create_all(engine, checkfirst=True)
+    global SA_ENGINE
+
+    if SA_ENGINE is None:
+        engine = create_engine(
+            db_path,
+            echo=echo,
+            pool_size=10,
+            max_overflow=20,
+            connect_args={"timeout": 15},
+        )
+        if create:
+            Base.metadata.create_all(engine, checkfirst=True)
+
+        SA_ENGINE = engine
+    else:
+        engine = SA_ENGINE
 
     session_factory = sessionmaker(bind=engine)
 
