@@ -7,6 +7,7 @@ import Boundary, { PYWEBVIEWREADY } from '@src/lib/boundary'
 import { Switchboard } from '@src/lib/switchboard';
 import { useEffect, useMemo, useState } from 'react';
 import APIBridge from '@src/lib/api';
+import { AppContext, type AppContextValue } from '@src/contexts/App.context';
 
 const boundary = new Boundary()
 const switchboard = new Switchboard()
@@ -25,6 +26,10 @@ export default function App() {
         }
     }, [isReady, setIsReady])
 
+    const appContext = useMemo<AppContextValue>(() => ({
+        api
+    }), [api])
+
     api.logger.debug('UI is ready').then()
 
     if (!isReady) {
@@ -38,7 +43,9 @@ export default function App() {
 
   return (
     <MantineProvider forceColorScheme='dark' theme={theme}>
-      <Router />
+        <AppContext.Provider value={appContext}>
+            <Router />
+        </AppContext.Provider>
     </MantineProvider>
   );
 }
