@@ -6,6 +6,8 @@ import contextlib
 
 import webview
 
+from . import models
+
 
 class App:
     """
@@ -14,12 +16,13 @@ class App:
     """
 
     port: str
-    __main_window: webview.Window
+    __main_window: webview.Window | None
+    db_path: str | None
 
-    def __init__(self, port="8080", get_session=None):
+    def __init__(self, port="8080", db_path=None):
         self.__main_window = None
         self.port = port
-        self.get_session = get_session
+        self.db_path = db_path
 
     @property
     def main_window(self) -> webview.Window:
@@ -31,6 +34,6 @@ class App:
 
     @contextlib.contextmanager
     def get_db(self):
-        session = self.get_session()
+        engine, session = models.connect(db_path=self.db_path)
         yield session
         session.close()
