@@ -1,4 +1,4 @@
- export type Identifier = string | number
+export type Identifier = string | number
 export interface TagType {
 
     id: Identifier
@@ -14,10 +14,17 @@ export interface SongType {
     length_seconds: number
     tags: TagType[]
 }
+export interface GetPlaylistPage {
+
+    songs: SongType[]
+    count: number
+}
+
 
 interface Boundary {
     remote: (method_name:string, ...args:unknown[])=> Promise<unknown>
 }
+
 
 class Logger {
     private boundary: Boundary
@@ -25,6 +32,8 @@ class Logger {
     constructor(boundary:Boundary) {
         this.boundary = boundary
     }
+
+
 
 /*
 Info logger
@@ -66,8 +75,9 @@ class Songs {
         this.boundary = boundary
     }
 
-    list(page:number, limit:number = 100):Promise<SongType[]> {
-        return this.boundary.remote('songs.list', page, limit) as Promise<SongType[]>
+
+    list(page:number, limit:number = 100, filters:any = undefined):Promise<GetPlaylistPage> {
+        return this.boundary.remote('songs.list', page, limit, filters) as Promise<GetPlaylistPage>
     }
     get(song_id:number):Promise<SongType> {
         return this.boundary.remote('songs.get', song_id) as Promise<SongType>
@@ -80,6 +90,7 @@ class Songs {
     }
 }
 
+
 class APIBridge {
     private boundary:Boundary
 
@@ -87,12 +98,18 @@ class APIBridge {
 
     public songs:Songs
 
+
     constructor(boundary:Boundary) {
         this.boundary = boundary
 
         this.logger = new Logger(boundary)
 
         this.songs = new Songs(boundary)
+
+    }
+
+    info(message:string): Promise<void> {
+        return this.boundary.remote('info', message) as Promise<void>
     }
 }
 

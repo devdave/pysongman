@@ -5,7 +5,7 @@ The bridge API between the python application and the TS/react frontend
 import contextlib
 import logging
 
-from .app_types import SongType
+from .app_types import SongType, GetPlaylistPage, PlaylistPage
 from .application import App
 from . import models
 
@@ -58,11 +58,18 @@ class Songs:
     def __init__(self, app: App):
         self.__app = app
 
-    def list(self, page: int, limit: int = 100) -> list[SongType]:
+    def list(
+        self, page: int, limit: int = 100, filters: dict[str, str] | None = None
+    ) -> PlaylistPage:
         with self.__app.get_db() as session:
-            return [
-                song.to_dict() for song in models.Song.GetPage(session, page, limit)
-            ]
+            response = models.Song.GetPage(session, page, limit, filters)
+            return dict(
+                data=[song.to_dict() for song in response["data"]],
+                offset=max(1, page) * limit,
+                limit=limit,
+                page=page,
+                count=response["count"],
+            )
 
     def get(self, song_id: int) -> SongType:
         with self.__app.get_db() as session:
@@ -89,3 +96,6 @@ class API:
 
         self.logger = Logger(app)
         self.songs = Songs(app)
+
+    def info(self, message: str):
+        print(">", message)
