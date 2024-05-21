@@ -14,10 +14,13 @@ export interface SongType {
     length_seconds: number
     tags: TagType[]
 }
-export interface GetPlaylistPage {
+export interface PlaylistPage {
 
-    songs: SongType[]
+    data: SongType[]
     count: number
+    offset: number
+    limit: number
+    page: number
 }
 
 
@@ -76,8 +79,8 @@ class Songs {
     }
 
 
-    list(page:number, limit:number = 100, filters:any = undefined):Promise<GetPlaylistPage> {
-        return this.boundary.remote('songs.list', page, limit, filters) as Promise<GetPlaylistPage>
+    list(page:number, limit:number = 100, filters:{[key:string]: string} | undefined = undefined):Promise<PlaylistPage> {
+        return this.boundary.remote('songs.list', page, limit, filters) as Promise<PlaylistPage>
     }
     get(song_id:number):Promise<SongType> {
         return this.boundary.remote('songs.get', song_id) as Promise<SongType>
