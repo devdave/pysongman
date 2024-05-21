@@ -5,33 +5,36 @@ import './index.css'
 
 //3 TanStack Libraries!!!
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  OnChangeFn,
-  Row,
-  SortingState,
-  useReactTable,
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getSortedRowModel,
+    OnChangeFn,
+    Row,
+    SortingState,
+    useReactTable,
 } from '@tanstack/react-table'
-import {
-  keepPreviousData,
-  QueryClient,
-  QueryClientProvider,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { keepPreviousData, QueryClient, QueryClientProvider, useInfiniteQuery, } from '@tanstack/react-query'
 
 import { useVirtualizer } from '@tanstack/react-virtual'
+import { useAppContext } from '@src/contexts/App.context';
+import { type SongType } from '@src/lib/api';
 
-const fetchSize = 50
+export interface SongsPlayList {
+    id: number
+    title: string
+    artist: string
+    length: number
+}
 
-function App() {
-  //we need a reference to the scrolling element for logic down below
-  const tableContainerRef = React.useRef<HTMLDivElement>(null)
+export const Playlist = () => {
+    const { api } = useAppContext()
+    //we need a reference to the scrolling element for logic down below
+    const tableContainerRef = React.useRef<HTMLDivElement>(null)
+    const fetchSize = 100
+    const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const [sorting, setSorting] = React.useState<SortingState>([])
-
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<ColumnDef<SongsPlayList>[]>(
     () => [
       {
         accessorKey: 'id',
@@ -39,39 +42,19 @@ function App() {
         size: 60,
       },
       {
-        accessorKey: 'firstName',
+        accessorKey: 'title',
         cell: info => info.getValue(),
       },
       {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
+        accessorFn: row => row.artist,
+        id: 'artist',
         cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
+        header: () => <span>Artist</span>,
       },
       {
-        accessorKey: 'age',
-        header: () => 'Age',
+        accessorKey: 'length',
+        header: () => 'length',
         size: 50,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        size: 50,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        size: 80,
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created At',
-        cell: info => info.getValue<Date>().toLocaleString(),
-        size: 200,
       },
     ],
     []
@@ -79,15 +62,13 @@ function App() {
 
   //react-query has a useInfiniteQuery hook that is perfect for this use case
   const { data, fetchNextPage, isFetching, isLoading } =
-    useInfiniteQuery<PersonApiResponse>({
-      queryKey: [
-        'people',
-        sorting, //refetch when sorting changes
-      ],
+    useInfiniteQuery<SongsPageResponse>({
+        // eslint-disable-next-line no-sparse-arrays
+      queryKey: ['songs', fetchSize],
       queryFn: async ({ pageParam = 0 }) => {
         const start = (pageParam as number) * fetchSize
-        const fetchedData = await fetchData(start, fetchSize, sorting) //pretend api call
-        return fetchedData
+         //pretend api call
+          return api.songs.list(start, fetchSize)
       },
       initialPageParam: 0,
       getNextPageParam: (_lastGroup, groups) => groups.length,
@@ -95,13 +76,8 @@ function App() {
       placeholderData: keepPreviousData,
     })
 
-  //flatten the array of arrays from the useInfiniteQuery hook
-  const flatData = React.useMemo(
-    () => data?.pages?.flatMap(page => page.data) ?? [],
-    [data]
-  )
-  const totalDBRowCount = data?.pages?.[0]?.meta?.totalRowCount ?? 0
-  const totalFetched = flatData.length
+  const totalDBRowCount = data?.count || 0
+  const totalFetched = data?.songs.length || 0
 
   //called on scroll and possibly on mount to fetch more data as the user scrolls and reaches bottom of table
   const fetchMoreOnBottomReached = React.useCallback(
@@ -127,7 +103,7 @@ function App() {
   }, [fetchMoreOnBottomReached])
 
   const table = useReactTable({
-    data: flatData,
+    data: data?.songs || [],
     columns,
     state: {
       sorting,
