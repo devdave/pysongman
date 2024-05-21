@@ -728,12 +728,12 @@ class MainArgs(tap.Tap):
         None  # optional file to write to instead of printing to stdout
     )
 
-    dest_header: pathlib.Path = None
+    types_header: pathlib.Path = None
 
     def configure(self) -> None:
         self.add_argument("source", type=pathlib.Path)
         self.add_argument("dest", type=pathlib.Path)
-        self.add_argument("dest_header", type=pathlib.Path)
+        self.add_argument("types_header", type=pathlib.Path, default=None)
 
 
 def main():
@@ -743,20 +743,21 @@ def main():
     :return:
     """
     args = MainArgs().parse_args()
+    print(f"{args.source=}")
+    print(f"{args.types_header=}")
+    print(f"{args.dest=}")
+
     assert args.source.exists(), f"Cannot find source {args.source} file to process!"
 
-    if args.dest.name == "-":
-        args.dest = None
+    app_types_str = (
+        process_types_source(args.types_header) if args.types_header else None
+    )
 
-    if args.dest is not None:
-        assert (
-            args.dest.parent.exists()
-        ), f"Cannot write {args.dest.name} to {args.dest.parent} as it does not exist!"
-        assert (
-            args.dest.parent.is_dir()
-        ), f"Cannot write {args.dest.name} to {args.dest.parent} as it is not a dir!"
-
-    process_source(args.source, dest=args.dest, header=args.dest_header)
+    process_source(
+        args.source,
+        args.dest,
+        header=app_types_str,
+    )
 
 
 if __name__ == "__main__":
