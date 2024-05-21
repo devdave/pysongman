@@ -32,8 +32,7 @@ from sqlalchemy.orm import (
     relationship,
 )
 
-from .app_types import Identifier, SongType, TagType
-
+from .app_types import Identifier, SongType, TagType, GetPlaylistPage
 
 log = logging.getLogger(__name__)
 
@@ -267,9 +266,20 @@ class Song(Base):
         )
 
     @classmethod
-    def GetPage(cls, session: Session, page: int, limit: int = 100):
+    def GetPage(cls, session: Session, page: int, limit: int = 100, filters=None):
+
         stmt = select(cls).limit(limit).offset(max(page, 1) * limit)
-        return session.execute(stmt).scalars().all()
+        if filters is not None:
+            stmt.filter_by(**filters)
+
+        countq = select(func.count(cls.id))
+        if filters is not None:
+            countq = countq.filter_by(**filters)
+
+        count = session.execute(countq).scalars().one_or_none()
+        data = session.execute(stmt).scalars().all()
+
+        return dict(count=count, data=data)
 
 
 class Library(Base):
