@@ -529,7 +529,7 @@ def process_returntype(func_elm: ast.FunctionDef):
                     return f"{func_elm.returns.slice.id} | undefined "
 
         elif getattr(func_elm.returns.value, "id", None) == "dict":
-            return process_dict_returntype(func_elm.returns)
+            return process_dict(func_elm.returns)
 
     if isinstance(func_elm.returns, ast.Name):
         return python2ts_types(func_elm.returns.id)
@@ -537,7 +537,7 @@ def process_returntype(func_elm: ast.FunctionDef):
     return None
 
 
-def process_dict_returntype(return_elm: ast.Subscript) -> str:
+def process_dict(return_elm: ast.Subscript) -> str:
     """
     Given a return type like `dict[str, int]`, converts it into a TS object definition like
         {[key:str]:int}
@@ -591,7 +591,11 @@ def process_binop(bin_st: ast.BinOp) -> str:
             right = python2ts_types(find_name(element.value.right))
 
         case element if hasattr(element, "left") and hasattr(element, "right"):
-            left = python2ts_types(find_name(element.left))
+
+            if isinstance(element.left, ast.Subscript):
+                left = process_dict(element.left)
+            else:
+                left = python2ts_types(find_name(element.left))
 
             match element.right:
                 case element if isinstance(
