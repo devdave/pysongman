@@ -25,3 +25,11 @@ class SongType(typing.TypedDict):
     size: int
     length_seconds: int
     tags: list[TagType]
+
+
+class PlaylistPage(typing.TypedDict):
+    data: list[SongType]
+    count: int
+    offset: int
+    limit: int
+    page: int
